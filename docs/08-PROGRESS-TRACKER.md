@@ -40,6 +40,8 @@ pass on the owner's machine.
 | DEF-010 | Low | `'var(--heading-weight)' as unknown as string` cast in tailwind.config | Open |
 | DEF-011 | Low | `ApprovalAction` mixes actions with states (PENDING, NOT_STARTED) — acceptable in demo, wrong for production schema | Deferred to production |
 | DEF-012 | Med | Vestigial `isAsset: boolean` on `Item` maps to nothing; replace with `itemType` | Open — Step 4 |
+| DEF-013 | Med | `Project.contractValueCr: number` — display unit (crore) leaks into the data model and money stored as float. Violates D-010/R2. | Open — Step 4 |
+
 
 ## Confirmed good (do not re-audit)
 Theme token plumbing (HSL triplets → CSS vars → Tailwind semantic names,
@@ -52,6 +54,8 @@ lucide-react, cva/clsx/tailwind-merge — nothing else). `next.config.mjs`
 static export config. `DataTable` API. Fixture domain fidelity (real IS
 and MoRTH specifications).
 
-## Open questions register
-Owner = who must answer. Client = needs client input. Owner-decide = the
-project owner decides.
+## Registers (kept in separate files)
+- Decisions → `06-DECISION-LOG.md` (D-001 … D-010)
+- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-34; Q-01, Q-02, Q-03, Q-33, Q-34 closed)
+- Session history → `09-SESSION-LOG.md`
+
