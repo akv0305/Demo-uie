@@ -51,6 +51,8 @@ Each step ends with a tracker update and a session-log entry.
 | 2 | Self-enforcing lint rules (colour literals, adapter imports) | Co-pilot | `npm run lint` fails on violation |
 | 3 | Freeze docs: `03-DESIGN-SYSTEM`, `04-DATA-CONTRACT` | Co-pilot | Signatures recorded from real code |
 | 4 | Consolidated `types.ts` extension (UOM + HSN + Item) | Co-pilot | typecheck clean |
+| 4b | Install zod, react-hook-form, @hookform/resolvers; write `item.schema.ts` as the reference Zod schema | Co-pilot | typecheck clean |
+| 4c | Adopt `features/` folder structure with UOM Master | Co-pilot | Structure frozen before replication |
 | 5 | UOM Master — pattern-proving screen | Co-pilot | Round-trip calibration done |
 | 6 | HSN/SAC Master | Co-pilot | |
 | 7 | **Item Master (full depth) = GOLDEN PATH** | Co-pilot | Frozen as the master template |
@@ -104,6 +106,8 @@ Each step ends with a tracker update and a session-log entry.
 | Style drift | Lint rules fail the build, not a document. |
 | Over-generation beyond review capacity | One file or one screen per exchange. |
 | Terminology drift | All labels via `terminology.config.ts` + glossary. |
+| Demo work discarded at production handover | Carryover contract in `02-ARCHITECTURE.md`; container/presenter split; Zod shared; fixtures as seed. |
+| Second AI agent making unsupervised edits | Agentic IDE features stay OFF. One change at a time, reviewed. See §12. |
 
 ## 10. STATE block (co-pilot ends every message with this)
 
@@ -124,7 +128,15 @@ integrations · advanced BI.
 "Sales MIS" in Phase 1 = **EPC Order Book / Project Sales MIS Dashboard**
 only. Never call it a Sales Module.
 
-## 12. Known risks to flag to the client in writing
+## 12. Tooling discipline
+The IDE is an **editor**, not a second developer. Autonomous multi-file
+agent modes must remain disabled. Rationale: this project's primary
+technical risk is pattern drift across 15 modules built by a two-person
+team. A second, uncoordinated AI editing files outside the tracker breaks
+the single-source-of-truth discipline and produces exactly the drift the
+golden-path strategy exists to prevent. Inline autocomplete is acceptable.
+
+## 13. Known risks to flag to the client in writing
 - Site connectivity: DPR, fuel, log book and labour attendance happen at
   remote sites; Phase 1 is online-only. Mitigation: mobile-first,
   small-payload, retry-safe forms + day-end Excel upload fallback.
