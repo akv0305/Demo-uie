@@ -1,8 +1,9 @@
+# OPEN QUESTIONS
+Q-xxx numbered, never deleted. Mark answers inline and move the item to
+§Closed. Owner = project owner decides · Client = needs client input.
+
 **Blocking now**
-- Q-01 (Owner) Dev environment: Codespaces, local, or other?
-- Q-02 (Owner) Logo artwork — SVG/PNG, full lockup + square mark?
-- Q-03 (Owner-decide) Confirm client name on a public unauthenticated
-  demo URL with fabricated data + noindex. Stated, accepted.
+
 
 **Needed before dashboards (Step 18)**
 - Q-04 Charting dependency — Recharts vs alternative. Needs approval.
@@ -59,5 +60,12 @@
 - Q-31 Auth approach for production: Auth.js credentials + Argon2id
   (recommended) vs hand-rolled session layer.
 - Q-32 Owner's weekly review hours — the real throughput constraint.
+
+## Closed
+- Q-01 (Owner) Dev environment: Codespaces, local, or other? -- Dev
+- Q-02 (Owner) Logo artwork — SVG/PNG, full lockup + square mark? -- Ok
+- Q-03 (Owner-decide) Confirm client name on a public unauthenticated
+  demo URL with fabricated data + noindex. Stated, accepted. -- Client name is displayed
 - Q-33 Approve Zod as a dependency? - Zod is Approved
 - Q-34 Approve react-hook-form? - Approved
+  
