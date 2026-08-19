@@ -15,40 +15,27 @@
  *
  * Colour format: HSL channel triplets "H S% L%" (no hsl() wrapper) so Tailwind
  * can compose them with opacity modifiers, e.g. bg-primary/10.
+ *
+ * Palette derived from the client brand mark (navy "U" shield + navy wordmark).
+ * Source hex values are recorded in comments for traceability.
  */
 
 export type Density = 'comfortable' | 'compact';
 
 export interface ThemeColors {
-  /** Page canvas behind all content. */
   background: string;
-  /** Cards, panels, table surfaces sitting on the canvas. */
   surface: string;
-  /** Subtle fills: table headers, disabled inputs, hover rows. */
   surfaceMuted: string;
-  /** Primary readable text. */
   foreground: string;
-  /** Secondary / helper text, captions, column labels. */
   foregroundMuted: string;
-
-  /** Brand colour: primary buttons, active nav, focus accents. */
   primary: string;
-  /** Text/icon colour placed on top of `primary`. */
   primaryForeground: string;
-  /** Low-emphasis buttons and chips. */
   secondary: string;
   secondaryForeground: string;
-  /** Hover/selected wash for interactive rows and menu items. */
   accent: string;
-
-  /** Hairlines, dividers, table gridlines, card outlines. */
   border: string;
-  /** Form control border. */
   input: string;
-  /** Focus ring. */
   ring: string;
-
-  // --- Document workflow status colours -------------------------------------
   draft: string;
   submitted: string;
   pendingApproval: string;
@@ -58,8 +45,6 @@ export interface ThemeColors {
   revised: string;
   cancelled: string;
   closed: string;
-
-  // --- Semantic feedback colours --------------------------------------------
   success: string;
   warning: string;
   danger: string;
@@ -69,9 +54,7 @@ export interface ThemeColors {
 export interface ThemeTypography {
   fontSans: string;
   fontMono: string;
-  /** Root font size; every rem-based size scales from this. */
   baseFontSize: string;
-  /** Weight applied to h1–h6 and section titles. */
   headingWeight: string;
 }
 
@@ -92,40 +75,44 @@ export interface ThemeConfig {
   colors: ThemeColors;
   typography: ThemeTypography;
   shape: ThemeShape;
-  /** Drives table row height, form field height and page padding. */
   density: Density;
   brand: ThemeBrand;
 }
 
 export const themeConfig: ThemeConfig = {
   colors: {
-    // Neutral, professional, data-dense palette.
-    background: '210 20% 98%', // near-white page canvas
-    surface: '0 0% 100%', // white cards / tables
-    surfaceMuted: '210 20% 96%', // table header, subtle fills
-    foreground: '215 28% 17%', // dark blue-grey text
-    foregroundMuted: '215 16% 47%', // secondary text
+    // --- Neutrals: cool greys tuned to the navy hue family ------------------
+    background: '210 20% 98%',      // #F6F7F9  page canvas
+    surface: '0 0% 100%',           // #FFFFFF  cards / tables / forms
+    surfaceMuted: '212 22% 96%',    // #F1F3F6  table header, subtle fills
+    foreground: '213 15% 12%',      // #1A1D21  primary text
+    foregroundMuted: '213 13% 43%', // #5F6B7A  labels, helper text
 
-    primary: '215 45% 26%', // deep blue-grey brand
+    // --- Brand --------------------------------------------------------------
+    primary: '211 67% 21%',         // #12355B  logo navy — sidebar, buttons
     primaryForeground: '0 0% 100%',
-    secondary: '210 20% 94%',
-    secondaryForeground: '215 28% 17%',
-    accent: '210 30% 93%',
+    secondary: '213 31% 93%',       // #E8EDF3  pale navy tint
+    secondaryForeground: '211 67% 21%',
 
-    border: '214 20% 88%',
-    input: '214 20% 84%',
-    ring: '215 45% 36%',
+    // NOTE: `accent` is a LIGHT hover/selected wash. tailwind.config maps
+    // accent-foreground to --foreground (dark text), so accent must stay
+    // light or hover states become unreadable. Do not set this to navy.
+    accent: '213 40% 92%',
 
-    // Workflow statuses — muted, legible, distinguishable.
-    draft: '215 14% 52%', // grey — not yet in workflow
-    submitted: '206 70% 42%', // blue — sent onward
-    pendingApproval: '32 85% 44%', // amber — awaiting a person
-    approved: '152 55% 33%', // green — cleared
-    rejected: '0 65% 46%', // red — refused
-    returned: '270 45% 48%', // violet — sent back for correction
-    revised: '190 60% 36%', // teal — reissued after change
-    cancelled: '215 10% 60%', // pale grey — void
-    closed: '215 22% 34%', // dark slate — completed & locked
+    border: '213 20% 88%',          // #DDE2E8
+    input: '213 18% 84%',           // #CBD2DA
+    ring: '212 66% 32%',            // #1B4C86  lighter navy focus ring
+
+    // --- Workflow statuses --------------------------------------------------
+    draft: '215 14% 52%',
+    submitted: '206 70% 42%',
+    pendingApproval: '32 85% 44%',
+    approved: '152 55% 33%',
+    rejected: '0 65% 46%',
+    returned: '270 45% 48%',
+    revised: '190 60% 36%',
+    cancelled: '215 10% 60%',
+    closed: '215 22% 34%',
 
     success: '152 55% 33%',
     warning: '32 85% 44%',
@@ -151,18 +138,13 @@ export const themeConfig: ThemeConfig = {
   density: 'comfortable',
 
   brand: {
-    appName: 'Infra ERP',
-    shortName: 'ERP',
+    appName: 'Unique Infra Engineers',
+    shortName: 'UIE',
     logoPath: '/brand/logo.svg',
     logoMarkPath: '/brand/logo-mark.svg',
   },
 };
 
-/**
- * Density scale — resolved into CSS variables by lib/theme.ts.
- * Components must read these via Tailwind utilities (h-row, p-page, h-field)
- * rather than hardcoding sizes.
- */
 export const densityScale = {
   comfortable: {
     rowHeight: '44px',
