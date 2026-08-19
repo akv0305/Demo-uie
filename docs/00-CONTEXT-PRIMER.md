@@ -26,15 +26,26 @@ Host: Netlify free plan, static export, public URL, noindex.
    `config/terminology.config.ts`.
 5. Screens read data ONLY from `lib/data` — never from `lib/data/adapters/*`.
 6. Reuse the frozen components in `components/erp/`. Do not create variants.
-7. No new npm dependencies without explicit approval.
+7. No new npm dependencies without explicit approval. Allowlist lives in
+   `02-ARCHITECTURE.md` §4. Approved: zod, react-hook-form,
+   @hookform/resolvers.
 8. Static export must keep working (`output: 'export'`). No API routes,
    no server components fetching data, no middleware.
 9. **Never mention AI tooling, co-pilot usage, or vendor tool names in any
    client-facing screen, document, help text, or repo content.**
 10. Never rewrite a file I have not read in this session — ask for it.
+11. Presenters never fetch. Containers fetch, presenters receive props.
+    See `02-ARCHITECTURE.md` §2. This is what makes the demo become the
+    production app instead of being rewritten.
+12. Validation lives in one Zod schema per entity and is reused in
+    production for server actions and Excel import. Never hand-roll
+    validation.
+13. IDs are opaque. Money is rupees, never floats, never crore in the
+    model. Dates are ISO strings.
 
 ## Read next, in this order
 - `08-PROGRESS-TRACKER.md`  → what is done, what is next (READ THIS FIRST)
+- `02-ARCHITECTURE.md → layering, carryover contract, dependency allowlist
 - `01-DELIVERY-PLAN.md`     → scope, sequence, protocol
 - `03-DESIGN-SYSTEM.md`     → frozen component signatures
 - `04-DATA-CONTRACT.md`     → lib/data API surface and domain types
