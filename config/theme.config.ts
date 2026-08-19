@@ -140,8 +140,8 @@ export const themeConfig: ThemeConfig = {
   brand: {
     appName: 'Unique Infra Engineers',
     shortName: 'UIE',
-    logoPath: '/brand/logo.svg',
-    logoMarkPath: '/brand/logo-mark.svg',
+    logoPath: '/brand/UIE_Logo.PNG',
+    logoMarkPath: '/brand/UIE_Logo1.png',
   },
 };
 

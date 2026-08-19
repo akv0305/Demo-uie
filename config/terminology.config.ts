@@ -609,6 +609,21 @@ export const terminology = {
     rolePickerHint:
       'Choose a role to see the application from that person’s point of view. The menu changes to match the role.',
     forgotPassword: 'Forgot password?',
+        // --- Added: login brand panel & form states ---
+    brandHeading: 'Enterprise Resource Planning',
+    brandSubheading:
+      'One system for projects, procurement, stores, subcontractors, plant and people.',
+    brandPointProjects: 'Track project progress, budgets and daily site activity',
+    brandPointProcurement: 'Control indents, purchase orders and material receipts',
+    brandPointStores: 'Know exactly what stock is at every site store',
+    brandPointVisibility: 'Give management one reliable view across all projects',
+    emailRequired: 'Please enter your email address',
+    passwordRequired: 'Please enter your password',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
+    signingIn: 'Signing in…',
+    viewAs: 'View the system as',
+    supportNote: 'For access or password help, contact your system administrator.',
   },
 
   // ===========================================================================

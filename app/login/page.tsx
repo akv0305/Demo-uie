@@ -41,7 +41,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Brand */}
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
-          <BrandLogo />
+          <BrandLogo height={48} hideTagline className="items-center" />
           <p className="text-sm text-muted-foreground">{t.common.appTagline}</p>
         </div>
 
