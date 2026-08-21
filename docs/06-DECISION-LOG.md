@@ -22,7 +22,7 @@ one SUPERSEDED. Never edit history.
 | D-015 | 2026-08-21 | **Lint scope widened beyond Next's defaults** to `app components lib features config`. | `next lint` defaults omit `features/` and `config/` — the two directories the new rules most need to police. A silently unscanned rule is worse than no rule. | ACTIVE |
 | D-016 | 2026-08-21 | **Fonts are self-hosted via `next/font/google`**; `themeConfig.typography.fontSans` references `var(--font-inter)`. No external font `<link>` tags. | Removes a render-blocking third-party request, works offline and under static export on Netlify, and clears the `no-page-custom-font` warning. Config remains the single source of truth for typography. | ACTIVE |
 | D-017 | 2026-08-21 | **`next-env.d.ts` is tracked in git, not ignored.** | It supplies the CSS/image module declarations that `tsconfig.json` includes. Ignoring it made every fresh clone show TS2882 in the editor until someone ran a build — a defect that would have been inherited by the production repo under D-004. Closes DEF-017. | ACTIVE |
-
+| D-018 | 2026-08-21 | docs/03-DESIGN-SYSTEM.md is the mandatory pre-read before writing any screen, and must be updated in the same commit as any component change. Components not yet transcribed are marked NOT TRANSCRIBED and must be read from source before first use. | Removes the main amnesia cost: re-deriving prop signatures every session. Marking gaps explicitly prevents invented APIs, which is how the four "API tensions" arose in the Genspark run. | ACTIVE |
 
 ## Superseded decisions
 | ID | Superseded by | Note |

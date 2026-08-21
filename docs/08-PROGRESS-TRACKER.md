@@ -18,8 +18,8 @@ the frozen component catalogue that every later screen references.
 | 2 | Lint rules (colour literals, adapter/data imports) | ✅ DONE | D-014, D-015; verified firing; closes DEF-009 |
 | 2b | next/font self-hosting | ✅ DONE | D-016 |
 | 2c | next-env.d.ts tracked | ✅ DONE | D-017; closes DEF-017 |
-| 3 | docs/03-DESIGN-SYSTEM.md | ⬜ NOT STARTED | Next action |
-| 3 | docs/04-DATA-CONTRACT.md | ⬜ NOT STARTED | |
+| 3 | docs/03-DESIGN-SYSTEM.md | ✅ DONE | v1.0 |
+| 3b | docs/04-DATA-CONTRACT.md | ⬜ NOT STARTED | |
 | 4 | types.ts extension (UOM/HSN/Item) | ⬜ NOT STARTED | Closes DEF-002..006, 012, 013 |
 | 4b | Zod + RHF + reference schema | 🟡 PARTIAL | Packages installed; no schema written yet |
 | 4c | features/ folder structure | ⬜ NOT STARTED | Adopt at UOM Master |
@@ -48,7 +48,7 @@ the frozen component catalogue that every later screen references.
 | DEF-015 | High | Uppercase `.PNG` in brand asset paths would 404 on Netlify's case-sensitive filesystem | Closed 2026-08-21 — files renamed lowercase |
 | DEF-016 | Low | `BrandLogo` hard-codes `/brand/logo.svg|png` instead of reading `themeConfig.brand.logoPath`, weakening the "one config file" promise | Open — fix on next touch of that file |
 | DEF-017 | Med | `next-env.d.ts` was gitignored while `tsconfig.json` includes it → TS2882 on CSS side-effect import in a fresh clone | Closed 2026-08-21 (D-017) |
-
+| DEF-018 | Low | placeholder-page.tsx not exported from components/erp/index.ts | Open | | DEF-019 | Low | PageAction.variant union lacks 'success' although Button supports it | Open | | DEF-020 | Med | FilterState is a closed shape; module-specific filters have no home. Decide additively at UOM Master | Open |
 
 ## Confirmed good (do not re-audit)
 Theme token plumbing (HSL triplets → CSS vars → Tailwind semantic names,
