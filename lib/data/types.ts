@@ -228,22 +228,84 @@ export type ItemGroup =
   | 'ELECTRICAL'
   | 'SAFETY';
 
-export interface Uom {
+/** Item group as master data (list rendered from this, not from the union). */
+export interface ItemGroupDef {
+  id: string;
+  code: ItemGroup;
+  name: string;
+  subGroups: string[];
+  isActive: boolean;
+}
+
+/** Audit fields carried by every master record. All optional in the demo. */
+export interface MasterAudit {
+  createdBy?: string;
+  createdOn?: string;
+  updatedBy?: string;
+  updatedOn?: string;
+}
+
+export type UomCategory =
+  | 'COUNT'
+  | 'WEIGHT'
+  | 'VOLUME'
+  | 'LENGTH'
+  | 'AREA'
+  | 'TIME'
+  | 'OTHER';
+
+export interface Uom extends MasterAudit {
   id: string;
   code: string;
   name: string;
   decimals: number;
+  category?: UomCategory;
+  /** Base unit of its category (KG for WEIGHT, etc.). */
+  isBaseUnit?: boolean;
+  isActive?: boolean;
+  remarks?: string;
 }
 
-export interface HsnSac {
+/** 1 fromUom = factor x toUom. Both must share a UomCategory. */
+export interface UomConversion {
+  id: string;
+  fromUomCode: string;
+  toUomCode: string;
+  factor: number;
+  itemCode?: string;
+  isActive?: boolean;
+}
+
+export interface HsnSac extends MasterAudit {
   id: string;
   code: string;
   description: string;
   gstRate: number;
   kind: 'HSN' | 'SAC';
+  /** Derived: cgst = sgst = gstRate / 2; igst = gstRate. Stored for export fidelity. */
+  cgstRate?: number;
+  sgstRate?: number;
+  igstRate?: number;
+  cessRate?: number;
+  effectiveFrom?: string;
+  /** TRUE where the commodity sits outside GST (HSD, petrol) — state VAT applies. */
+  isNonGst?: boolean;
+  isActive?: boolean;
 }
 
-export interface Item {
+export type ItemType =
+  | 'MATERIAL'
+  | 'CONSUMABLE'
+  | 'SPARE'
+  | 'FUEL'
+  | 'RETURNABLE'
+  | 'PRODUCED'
+  | 'SERVICE'
+  | 'ASSET';
+
+export type ValuationMethod = 'WEIGHTED_AVERAGE' | 'FIFO' | 'STANDARD';
+
+export interface Item extends MasterAudit {
   id: string;
   code: string;
   name: string;
@@ -255,6 +317,53 @@ export interface Item {
   reorderLevel: number;
   isAsset: boolean;
   isActive: boolean;
+
+  // --- Identification ---
+  shortName?: string;
+  subGroup?: string;
+  oldCode?: string;
+  brandPreference?: string;
+  makeOrGrade?: string;
+
+  // --- Type & behaviour ---
+  itemType?: ItemType;
+  /** Shuttering, staging, scaffolding: issued and expected back. */
+  isReturnable?: boolean;
+  /** Output of a plant (RMC, WMM, hot mix) rather than a purchase. */
+  isProduced?: boolean;
+  isBatchTracked?: boolean;
+  isSerialTracked?: boolean;
+  requiresQc?: boolean;
+  shelfLifeDays?: number;
+
+  // --- Units ---
+  purchaseUomCode?: string;
+  /** 1 purchase UOM = factor x stock UOM (1 BAG = 50 KG). */
+  purchaseToStockFactor?: number;
+  issueUomCode?: string;
+  issueToStockFactor?: number;
+
+  // --- Stock control ---
+  minStockLevel?: number;
+  maxStockLevel?: number;
+  leadTimeDays?: number;
+  allowNegativeStock?: boolean;
+  defaultStoreSiteId?: string;
+  binLocation?: string;
+
+  // --- Costing reference (display only in Phase 1) ---
+  valuationMethod?: ValuationMethod;
+  /** Rupees. Never crore/lakh — display units are a formatting concern (R2). */
+  standardRate?: number;
+  lastPurchaseRate?: number;
+  lastPurchaseDate?: string;
+  budgetRateRef?: number;
+
+  // --- Classification ---
+  isCapitalItem?: boolean;
+  isHazardous?: boolean;
+  tags?: string[];
+  remarks?: string;
 }
 
 export interface StockBalance {
@@ -323,16 +432,27 @@ export type DocumentKind =
   | 'RFQ'
   | 'QUOTE'
   | 'PO'
+  | 'WORK_ORDER_PO'
   | 'GRN'
+  | 'PURCHASE_INVOICE'
+  | 'DEBIT_NOTE'
   | 'ISSUE'
   | 'RETURN'
   | 'TRANSFER'
+  | 'STOCK_ADJUSTMENT'
+  | 'PRODUCTION'
   | 'WO'
   | 'MEASUREMENT'
   | 'BILL'
   | 'DPR'
   | 'FUEL'
-  | 'EXPENSE';
+  | 'LOGBOOK'
+  | 'MAINTENANCE'
+  | 'EXPENSE'
+  | 'ADVANCE'
+  | 'ATTENDANCE'
+  | 'PAYROLL'
+  | 'CLIENT_BILL';
 
 export interface DocumentSummary {
   id: string;
@@ -340,7 +460,7 @@ export interface DocumentSummary {
   documentNo: string;
   date: string;
   companyId: string;
-  projectId: string;
+  projectId: string | null; // null = head office / company-level document
   siteId: string | null;
   partyName?: string;
   title: string;
@@ -453,7 +573,16 @@ export interface ListParams {
   siteId?: string;
   search?: string;
   status?: DocumentStatus | 'ALL';
+  /** Generic bucket filter: item group, vendor category, subcontractor trade. */
   group?: string;
+  /** Second-level bucket: item sub-group. */
+  subGroup?: string;
+  /** Master-screen filters. */
+  itemType?: ItemType | 'ALL';
+  category?: string;
+  kind?: DocumentKind | 'ALL';
+  /** undefined = all, true = active only, false = inactive only. */
+  isActive?: boolean;
   fromDate?: string;
   toDate?: string;
   page?: number;

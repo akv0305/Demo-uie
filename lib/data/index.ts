@@ -209,9 +209,22 @@ export async function listSubcontractors(params?: ListParams): Promise<Paged<Sub
 // ===========================================================================
 export async function listItems(params?: ListParams): Promise<Paged<Item>> {
   let rows = fxItems;
-  if (params?.group) rows = rows.filter((i) => i.group === params.group);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((i) => i.group === params.group);
+  if (params?.subGroup) rows = rows.filter((i) => i.subGroup === params.subGroup);
+  if (params?.itemType && params.itemType !== 'ALL')
+    rows = rows.filter((i) => i.itemType === params.itemType);
+  if (params?.isActive !== undefined) rows = rows.filter((i) => i.isActive === params.isActive);
   if (params?.search)
     rows = rows.filter((i) => matchesText([i.name, i.code, i.specification, i.hsnCode], params.search));
+  const sortBy = params?.sortBy;
+  if (sortBy) {
+    const dir = params?.sortDir === 'desc' ? -1 : 1;
+    rows = [...rows].sort((a, b) => {
+      const av = String((a as unknown as Record<string, unknown>)[sortBy] ?? '');
+      const bv = String((b as unknown as Record<string, unknown>)[sortBy] ?? '');
+      return av.localeCompare(bv, 'en-IN', { numeric: true }) * dir;
+    });
+  }
   return resolve(paginate(rows, params));
 }
 
@@ -219,12 +232,23 @@ export async function getItem(id: string): Promise<Item | null> {
   return resolve(fxItems.find((i) => i.id === id) ?? null);
 }
 
-export async function listUoms(): Promise<Uom[]> {
-  return resolve(fxUoms);
+export async function listUoms(params?: ListParams): Promise<Uom[]> {
+  let rows = fxUoms;
+  if (params?.category && params.category !== 'ALL')
+    rows = rows.filter((u) => u.category === params.category);
+  if (params?.isActive !== undefined)
+    rows = rows.filter((u) => (u.isActive ?? true) === params.isActive);
+  if (params?.search) rows = rows.filter((u) => matchesText([u.code, u.name], params.search));
+  return resolve(rows);
 }
 
-export async function listHsnSac(): Promise<HsnSac[]> {
-  return resolve(fxHsnSac);
+export async function listHsnSac(params?: ListParams): Promise<HsnSac[]> {
+  let rows = fxHsnSac;
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((h) => h.kind === params.group);
+  if (params?.isActive !== undefined)
+    rows = rows.filter((h) => (h.isActive ?? true) === params.isActive);
+  if (params?.search) rows = rows.filter((h) => matchesText([h.code, h.description], params.search));
+  return resolve(rows);
 }
 
 export async function listStockBalances(params?: ListParams): Promise<Paged<StockBalance>> {
