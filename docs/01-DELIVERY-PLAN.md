@@ -48,10 +48,10 @@ Each step ends with a tracker update and a session-log entry.
 |---|------|------|-------------|
 | 0 | Dev environment working (`dev`, `build`, `typecheck` pass) | Owner | BLOCKER for all code |
 | 1 | Rebrand `theme.config.ts` + logo assets | Co-pilot | Navy shell renders from tokens |
-| 2 | Self-enforcing lint rules (colour literals, adapter imports) | Co-pilot | `npm run lint` fails on violation |
+| 2 | Self-enforcing lint rules (colour literals, adapter imports) | Co-pilot | `npm run lint` fails on violation - Done |
 | 3 | Freeze docs: `03-DESIGN-SYSTEM`, `04-DATA-CONTRACT` | Co-pilot | Signatures recorded from real code |
 | 4 | Consolidated `types.ts` extension (UOM + HSN + Item) | Co-pilot | typecheck clean |
-| 4b | Install zod, react-hook-form, @hookform/resolvers; write `item.schema.ts` as the reference Zod schema | Co-pilot | typecheck clean |
+| 4b | Install zod, react-hook-form, @hookform/resolvers; write `item.schema.ts` as the reference Zod schema | Co-pilot | typecheck clean - Done |
 | 4c | Adopt `features/` folder structure with UOM Master | Co-pilot | Structure frozen before replication |
 | 5 | UOM Master — pattern-proving screen | Co-pilot | Round-trip calibration done |
 | 6 | HSN/SAC Master | Co-pilot | |

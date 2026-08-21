@@ -122,9 +122,9 @@ export const themeConfig: ThemeConfig = {
 
   typography: {
     fontSans:
-      "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-    fontMono:
-      "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
+      "var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      fontMono:
+      "var(--font-sfmono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
     baseFontSize: '14px',
     headingWeight: '600',
   },
@@ -140,8 +140,8 @@ export const themeConfig: ThemeConfig = {
   brand: {
     appName: 'Unique Infra Engineers',
     shortName: 'UIE',
-    logoPath: '/brand/UIE_Logo.PNG',
-    logoMarkPath: '/brand/UIE_Logo1.png',
+    logoPath: '/brand/logo.png',
+    logoMarkPath: '/brand/logo-mark.png',
   },
 };
 

@@ -68,4 +68,5 @@ Q-xxx numbered, never deleted. Mark answers inline and move the item to
   demo URL with fabricated data + noindex. Stated, accepted. -- Client name is displayed
 - Q-33 Approve Zod as a dependency? - Zod is Approved
 - Q-34 Approve react-hook-form? - Approved
-  
+| Q-35 | Original vector logo files (SVG or AI/EPS) with transparent background from the client's designer. The supplied PNG has a baked-in white box, which restricts the mark to light surfaces and will pixelate at large sizes. | Open — ask at the next client touchpoint, not blocking |
+

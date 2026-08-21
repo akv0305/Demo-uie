@@ -1,0 +1,66 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Literal[value=/(?:^|\\s|:)(?:bg|text|border|ring|ring-offset|from|via|to|fill|stroke|outline|decoration|divide|placeholder|accent|caret|shadow)-(?:slate|gray|grey|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\\d{2,3}/]",
+        "message": "Raw Tailwind palette class is not allowed. Use a semantic token (bg-surface, text-muted-foreground, border-border, text-warning, bg-primary...). Tokens are defined in config/theme.config.ts."
+      },
+      {
+        "selector": "TemplateElement[value.raw=/(?:^|\\s|:)(?:bg|text|border|ring|ring-offset|from|via|to|fill|stroke|outline|decoration|divide|placeholder|accent|caret|shadow)-(?:slate|gray|grey|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\\d{2,3}/]",
+        "message": "Raw Tailwind palette class is not allowed inside a template string. Use a semantic token from config/theme.config.ts."
+      },
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?(?:[0-9a-fA-F]{2})?\\b/]",
+        "message": "Hard-coded hex colour. Colours belong in config/theme.config.ts only."
+      },
+      {
+        "selector": "TemplateElement[value.raw=/#[0-9a-fA-F]{6}\\b/]",
+        "message": "Hard-coded hex colour in a template string. Colours belong in config/theme.config.ts only."
+      },
+      {
+        "selector": "Literal[value=/\\b(?:rgb|rgba|hsla)\\(/]",
+        "message": "Hard-coded colour function. Use hsl(var(--token)) or a Tailwind semantic class."
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/lib/data/adapters/*", "**/lib/data/adapters/*"],
+            "message": "Never import a data adapter directly. Import from '@/lib/data' so the fixture adapter can be swapped for Prisma without touching screens."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["config/theme.config.ts"],
+      "rules": { "no-restricted-syntax": "off" }
+    },
+    {
+      "files": ["features/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/lib/data", "@/lib/data/*", "**/lib/data", "**/lib/data/*"],
+                "message": "Presenters must not fetch data. Receive data and callbacks as props from the container page (see docs/02-ARCHITECTURE.md). Type-only imports are allowed: use 'import type'."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["lib/data/**/*.{ts,tsx}", "scripts/**/*"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
+}
