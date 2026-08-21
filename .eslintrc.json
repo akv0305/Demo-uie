@@ -25,12 +25,17 @@
         "message": "Hard-coded colour function. Use hsl(var(--token)) or a Tailwind semantic class."
       }
     ],
-    "no-restricted-imports": [
+        "no-restricted-imports": [
       "error",
       {
         "patterns": [
           {
-            "group": ["@/lib/data/adapters/*", "**/lib/data/adapters/*"],
+            "group": [
+              "@/lib/data/adapters/*",
+              "@/lib/data/adapters/**",
+              "**/lib/data/adapters/*",
+              "**/lib/data/adapters/**"
+            ],
             "message": "Never import a data adapter directly. Import from '@/lib/data' so the fixture adapter can be swapped for Prisma without touching screens."
           }
         ]
@@ -48,10 +53,29 @@
         "no-restricted-imports": [
           "error",
           {
+            "paths": [
+              {
+                "name": "@/lib/data",
+                "message": "Presenters must not fetch data. Receive data and callbacks as props from the container page (docs/02-ARCHITECTURE.md). Types are fine: import type { X } from '@/lib/data/types'."
+              },
+              {
+                "name": "@/lib/data/index",
+                "message": "Presenters must not fetch data. Use props. Types are fine: '@/lib/data/types'."
+              },
+              {
+                "name": "@/lib/data/store",
+                "message": "Presenters must not persist data. The container page owns all reads and writes."
+              }
+            ],
             "patterns": [
               {
-                "group": ["@/lib/data", "@/lib/data/*", "**/lib/data", "**/lib/data/*"],
-                "message": "Presenters must not fetch data. Receive data and callbacks as props from the container page (see docs/02-ARCHITECTURE.md). Type-only imports are allowed: use 'import type'."
+                "group": [
+                  "@/lib/data/adapters/*",
+                  "@/lib/data/adapters/**",
+                  "**/lib/data/adapters/*",
+                  "**/lib/data/adapters/**"
+                ],
+                "message": "Never import a data adapter directly. Import from '@/lib/data' in a container page only."
               }
             ]
           }

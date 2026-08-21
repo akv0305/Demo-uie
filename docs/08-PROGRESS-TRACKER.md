@@ -21,9 +21,9 @@ the frozen component catalogue that every later screen references.
 | 3 | docs/03-DESIGN-SYSTEM.md | ✅ DONE | v1.0 |
 | 3 | docs/04-DATA-CONTRACT.md | ✅ DONE | v1.0 |
 | 4 | types.ts extension (UOM/HSN/Item) | ✅ DONE | Closes DEF-002..006, DEF-012 |
-| 4b | Zod + RHF + reference schema | 🟡 PARTIAL | Packages installed; no schema written yet |
-| 4c | features/ folder structure | ⬜ NOT STARTED | Adopt at UOM Master |
-| 5 | UOM Master | ⬜ NOT STARTED | |
+| 4b | Zod + RHF + reference schema | ✅ DONE | uom-schema.ts is the reference |
+| 4c | features/ folder structure | ✅ DONE | D-024 |
+| 5 | UOM Master | ✅ DONE | Golden pattern; list + form + activate/deactivate |
 | 6 | HSN/SAC Master | ⬜ NOT STARTED | |
 | 7 | Item Master (GOLDEN PATH) | ⬜ NOT STARTED | |
 | 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
@@ -51,7 +51,7 @@ the frozen component catalogue that every later screen references.
 | DEF-018 | Low | placeholder-page.tsx not exported from components/erp/index.ts | Open | | DEF-019 | Low | PageAction.variant union lacks 'success' although Button supports it | Open | | DEF-020 | Med | FilterState is a closed shape; module-specific filters have no home. Decide additively at UOM Master | Open |
 | DEF-018 | Low | placeholder-page.tsx not exported from components/erp/index.ts | Open | 
 | DEF-019 | Low | PageAction.variant union lacks 'success' although Button supports it | Open | 
-| DEF-020 | Med | FilterState is a closed shape; module-specific filters have no home. Decide additively at UOM Master | Open |
+| DEF-020 | Med | `FilterState` is a closed shape; module-specific filters have no home | Closed 2026-08-21 by D-022 — masters use inline filters |
 | DEF-021 | Low | `listItems` sorts by string coercion; numeric columns sort lexically | Open — acceptable for demo |
 
 ## Confirmed good (do not re-audit)

@@ -13,18 +13,23 @@ import type {
 // UOM
 // ===========================================================================
 export const uoms: Uom[] = [
-  { id: 'UOM-BAG', code: 'BAG', name: 'Bag (50 kg)', decimals: 0 },
-  { id: 'UOM-MT', code: 'MT', name: 'Metric Tonne', decimals: 3 },
-  { id: 'UOM-CUM', code: 'CUM', name: 'Cubic Metre', decimals: 3 },
-  { id: 'UOM-SQM', code: 'SQM', name: 'Square Metre', decimals: 3 },
-  { id: 'UOM-RMT', code: 'RMT', name: 'Running Metre', decimals: 3 },
-  { id: 'UOM-NOS', code: 'NOS', name: 'Numbers', decimals: 0 },
-  { id: 'UOM-KG', code: 'KG', name: 'Kilogram', decimals: 3 },
-  { id: 'UOM-LTR', code: 'LTR', name: 'Litre', decimals: 3 },
-  { id: 'UOM-HRS', code: 'HRS', name: 'Hours', decimals: 2 },
-  { id: 'UOM-DAY', code: 'DAY', name: 'Days', decimals: 2 },
-  { id: 'UOM-QTL', code: 'QTL', name: 'Quintal', decimals: 3 },
-  { id: 'UOM-KM', code: 'KM', name: 'Kilometre', decimals: 3 },
+  { id: 'UOM-01', code: 'NOS', name: 'Numbers', decimals: 0, category: 'COUNT', isBaseUnit: true, isActive: true },
+  { id: 'UOM-02', code: 'KG', name: 'Kilogram', decimals: 3, category: 'WEIGHT', isBaseUnit: true, isActive: true },
+  { id: 'UOM-03', code: 'MT', name: 'Metric Tonne', decimals: 3, category: 'WEIGHT', isActive: true },
+  { id: 'UOM-04', code: 'BAG', name: 'Bag (50 kg)', decimals: 0, category: 'COUNT', isActive: true },
+  { id: 'UOM-05', code: 'CUM', name: 'Cubic Metre', decimals: 3, category: 'VOLUME', isBaseUnit: true, isActive: true },
+  { id: 'UOM-06', code: 'SQM', name: 'Square Metre', decimals: 2, category: 'AREA', isBaseUnit: true, isActive: true },
+  { id: 'UOM-07', code: 'RMT', name: 'Running Metre', decimals: 2, category: 'LENGTH', isBaseUnit: true, isActive: true },
+  { id: 'UOM-08', code: 'LTR', name: 'Litre', decimals: 2, category: 'VOLUME', isActive: true },
+  { id: 'UOM-09', code: 'KL', name: 'Kilolitre', decimals: 3, category: 'VOLUME', isActive: true },
+  { id: 'UOM-10', code: 'HOUR', name: 'Hour', decimals: 2, category: 'TIME', isBaseUnit: true, isActive: true },
+  { id: 'UOM-11', code: 'DAY', name: 'Day', decimals: 2, category: 'TIME', isActive: true },
+  { id: 'UOM-12', code: 'TRIP', name: 'Trip', decimals: 0, category: 'COUNT', isActive: true },
+  { id: 'UOM-13', code: 'SET', name: 'Set', decimals: 0, category: 'COUNT', isActive: true },
+  { id: 'UOM-14', code: 'ROLL', name: 'Roll', decimals: 0, category: 'COUNT', isActive: true },
+  { id: 'UOM-15', code: 'BUNDLE', name: 'Bundle', decimals: 0, category: 'COUNT', isActive: true },
+  { id: 'UOM-16', code: 'PAIR', name: 'Pair', decimals: 0, category: 'COUNT', isActive: true },
+  { id: 'UOM-17', code: 'QTL', name: 'Quintal', decimals: 3, category: 'WEIGHT', isActive: false },
 ];
 
 // ===========================================================================

@@ -56,6 +56,11 @@ eslint · eslint-config-next · serve.
 
 Deferred, decision required before Step 18: charting library (Q-04).
 
+- zod 4.4.3 (v4 syntax: field messages use `{ message: '…' }`; `invalid_type_error` was removed)
+- react-hook-form 7.85.0
+- @hookform/resolvers 5.9.1 (v5 is required for zod v4; v3/v4 resolvers will not typecheck)
+
+
 ## 5. Zod usage contract (this is why Zod was adopted)
 One schema per entity in `features/<module>/<entity>.schema.ts`.
 Demo use: form validation via `@hookform/resolvers/zod`.

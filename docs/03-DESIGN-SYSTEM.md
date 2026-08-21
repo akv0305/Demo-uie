@@ -13,7 +13,7 @@ Signatures below are transcribed from source. Where a signature is marked
 
 ## 1. Layer rules (recap of 02-ARCHITECTURE §2)
 - `app/**/page.tsx` = container. Fetches via `lib/data`, owns state, passes props.
-- `features/<module>/*-screen.tsx` = presenter. Props only. Never imports `@/lib/data` (value). Type-only imports allowed.
+- `features/<module>/*` = presenter. Props only. May import types from `@/lib/data/types`; must NOT import `@/lib/data`, `@/lib/data/store`, or any adapter.
 - `components/erp/*` = frozen vocabulary. Generic, domain-agnostic, token-driven.
 - `components/ui/*` = shadcn primitives. Do not use directly in a screen if an `erp` wrapper exists.
 - Lint enforces the boundaries (D-014).

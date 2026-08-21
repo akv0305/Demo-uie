@@ -236,6 +236,34 @@ export const terminology = {
     siteName: 'Site / Store Name',
     siteType: 'Type',
     storeKeeper: 'Store Keeper',
+
+    uomCode: 'UOM Code',
+    uomName: 'Unit Name',
+    uomCategory: 'Category',
+    uomDecimals: 'Decimal Places',
+    uomIsBase: 'Base Unit',
+    uomConversions: 'Conversions',
+    uomNew: 'New Unit',
+    uomEdit: 'Edit Unit',
+    uomSubtitle: 'Units in which materials are purchased, stored and issued.',
+    uomEmpty: 'No units defined',
+    uomEmptyHint: 'Add a unit such as MT, BAG or CUM to get started.',
+    uomDuplicateCode: 'This code is already used by another unit.',
+    uomDecimalsHint: '0 for countable items, 2 or 3 for weights and volumes.',
+    uomBaseHint: 'The reference unit of its category — for example KG for weight.',
+    activate: 'Activate',
+    deactivate: 'Deactivate',
+    activateConfirm: 'Make this record available for use again?',
+    deactivateConfirm:
+      'Existing records keep this value, but it will no longer appear in new entries.',
+    catCOUNT: 'Count',
+    catWEIGHT: 'Weight',
+    catVOLUME: 'Volume',
+    catLENGTH: 'Length',
+    catAREA: 'Area',
+    catTIME: 'Time',
+    catOTHER: 'Other',
+
   },
 
   // ===========================================================================
@@ -664,6 +692,9 @@ export const terminology = {
     retention:
       'A percentage of the bill amount held back until the work is complete, released later as per contract terms.',
     tds: 'Tax deducted at source from the payable amount as required under the Income Tax Act.',
+    uom: 'The unit a material is counted in. Cement is bought in bags but often stored in tonnes — recording both, with the conversion between them, keeps stock figures correct.',
+    uomDecimals: 'How many digits after the decimal point are allowed. Bags are whole numbers, but diesel and concrete need three decimals.',
+
   },
 } as const;
 
