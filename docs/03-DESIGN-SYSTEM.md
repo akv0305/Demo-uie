@@ -148,13 +148,26 @@ hint is shown by SearchableSelectField and RadioGroupField, and is searchable �
 (8) LineItemsGrid — NOT TRANSCRIBED (22 KB, the most complex component).
 Exports LineItemsGrid, computeLine, validateLine, types LineRow, LineRowComputed. Read in full before the first PO/PR screen; treat its line maths as the standard for every document with items.
 
-(9) DetailPageLayout — NOT TRANSCRIBED. Exports type SummaryEntry.
+### (9) DetailPageLayout — transaction documents ONLY (D-030)
+```ts
+{ documentNo: string; title?: string; status: DocumentStatus; backHref?: string;
+  summary: SummaryEntry[]; actions?: PageAction[];
+  detailsSlot?: ReactNode; lineItemsSlot?: ReactNode;
+  attachments?: Attachment[]; approvals?: ApprovalStep[]; auditEntries?: AuditEntry[] }
+SummaryEntry = { label: string; value: ReactNode }
+
 (10) AttachmentsPanel · (11) AuditTrailPanel — NOT TRANSCRIBED.
-(12) KpiCard · (13) EmptyState · (15) ErrorState · (14) LoadingSkeleton family
+
+(12) KpiCard · 
+{ label: string; value: string; unit?: string; comparison?: string;
+  trend?: 'UP'|'DOWN'|'FLAT'; trendIsGood?: boolean; href?: string; className? }
+
+(13) EmptyState ·  
+(14) LoadingSkeleton family
 (LoadingSkeleton, TableSkeleton, FormSkeleton, CardSkeleton) — NOT TRANSCRIBED. EmptyState takes at least headline and description (used by DataTable).
+(15) ErrorState ·
 
 (16) ConfirmDialog
-
 ConfirmIntent = 'SUBMIT'|'APPROVE'|'REJECT'|'RETURN'|'CANCEL'|'REVISE'|'DELETE'
 { open: boolean; onOpenChange: (open: boolean) => void; intent: ConfirmIntent;
   documentLabel?: string; description?: string;
@@ -162,8 +175,13 @@ ConfirmIntent = 'SUBMIT'|'APPROVE'|'REJECT'|'RETURN'|'CANCEL'|'REVISE'|'DELETE'
 
 Remarks are mandatory for REJECT, RETURN, CANCEL, REVISE and enforced inside the component. Title, icon, button variant all derive from intent. Every state transition in the app goes through this dialog — do not build bespoke confirmations.
 
-(17) ImportWizard — NOT TRANSCRIBED. Exports ImportPreviewRow, ImportWizardProps.
-Every master with Excel import uses it; read before the Item Master import step.
+(17) ImportWizard · 
+ImportPreviewRow = { rowNo: number; values: Record<string,string>; errors?: string[] }
+ImportWizardProps = { columns: {key,header}[]; previewRows: ImportPreviewRow[];
+  onDownloadTemplate?: () => void;
+  onFileSelected?: (file: {name,sizeKb}) => void;
+  onConfirm?: (validRowCount: number) => void; className? }
+
 
 (18) RecordContextBar — NOT TRANSCRIBED.
 (19) HelpHint

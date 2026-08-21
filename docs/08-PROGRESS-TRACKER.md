@@ -25,7 +25,7 @@ the frozen component catalogue that every later screen references.
 | 4c | features/ folder structure | ✅ DONE | D-024 |
 | 5 | UOM Master | ✅ DONE | Golden pattern; list + form + activate/deactivate |
 | 6 | HSN/SAC Master | ✅ DONE | Derived tax split, isNonGst for diesel, 22 fixtures |
-| 7 | Item Master (GOLDEN PATH) | ⬜ NOT STARTED | |
+| 7 | Item Master | ✅ DONE | Schema with 9 cross-field rules, 12 columns, six-section dialog form, container with fixture+patch merge, static import route. GST derived from HSN (D-034). |
 | 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 ## Defect register (from P0 audit)
@@ -53,6 +53,8 @@ the frozen component catalogue that every later screen references.
 | DEF-019 | Low | PageAction.variant union lacks 'success' although Button supports it | Open | 
 | DEF-020 | Med | `FilterState` is a closed shape; module-specific filters have no home | Closed 2026-08-21 by D-022 — masters use inline filters |
 | DEF-021 | Low | `listItems` sorts by string coercion; numeric columns sort lexically | Open — acceptable for demo |
+| DEF-022 | 2026-08-21 | med | Item Master optional numeric fields are typed `number | ''` end to end; the container strips blanks in `toItem()`. A shared numeric-field helper should replace this per-screen conversion. | OPEN |
+| DEF-023 | 2026-08-21 | low | Item import wizard shows fixed illustrative preview rows and does not read the uploaded file. Blocked on the xlsx parsing decision. | OPEN |
 
 ## Confirmed good (do not re-audit)
 Theme token plumbing (HSL triplets → CSS vars → Tailwind semantic names,
