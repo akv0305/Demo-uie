@@ -212,7 +212,7 @@ export const terminology = {
     specification: 'Specification',
     stockUom: 'Stock UOM',
     reorderLevel: 'Reorder Level',
-    hsnCode: 'HSN Code',
+
     gstRate: 'GST Rate',
     isAsset: 'Capital Item',
 
@@ -263,6 +263,30 @@ export const terminology = {
     catAREA: 'Area',
     catTIME: 'Time',
     catOTHER: 'Other',
+
+    hsnFull: 'HSN / SAC Master',
+    hsnSubtitle: 'Tax classification codes used on purchase orders, invoices and bills.',
+    hsnCode: 'Code',
+    hsnKind: 'Type',
+    hsnDescription: 'Description',
+    hsnGstRate: 'GST %',
+    hsnCgst: 'CGST %',
+    hsnSgst: 'SGST %',
+    hsnIgst: 'IGST %',
+    hsnCess: 'Cess %',
+    hsnEffectiveFrom: 'Effective From',
+    hsnNonGst: 'Outside GST',
+    hsnNew: 'New Code',
+    hsnEdit: 'Edit Code',
+    hsnEmpty: 'No codes defined',
+    hsnEmptyHint: 'Add an HSN code for materials or a SAC code for services.',
+    hsnDuplicateCode: 'This code already exists.',
+    hsnSplitNote: 'CGST and SGST are half of the GST rate each. IGST equals the full rate.',
+    hsnNonGstHint:
+      'Tick for diesel, petrol and liquor — these are taxed under state VAT, not GST.',
+    hsnKindHint: 'HSN for goods and materials. SAC for services such as hire or transport.',
+    kindHSN: 'HSN (Goods)',
+    kindSAC: 'SAC (Services)',
 
   },
 
@@ -694,6 +718,9 @@ export const terminology = {
     tds: 'Tax deducted at source from the payable amount as required under the Income Tax Act.',
     uom: 'The unit a material is counted in. Cement is bought in bags but often stored in tonnes — recording both, with the conversion between them, keeps stock figures correct.',
     uomDecimals: 'How many digits after the decimal point are allowed. Bags are whole numbers, but diesel and concrete need three decimals.',
+
+    hsn: 'The tax code printed on every purchase invoice. HSN codes classify goods, SAC codes classify services. The GST rate follows from the code, so getting it right here keeps every downstream invoice and Tally export correct.',
+    hsnSplit: 'Within one state the tax splits into CGST and SGST, half each. Across states it is a single IGST at the full rate. The system fills all three from the GST rate you enter.',
 
   },
 } as const;

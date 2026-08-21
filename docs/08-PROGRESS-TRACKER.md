@@ -24,7 +24,7 @@ the frozen component catalogue that every later screen references.
 | 4b | Zod + RHF + reference schema | ✅ DONE | uom-schema.ts is the reference |
 | 4c | features/ folder structure | ✅ DONE | D-024 |
 | 5 | UOM Master | ✅ DONE | Golden pattern; list + form + activate/deactivate |
-| 6 | HSN/SAC Master | ⬜ NOT STARTED | |
+| 6 | HSN/SAC Master | ✅ DONE | Derived tax split, isNonGst for diesel, 22 fixtures |
 | 7 | Item Master (GOLDEN PATH) | ⬜ NOT STARTED | |
 | 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 

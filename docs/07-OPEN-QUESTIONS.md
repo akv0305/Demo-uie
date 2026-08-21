@@ -60,6 +60,8 @@ Q-xxx numbered, never deleted. Mark answers inline and move the item to
 - Q-31 Auth approach for production: Auth.js credentials + Argon2id
   (recommended) vs hand-rolled session layer.
 - Q-32 Owner's weekly review hours — the real throughput constraint.
+| Q-36 | Confirm current GST rates per HSN/SAC with the client's CA before UAT — the fixture uses rates as at the last rationalisation known to us, and slabs change. Also confirm whether cement is procured under any concessional rate or reverse charge. | Open — questionnaire item, not blocking |
+| Q-37 | Does UIE need HSN-wise rate history (rate changing from a date) or only the current rate? `effectiveFrom` exists but no versioning is built. | Open — affects Phase 1 scope if history is required |
 
 ## Closed
 - Q-01 (Owner) Dev environment: Codespaces, local, or other? -- Dev
