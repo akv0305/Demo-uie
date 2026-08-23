@@ -315,7 +315,6 @@ export interface Item extends MasterAudit {
   hsnCode: string;
   gstRate: number;
   reorderLevel: number;
-  isAsset: boolean;
   isActive: boolean;
 
   // --- Identification ---

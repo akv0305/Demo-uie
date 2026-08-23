@@ -211,7 +211,6 @@ export const terminology = {
     reorderLevel: 'Reorder Level',
 
     gstRate: 'GST Rate',
-    isAsset: 'Capital Item',
 
     vendorCode: 'Vendor Code',
     vendorName: 'Vendor Name',

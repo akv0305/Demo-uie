@@ -150,7 +150,7 @@ export function ItemScreen({
       standardRate: row.standardRate ?? '',
       lastPurchaseRate: row.lastPurchaseRate ?? '',
       budgetRateRef: row.budgetRateRef ?? '',
-      isCapitalItem: row.isCapitalItem ?? row.isAsset ?? false,
+      isCapitalItem: row.isCapitalItem ?? false,
       isActive: row.isActive,
       remarks: row.remarks ?? '',
     });

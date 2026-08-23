@@ -29,10 +29,15 @@ The Item Master form has one FormSection per group, in that order.
 - Item with `isProduced` = plant output (RMC, WMM, hot mix). Enters stock via PRODUCTION, not GRN.
 - Fuel (HSD) is an Item with `itemType: 'FUEL'` and `isNonGst: true` on its HSN. Issued to Equipment, not to WBS.
 - `DocumentSummary.projectId` is nullable — head-office documents have no project.
+- `Item.gstRate` is stored but derived: the Item Master fills it from the selected HSN code and disables the input (D-034). The HSN master owns the rate.
+- `Item.isCapitalItem` is the single flag for capital items. The former `isAsset` was removed in D-038 — do not reintroduce it.
+
 
 ## 5. Known gaps (deliberate)
 | Gap | Decision |
 |---|---|
 | `Project.contractValueCr` leaks crore into the model (violates R2) | DEF-013 open — rename to `contractValue` in rupees when fixtures are next edited |
 | No `revisionNo` on `DocumentSummary` yet | Add when the first revisable document screen is built |
-| Valuation policy (weighted average, negative stock) | Q-06 unanswered by client |
+| Valuation policy (weighted average, negative stock) | Q-14 unanswered by client |
+| `UomConversion` typed but never built or seeded | DEF-025 — build in Step 8 or drop from the contract |
+| `MasterAudit.updatedBy`/`updatedOn` never written | DEF-026 — containers only set `createdBy` |

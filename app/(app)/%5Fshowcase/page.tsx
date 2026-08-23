@@ -474,7 +474,7 @@ export default function ShowcasePage() {
             />
             <CheckboxField
               id="sc-checkbox"
-              label={t.masters.isAsset}
+              label={t.masters.isCapitalItem}
               checked={checked}
               onChange={setChecked}
               description="Capital items are tracked in the asset register."

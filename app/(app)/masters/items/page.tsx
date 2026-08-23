@@ -37,7 +37,6 @@ function toItem(v: ItemFormValues): Omit<Item, 'id'> {
     hsnCode: v.hsnCode,
     gstRate: v.gstRate,
     reorderLevel: n(v.reorderLevel) ?? 0,
-    isAsset: v.isCapitalItem,
     isActive: v.isActive,
     shortName: v.shortName || undefined,
     subGroup: v.subGroup || undefined,

@@ -3,6 +3,16 @@ Q-xxx numbered, never deleted. Mark answers inline and move the item to
 §Closed. Owner = project owner decides · Client = needs client input.
 
 **Blocking now**
+_None._
+
+**Open — asset and tax questions**
+- Q-35 Original vector logo files (SVG or AI/EPS, transparent background) from
+  the client's designer. The supplied PNG has a baked-in white box, so the mark
+  cannot sit on navy and will pixelate at large sizes. *Ask at next touchpoint.*
+- Q-36 Confirm current GST rates per HSN/SAC with the client's CA before UAT,
+  and whether cement is procured under any concessional rate or reverse charge.
+- Q-37 Does UIE need HSN rate history (rate changing from a date), or only the
+  current rate? `effectiveFrom` exists but no versioning is built.
 
 
 **Needed before dashboards (Step 18)**
@@ -60,8 +70,7 @@ Q-xxx numbered, never deleted. Mark answers inline and move the item to
 - Q-31 Auth approach for production: Auth.js credentials + Argon2id
   (recommended) vs hand-rolled session layer.
 - Q-32 Owner's weekly review hours — the real throughput constraint.
-| Q-36 | Confirm current GST rates per HSN/SAC with the client's CA before UAT — the fixture uses rates as at the last rationalisation known to us, and slabs change. Also confirm whether cement is procured under any concessional rate or reverse charge. | Open — questionnaire item, not blocking |
-| Q-37 | Does UIE need HSN-wise rate history (rate changing from a date) or only the current rate? `effectiveFrom` exists but no versioning is built. | Open — affects Phase 1 scope if history is required |
+
 
 ## Closed
 - Q-01 (Owner) Dev environment: Codespaces, local, or other? -- Dev
@@ -70,5 +79,4 @@ Q-xxx numbered, never deleted. Mark answers inline and move the item to
   demo URL with fabricated data + noindex. Stated, accepted. -- Client name is displayed
 - Q-33 Approve Zod as a dependency? - Zod is Approved
 - Q-34 Approve react-hook-form? - Approved
-| Q-35 | Original vector logo files (SVG or AI/EPS) with transparent background from the client's designer. The supplied PNG has a baked-in white box, which restricts the mark to light surfaces and will pixelate at large sizes. | Open — ask at the next client touchpoint, not blocking |
 
