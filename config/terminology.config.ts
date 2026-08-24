@@ -212,9 +212,6 @@ export const terminology = {
 
     gstRate: 'GST Rate',
 
-    vendorCode: 'Vendor Code',
-    vendorName: 'Vendor Name',
-    vendorCategory: 'Supply Category',
     paymentTerms: 'Payment Terms',
     creditDays: 'Credit Days',
     msmeNo: 'MSME Registration No.',
@@ -365,6 +362,49 @@ export const terminology = {
     grpELECTRICAL: 'Electrical',
     grpSAFETY: 'Safety',
     isCapitalItem: 'Capital Item / Asset',
+
+        vendorFull: 'Vendor & Supplier Master',
+    vendorSubtitle: 'Every supplier, hire vendor and transporter you raise a purchase order or hire bill against.',
+    vendorNew: 'New Vendor',
+    vendorEdit: 'Edit Vendor',
+    vendorEmpty: 'No vendors defined',
+    vendorEmptyHint: 'Add a supplier such as a cement agency or stone crusher to get started.',
+    vendorDuplicateCode: 'This vendor code is already in use.',
+    vendorDuplicateGstin: 'A vendor with this GSTIN already exists.',
+
+    secVendorIdentity: 'Identity & Category',
+    secVendorTax: 'Tax Registration',
+    secVendorContact: 'Address & Contact',
+    secVendorCommercial: 'Payment Terms',
+    secVendorBank: 'Bank Details',
+
+    vendorCode: 'Vendor Code',
+    vendorName: 'Vendor Name',
+    vendorCategory: 'Supply Category',
+    vendorGstin: 'GSTIN',
+    vendorPan: 'PAN',
+    vendorMsme: 'MSME / Udyam Number',
+    vendorAddress: 'Address',
+    vendorCity: 'City',
+    vendorState: 'State',
+    vendorContactPerson: 'Contact Person',
+    vendorPhone: 'Phone',
+    vendorEmail: 'Email',
+    vendorPaymentTerms: 'Payment Terms',
+    vendorCreditDays: 'Credit Days',
+    vendorBankAccount: 'Bank Account Number',
+    vendorIfsc: 'IFSC Code',
+
+    catCEMENT: 'Cement',
+    catSTEEL: 'Steel',
+    catAGGREGATE: 'Aggregate',
+    catBITUMEN: 'Bitumen',
+    catDIESEL: 'Diesel & Lubricants',
+    catHARDWARE: 'Hardware',
+    catEQUIPMENT_HIRE: 'Equipment Hire',
+    catTRANSPORT: 'Transport',
+    catELECTRICAL: 'Electrical',
+    catRMC: 'Ready Mix Concrete',
 
   },
 
@@ -805,6 +845,11 @@ export const terminology = {
     itemUnits: 'Materials are often bought in one unit and stored in another. Cement is purchased in bags but tracked in tonnes. Recording the conversion factor keeps stock and purchase figures reconciled.',
     itemStock: 'Minimum and reorder levels drive the low-stock alerts on the home page. Lead time is how long the vendor typically takes, so the alert fires early enough to act.',
     itemValuation: 'How the value of stock on hand is calculated when material arrives at different rates. Weighted average is the common choice for construction materials.',
+
+    vendor: 'The master record for anyone you buy from or hire. Purchase orders, receipts and bills all point back here, so the GSTIN and payment terms set here flow into every downstream document and the Tally export.',
+    vendorGstin: 'Fifteen characters. The first two digits are the state code, the next ten are the PAN, and the rest identify the registration. The system checks all three agree, because a wrong GSTIN means the input tax credit is lost.',
+    vendorMsme: 'Udyam registration number, if the vendor is a registered micro or small enterprise. Worth capturing because payments to MSME vendors carry a statutory time limit, and finance will need the flag at payment run.',
+    vendorCreditDays: 'How many days after the invoice date payment falls due. Drives the payables ageing view and the overdue alerts.',
 
   },
 } as const;

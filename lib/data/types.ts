@@ -161,7 +161,7 @@ export type VendorCategory =
   | 'ELECTRICAL'
   | 'RMC';
 
-export interface Vendor {
+export interface Vendor extends MasterAudit {
   id: string;
   code: string;
   name: string;

@@ -13,6 +13,13 @@ _None._
   and whether cement is procured under any concessional rate or reverse charge.
 - Q-37 Does UIE need HSN rate history (rate changing from a date), or only the
   current rate? `effectiveFrom` exists but no versioning is built.
+- Q-38 (Client) MSME vendors: payments to registered micro and small enterprises
+  carry a statutory time limit, and non-compliance has tax consequences for the
+  buyer. Should the system flag MSME vendors at payment run and warn on overdue
+  MSME payables, or is `msmeNo` captured for reference only? Confirm the current
+  limit with the client's CA before building any logic.
+- Q-39 (Client) Vendor codes are currently `UIE/V/0001`. Is that the real house
+  format, and should new codes auto-number or stay manual?
 
 
 **Needed before dashboards (Step 18)**

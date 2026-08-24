@@ -28,7 +28,8 @@ across the remaining masters, starting with Vendors.
 | 5 | UOM Master | ✅ DONE | 17 fixtures, D-022/023/024 |
 | 6 | HSN/SAC Master | ✅ DONE | 22 fixtures, derived tax split (D-028), isNonGst (D-029) |
 | 7 | Item Master | ✅ DONE | 9 cross-field rules, 12 columns, 6-section dialog, GST derived from HSN (D-034), static import route (D-036) |
-| 8 | Remaining masters | ⬜ NOT STARTED | Vendors → Subcontractors → Sites/Stores → Employees → Departments → Equipment → Projects → Companies |
+| 8 | Vendor Master | ✅ DONE | 10 fixtures. GSTIN/PAN/IFSC validation with PAN-in-GSTIN and state-code cross-checks (D-045). Container is 45 lines on the shared hook |
+| 8b | Remaining masters | ⬜ NOT STARTED | Subcontractors → Sites/Stores → Employees → Departments → Equipment → Projects → Companies |
 | 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 ## Defect register (from P0 audit)
