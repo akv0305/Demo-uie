@@ -55,11 +55,12 @@ across the remaining masters, starting with Vendors.
 | DEF-019 | Low | `PageAction.variant` lacks `'success'` although Button supports it | Open |
 | DEF-020 | Med | `FilterState` is closed; module filters have no home | Closed 2026-08-21 by D-022 |
 | DEF-021 | Low | `listItems` sorts by string coercion; numeric columns sort lexically | Open — acceptable for demo |
-| DEF-022 | Med | Optional numeric fields typed `number \| ''` end to end; each container repeats the strip logic in `toItem()`. Extract a shared helper before Step 8 replicates it | Open |
+| DEF-022 | Med | Optional numeric fields typed `number \| ''` with per-screen conversion | Closed 2026-08-22 — extracted to `lib/forms.ts` (D-041). Note: only Items had the pattern; UOM and HSN use required numbers |
 | DEF-023 | Low | Item import wizard shows fixed preview rows; does not read the uploaded file | Open — blocked on xlsx decision |
 | DEF-024 | — | Withdrawn 2026-08-22. Claimed `toItem()` erases `Item.lastPurchaseDate` on edit; it does not — the key is absent from the patch object, so the original survives the spread. The field is written by goods-receipt posting, which is out of Phase 1 scope | Not a defect |
 | DEF-025 | Low | `UomConversion` type has no screen and no fixtures — dead type | Open — build in Step 8 or drop from the contract |
-| DEF-026 | Med | `MasterAudit.updatedBy`/`updatedOn` never written on edit. Client will ask "who changed this" during walkthroughs | Open |
+| DEF-026 | Med | `MasterAudit.updatedBy`/`updatedOn` never written on edit | Closed 2026-08-22 — stamped by `useMasterCollection` (D-043) |
+| DEF-027 | High | Patch upsert replaced the whole patch object instead of merging, so toggling a fixture row's status discarded any earlier field edit. Present in all three master containers | Closed 2026-08-22 — hook merges `{ ...hit.patch, ...values }` (D-042) |
 
 
 ## Confirmed good (do not re-audit)

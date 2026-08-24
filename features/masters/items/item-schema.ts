@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { ItemGroup, ItemType, ValuationMethod } from '@/lib/data/types';
 
+
 export const ITEM_GROUPS = [
   'CEMENT', 'STEEL', 'AGGREGATE', 'SAND', 'GRANULAR', 'BITUMEN', 'RMC', 'MASONRY',
   'SHUTTERING', 'CONSUMABLE', 'FUEL', 'ADMIXTURE', 'PIPES_FITTINGS', 'ELECTRICAL', 'SAFETY',
@@ -33,10 +34,9 @@ export const SUB_GROUPS: Record<ItemGroup, string[]> = {
   SAFETY: ['Helmet', 'Jacket', 'Harness', 'Glove', 'Barricade'],
 };
 
-/** Numeric fields the user may leave blank. NumberField emits '' when cleared. */
-const optNum = z.union([z.number(), z.literal('')]).optional();
-const num = (v: number | '' | undefined): number | undefined =>
-  v === '' || v === undefined ? undefined : v;
+import { num, optionalNumber } from '@/lib/forms';
+
+const optNum = optionalNumber();
 
 export const itemSchema = z
   .object({
