@@ -24,6 +24,9 @@ _None._
 | Q-41 | Should the labour licence expiry date be tracked, not just the licence number? | The fixture holds a licence number only. Licences under the Contract Labour Act expire, and the Document Expiry Tracker screen already exists to flag such dates. | Client — Compliance | Open |
 | Q-42 | Can a company ever be deactivated, given projects, sites and employees point at it? | The toggle exists for consistency with other masters and warns about dependents, but it may need to be removed or restricted to entities with no linked records. | Client — Accounts | Open |
 | Q-43 | Do SPVs and JVs need separate GST registrations per state of operation? | The contract holds one GSTIN per company. A company working across state lines needs one registration per state, which would make GSTIN a child collection rather than a field. | Client — Accounts | Open |
+| Q-44 | Are departments shared across all companies, or defined per company? | `Department` has no `companyId`, so the demo treats the eight departments as group-wide. An SPV or JV with its own Accounts function would need departments scoped per company. | Client — HR/Accounts | Open |
+| Q-45 | Must a department head be an employee already posted to that department? | The fixtures follow that convention but it cannot be enforced without blocking the creation of a new department. Currently advisory. | Client — HR | Open |
+| Q-46 | Should approval routing point at the department head post, or at a named employee? | Routing by post survives a change of personnel; routing by name does not. Affects how the approval matrix screen is modelled. | Client — Management | Open |
 
 
 **Needed before dashboards (Step 18)**

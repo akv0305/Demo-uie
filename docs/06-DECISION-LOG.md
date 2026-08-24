@@ -55,6 +55,9 @@ one SUPERSEDED. Never edit history.
 | D-048 | 2026-08-24 | `Vendor` and `Subcontractor` now extend `MasterAudit` | Closes DEF-026 for these two masters. The `useMasterCollection` hook was already stamping `updatedBy`/`updatedOn` into patches for types that did not declare the fields. |
 | D-049 | 2026-08-24 | `Company` gains optional `isActive` and extends `MasterAudit` | The hook's toggle needs the flag and fixture rows do not carry it, so every read treats missing as active (`isActive !== false`). Avoids backfilling three fixture rows with a field the client has not confirmed they want. |
 | D-050 | 2026-08-24 | CIN is required for PARENT and SPV, optional for JV | An unincorporated joint venture has no Registrar of Companies number. The JV fixture held `cin: '—'`, display filler in the data layer, now `''` with the dash rendered by the column. |
+| D-051 | 2026-08-24 | `Department` gains optional `isActive` and extends `MasterAudit` | Same treatment as `Company` (D-049). Fixture rows carry no flag, so reads use `isActive !== false`. |
+| D-052 | 2026-08-24 | Column definitions become factories where a foreign key must render as a name | `departmentColumns(employeeName)` takes a resolver instead of importing data. Keeps the columns file presentational and free of data-layer imports, which the lint rule forbids anyway. Projects, Sites and Employees will follow this shape. |
+| D-053 | 2026-08-24 | Department head / employee department mismatch is advisory, not blocking | A new department has no employees posted to it, so a hard rule would make the first save impossible. The form shows which department the chosen head currently sits in and lets the save proceed. |
 
 
 ## Superseded decisions

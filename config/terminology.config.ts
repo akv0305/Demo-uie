@@ -467,6 +467,26 @@ export const terminology = {
     entSPV: 'Special Purpose Vehicle',
     entJV: 'Joint Venture',
 
+        depFull: 'Department Master',
+    depSubtitle: 'Functional departments used for routing approvals and grouping employees.',
+    depNew: 'New Department',
+    depEdit: 'Edit Department',
+    depEmpty: 'No departments defined',
+    depEmptyHint: 'Departments group employees and decide who approves what, so at least one is needed.',
+    depDuplicateCode: 'This department code is already in use.',
+    depDuplicateName: 'A department with this name already exists.',
+    depCode: 'Department Code',
+    depName: 'Department Name',
+    depHead: 'Department Head',
+    depHeadNone: 'Not assigned',
+    depHeadHint: 'By convention the head is an employee already posted to this department.',
+    depHeadOtherDept: 'This employee is currently posted to {dept}.',
+    depDeactivateWarning:
+      'Employees are linked to this department. Deactivating hides it from new entries but leaves existing records untouched.',
+
+    secDepIdentity: 'Department',
+    secDepOwner: 'Ownership',
+
   },
 
   // ===========================================================================
@@ -920,6 +940,10 @@ export const terminology = {
       'The legal entity that signs the contract and raises the invoice. Projects, purchase orders and GST returns all roll up to a company, so the entity chosen here decides which books a transaction lands in.',
     companyCin:
       'The Corporate Identity Number issued by the Registrar of Companies. Incorporated entities have one; an unincorporated joint venture does not, which is why the field is not required for a JV.',
+    department:
+      'Departments decide who approves what. A purchase indent raised at site routes to Procurement, and a payment to Accounts, so the department set on an employee determines which queue their documents land in.',
+    departmentHead:
+      'The person accountable for the department. Approval rules can be written against the department head rather than a named person, so the workflow keeps working when the post changes hands.',
 
   },
 } as const;

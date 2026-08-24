@@ -105,11 +105,13 @@ export interface Site {
   isStore: boolean;
 }
 
-export interface Department {
+export interface Department extends MasterAudit {
   id: string;
   code: string;
   name: string;
   headEmployeeId?: string;
+  /** Absent on fixture rows; treat missing as active. */
+  isActive?: boolean;
 }
 
 // ===========================================================================
