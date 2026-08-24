@@ -7,6 +7,10 @@ import { createRecord, listRecords, updateRecord } from '@/lib/data';
 export interface MasterRow {
   id: string;
   isActive?: boolean;
+  createdBy?: string;
+  createdOn?: string;
+  updatedBy?: string;
+  updatedOn?: string;
 }
 
 /** Edits to fixture rows are stored as patch records (D-023). */
@@ -18,6 +22,10 @@ interface PatchRecord<T> {
 
 const DEMO_USER = 'Demo User';
 const today = () => new Date().toISOString().slice(0, 10);
+
+const asPatch = <T,>(o: Partial<MasterRow> & object): Partial<T> =>
+  o as unknown as Partial<T>;
+
 
 export interface UseMasterCollectionOptions<T extends MasterRow, F> {
   /** Store key for locally created rows. Patches use `${entityKey}.patch`. */
@@ -111,11 +119,11 @@ export function useMasterCollection<T extends MasterRow, F>({
 
   const update = React.useCallback(
     async (id: string, values: F) => {
-      const next = {
+      const next = asPatch<T>({
         ...toDomainRef.current(values),
         updatedBy: DEMO_USER,
         updatedOn: today(),
-      } as Partial<T>;
+      });
       if (isLocal(id)) await updateRecord<T>(entityKey, id, next);
       else await writePatch(id, next);
       await reload();
@@ -125,11 +133,11 @@ export function useMasterCollection<T extends MasterRow, F>({
 
   const toggleActive = React.useCallback(
     async (row: T) => {
-      const next = {
+      const next = asPatch<T>({
         isActive: !(row.isActive ?? true),
         updatedBy: DEMO_USER,
         updatedOn: today(),
-      } as Partial<T>;
+      });
       if (isLocal(row.id)) await updateRecord<T>(entityKey, row.id, next);
       else await writePatch(row.id, next);
       await reload();
