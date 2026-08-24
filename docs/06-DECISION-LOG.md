@@ -53,6 +53,8 @@ one SUPERSEDED. Never edit history.
 | D-046 | 2026-08-24 | Labour contractors are a filtered view of the Subcontractor master, not a separate master | One `Subcontractor` type with an `isLabourContractor` flag backs both routes. `/masters/labour-contractors` renders the same screen with the flag locked on and rows pre-filtered, sharing `entityKey: 'subcontractor'`. Two independent masters over one array would let the same agency be created twice. Reversible if the client says labour contractors carry fields subcontractors do not. |
 | D-047 | 2026-08-24 | GSTIN/PAN/IFSC validators extracted to `lib/masters/tax-validators.ts` | Vendor and Subcontractor both need the PAN-inside-GSTIN and state-code checks; companies and employees will too. `vendor-schema.ts` re-exports `INDIAN_STATES` and `STATE_CODES` so existing imports are unchanged. |
 | D-048 | 2026-08-24 | `Vendor` and `Subcontractor` now extend `MasterAudit` | Closes DEF-026 for these two masters. The `useMasterCollection` hook was already stamping `updatedBy`/`updatedOn` into patches for types that did not declare the fields. |
+| D-049 | 2026-08-24 | `Company` gains optional `isActive` and extends `MasterAudit` | The hook's toggle needs the flag and fixture rows do not carry it, so every read treats missing as active (`isActive !== false`). Avoids backfilling three fixture rows with a field the client has not confirmed they want. |
+| D-050 | 2026-08-24 | CIN is required for PARENT and SPV, optional for JV | An unincorporated joint venture has no Registrar of Companies number. The JV fixture held `cin: '—'`, display filler in the data layer, now `''` with the dash rendered by the column. |
 
 
 ## Superseded decisions

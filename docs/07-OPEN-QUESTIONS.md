@@ -22,6 +22,8 @@ _None._
   format, and should new codes auto-number or stay manual?
 | Q-40 | Is a labour contractor a flag on the subcontractor record, or a separate party master? | Demo treats it as a flag (D-046). If labour contractors carry PF/ESI codes, wage rates or gang composition that subcontractors do not, they need their own master. | Client — HR/Accounts | Open |
 | Q-41 | Should the labour licence expiry date be tracked, not just the licence number? | The fixture holds a licence number only. Licences under the Contract Labour Act expire, and the Document Expiry Tracker screen already exists to flag such dates. | Client — Compliance | Open |
+| Q-42 | Can a company ever be deactivated, given projects, sites and employees point at it? | The toggle exists for consistency with other masters and warns about dependents, but it may need to be removed or restricted to entities with no linked records. | Client — Accounts | Open |
+| Q-43 | Do SPVs and JVs need separate GST registrations per state of operation? | The contract holds one GSTIN per company. A company working across state lines needs one registration per state, which would make GSTIN a child collection rather than a field. | Client — Accounts | Open |
 
 
 **Needed before dashboards (Step 18)**

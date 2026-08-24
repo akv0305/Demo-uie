@@ -441,6 +441,32 @@ export const terminology = {
     trdELECTRICAL: 'Electrical',
     trdPLUMBING: 'Plumbing',
 
+    cmpFull: 'Company Master',
+    cmpSubtitle: 'Legal entities that own projects — the parent company, SPVs and joint ventures.',
+    cmpNew: 'New Company',
+    cmpEdit: 'Edit Company',
+    cmpEmpty: 'No companies defined',
+    cmpEmptyHint: 'Every project belongs to a company, so at least one entity is needed here.',
+    cmpDuplicateCode: 'This company code is already in use.',
+    cmpDuplicateGstin: 'A company with this GSTIN already exists.',
+    cmpCode: 'Company Code',
+    cmpName: 'Company Name',
+    cmpLegalName: 'Registered Legal Name',
+    cmpType: 'Entity Type',
+    cmpCin: 'CIN',
+    cmpPincode: 'PIN Code',
+    cmpDeactivateWarning:
+      'Projects, sites and employees are linked to this company. Deactivating hides it from new entries but leaves existing records untouched.',
+
+    secCmpIdentity: 'Entity',
+    secCmpTax: 'Statutory Registration',
+    secCmpAddress: 'Registered Address',
+    secCmpContact: 'Contact',
+
+    entPARENT: 'Parent Company',
+    entSPV: 'Special Purpose Vehicle',
+    entJV: 'Joint Venture',
+
   },
 
   // ===========================================================================
@@ -889,6 +915,11 @@ export const terminology = {
       'The agency that executes work at site. Work orders, measurement sheets and running account bills all point back to a record here, so the code set here follows the agency through the whole system.',
     labourLicence:
       'An agency supplying twenty or more workers needs a licence under the Contract Labour Act. Recording the licence number here lets the system flag it before it expires, which is what an audit or a client inspection asks for.',
+
+    company:
+      'The legal entity that signs the contract and raises the invoice. Projects, purchase orders and GST returns all roll up to a company, so the entity chosen here decides which books a transaction lands in.',
+    companyCin:
+      'The Corporate Identity Number issued by the Registrar of Companies. Incorporated entities have one; an unincorporated joint venture does not, which is why the field is not required for a JV.',
 
   },
 } as const;

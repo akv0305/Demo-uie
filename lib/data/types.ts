@@ -45,7 +45,7 @@ export interface ApprovalStep {
 // ===========================================================================
 export type CompanyType = 'PARENT' | 'SPV' | 'JV';
 
-export interface Company {
+export interface Company extends MasterAudit {
   id: string;
   code: string;
   name: string;
@@ -61,6 +61,7 @@ export interface Company {
   contactPerson: string;
   phone: string;
   email: string;
+  isActive?: boolean;
 }
 
 export type ProjectType =

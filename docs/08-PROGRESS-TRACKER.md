@@ -29,7 +29,7 @@ across the remaining masters, starting with Vendors.
 | 6 | HSN/SAC Master | ✅ DONE | 22 fixtures, derived tax split (D-028), isNonGst (D-029) |
 | 7 | Item Master | ✅ DONE | 9 cross-field rules, 12 columns, 6-section dialog, GST derived from HSN (D-034), static import route (D-036) |
 | 8 | Vendor Master | ✅ DONE | 10 fixtures. GSTIN/PAN/IFSC validation with PAN-in-GSTIN and state-code cross-checks (D-045). Container is 45 lines on the shared hook |
-| 8b | Remaining masters | ⬜ NOT STARTED | Subcontractors → Sites/Stores → Employees → Departments → Equipment → Projects → Companies |
+| 8b | Remaining masters | ⬜ NOT STARTED | Subcontractors → Sites/Stores → Employees → Departments → Equipment → Projects → Companies ✅ DONE|
 | 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 ## Defect register (from P0 audit)
@@ -62,6 +62,7 @@ across the remaining masters, starting with Vendors.
 | DEF-025 | Low | `UomConversion` type has no screen and no fixtures — dead type | Open — build in Step 8 or drop from the contract |
 | DEF-026 | Med | `MasterAudit.updatedBy`/`updatedOn` never written on edit | Closed 2026-08-22 — stamped by `useMasterCollection` (D-043) |
 | DEF-027 | High | Patch upsert replaced the whole patch object instead of merging, so toggling a fixture row's status discarded any earlier field edit. Present in all three master containers | Closed 2026-08-22 — hook merges `{ ...hit.patch, ...values }` (D-042) |
+| DEF-028 | Low | Display filler (`'—'`) stored in fixture data — `Company.cin` on the JV row | Closed 2026-08-24 — fixture set to `''`, dash moved to the column renderer (D-050). Worth a sweep for the same pattern elsewhere. |
 
 
 ## Confirmed good (do not re-audit)
