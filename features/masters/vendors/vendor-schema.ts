@@ -1,25 +1,20 @@
 import { z } from 'zod';
 import type { VendorCategory } from '@/lib/data/types';
+import {
+  GSTIN_RE,
+  IFSC_RE,
+  PAN_RE,
+  panInGstin,
+  stateFromGstin,
+} from '@/lib/masters/tax-validators';
+
+/** Re-exported so existing screen imports from this module keep working. */
+export { INDIAN_STATES, STATE_CODES } from '@/lib/masters/tax-validators';
 
 export const VENDOR_CATEGORIES = [
   'CEMENT', 'STEEL', 'AGGREGATE', 'BITUMEN', 'DIESEL',
   'HARDWARE', 'EQUIPMENT_HIRE', 'TRANSPORT', 'ELECTRICAL', 'RMC',
 ] as const satisfies readonly VendorCategory[];
-
-/** GST state codes. Used to cross-check the first two digits of a GSTIN. */
-export const STATE_CODES: Record<string, string> = {
-  '03': 'Punjab', '06': 'Haryana', '07': 'Delhi', '08': 'Rajasthan',
-  '09': 'Uttar Pradesh', '10': 'Bihar', '19': 'West Bengal', '21': 'Odisha',
-  '22': 'Chhattisgarh', '23': 'Madhya Pradesh', '24': 'Gujarat',
-  '27': 'Maharashtra', '29': 'Karnataka', '32': 'Kerala',
-  '33': 'Tamil Nadu', '36': 'Telangana', '37': 'Andhra Pradesh',
-};
-
-export const INDIAN_STATES = Object.values(STATE_CODES).sort();
-
-const GSTIN_RE = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]Z[0-9A-Z]$/;
-const PAN_RE = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-const IFSC_RE = /^[A-Z]{4}0[A-Z0-9]{6}$/;
 
 export const vendorSchema = z
   .object({
@@ -52,7 +47,8 @@ export const vendorSchema = z
   })
   .superRefine((v, ctx) => {
     // The PAN is embedded in the GSTIN at positions 3-12. They must agree.
-    if (GSTIN_RE.test(v.gstin) && PAN_RE.test(v.pan) && v.gstin.slice(2, 12) !== v.pan) {
+    const pan = panInGstin(v.gstin);
+    if (pan && PAN_RE.test(v.pan) && pan !== v.pan) {
       ctx.addIssue({
         code: 'custom',
         path: ['pan'],
@@ -60,15 +56,13 @@ export const vendorSchema = z
       });
     }
     // The first two digits of the GSTIN are the state code.
-    if (GSTIN_RE.test(v.gstin) && v.state) {
-      const expected = STATE_CODES[v.gstin.slice(0, 2)];
-      if (expected && expected !== v.state) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['state'],
-          message: `GSTIN state code belongs to ${expected}.`,
-        });
-      }
+    const expected = stateFromGstin(v.gstin);
+    if (expected && v.state && expected !== v.state) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['state'],
+        message: `GSTIN state code belongs to ${expected}.`,
+      });
     }
     // Advance payment and credit days contradict each other.
     if (v.creditDays > 0 && /advance/i.test(v.paymentTerms)) {

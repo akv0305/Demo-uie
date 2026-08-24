@@ -192,7 +192,7 @@ export type SubcontractorTrade =
   | 'ELECTRICAL'
   | 'PLUMBING';
 
-export interface Subcontractor {
+export interface Subcontractor extends MasterAudit {
   id: string;
   code: string;
   name: string;

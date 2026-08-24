@@ -363,7 +363,7 @@ export const terminology = {
     grpSAFETY: 'Safety',
     isCapitalItem: 'Capital Item / Asset',
 
-        vendorFull: 'Vendor & Supplier Master',
+    vendorFull: 'Vendor & Supplier Master',
     vendorSubtitle: 'Every supplier, hire vendor and transporter you raise a purchase order or hire bill against.',
     vendorNew: 'New Vendor',
     vendorEdit: 'Edit Vendor',
@@ -405,6 +405,41 @@ export const terminology = {
     catTRANSPORT: 'Transport',
     catELECTRICAL: 'Electrical',
     catRMC: 'Ready Mix Concrete',
+
+    subFull: 'Subcontractor Master',
+    subSubtitle: 'Agencies executing work at site against work orders and measured bills.',
+    subNew: 'New Subcontractor',
+    subEdit: 'Edit Subcontractor',
+    subEmpty: 'No subcontractors defined',
+    subEmptyHint: 'Add an agency such as an earthwork or shuttering contractor to get started.',
+    subDuplicateCode: 'This subcontractor code is already in use.',
+    subDuplicateGstin: 'A subcontractor with this GSTIN already exists.',
+    subCode: 'Subcontractor Code',
+    subName: 'Agency Name',
+    subIsLabour: 'Labour Contractor',
+    subLicenceNo: 'Labour Licence No.',
+    subLicenceRequired: 'Labour licence number is required for a labour contractor.',
+    subLicenceOrphan: 'Tick Labour Contractor, or clear the licence number.',
+
+    labourFull: 'Labour Contractor Master',
+    labourSubtitle: 'Agencies supplying labour on a muster-roll basis, tracked for licence compliance.',
+    labourNew: 'New Labour Contractor',
+    labourEmpty: 'No labour contractors defined',
+    labourEmptyHint: 'Labour contractors are subcontractors with a labour licence on record.',
+
+    secSubIdentity: 'Identification',
+    secSubTax: 'Tax Registration',
+    secSubContact: 'Contact',
+    secSubCompliance: 'Labour Compliance',
+
+    trdEARTHWORK: 'Earthwork',
+    trdSHUTTERING: 'Shuttering & Staging',
+    trdBAR_BENDING: 'Bar Bending',
+    trdCONCRETING: 'Concreting',
+    trdBLOCKWORK_PLASTER: 'Blockwork & Plastering',
+    trdBITUMINOUS: 'Bituminous Work',
+    trdELECTRICAL: 'Electrical',
+    trdPLUMBING: 'Plumbing',
 
   },
 
@@ -850,6 +885,10 @@ export const terminology = {
     vendorGstin: 'Fifteen characters. The first two digits are the state code, the next ten are the PAN, and the rest identify the registration. The system checks all three agree, because a wrong GSTIN means the input tax credit is lost.',
     vendorMsme: 'Udyam registration number, if the vendor is a registered micro or small enterprise. Worth capturing because payments to MSME vendors carry a statutory time limit, and finance will need the flag at payment run.',
     vendorCreditDays: 'How many days after the invoice date payment falls due. Drives the payables ageing view and the overdue alerts.',
+    subcontractor:
+      'The agency that executes work at site. Work orders, measurement sheets and running account bills all point back to a record here, so the code set here follows the agency through the whole system.',
+    labourLicence:
+      'An agency supplying twenty or more workers needs a licence under the Contract Labour Act. Recording the licence number here lets the system flag it before it expires, which is what an audit or a client inspection asks for.',
 
   },
 } as const;

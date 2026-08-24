@@ -20,6 +20,8 @@ _None._
   limit with the client's CA before building any logic.
 - Q-39 (Client) Vendor codes are currently `UIE/V/0001`. Is that the real house
   format, and should new codes auto-number or stay manual?
+| Q-40 | Is a labour contractor a flag on the subcontractor record, or a separate party master? | Demo treats it as a flag (D-046). If labour contractors carry PF/ESI codes, wage rates or gang composition that subcontractors do not, they need their own master. | Client — HR/Accounts | Open |
+| Q-41 | Should the labour licence expiry date be tracked, not just the licence number? | The fixture holds a licence number only. Licences under the Contract Labour Act expire, and the Document Expiry Tracker screen already exists to flag such dates. | Client — Compliance | Open |
 
 
 **Needed before dashboards (Step 18)**
