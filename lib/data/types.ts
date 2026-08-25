@@ -96,16 +96,20 @@ export interface Project extends MasterAudit {
 
 export type SiteType = 'MAIN_STORE' | 'SITE_STORE' | 'SITE_OFFICE' | 'PLANT';
 
-export interface Site {
+export interface Site extends MasterAudit {
   id: string;
   companyId: string;
+  /** Null = company-level, e.g. the central store serving every project. */
   projectId: string | null;
   code: string;
   name: string;
   type: SiteType;
   location: string;
+  /** Empty string or absent = not assigned. */
   storeKeeperId?: string;
   isStore: boolean;
+  /** Absent on fixture rows; treat missing as active. */
+  isActive?: boolean;
 }
 
 export interface Department extends MasterAudit {

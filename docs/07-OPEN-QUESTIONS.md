@@ -20,6 +20,8 @@ _None._
   limit with the client's CA before building any logic.
 - Q-39 (Client) Vendor codes are currently `UIE/V/0001`. Is that the real house
   format, and should new codes auto-number or stay manual?
+
+**Open — master data model (Step 8)**
 | Q-40 | Is a labour contractor a flag on the subcontractor record, or a separate party master? | Demo treats it as a flag (D-046). If labour contractors carry PF/ESI codes, wage rates or gang composition that subcontractors do not, they need their own master. | Client — HR/Accounts | Open |
 | Q-41 | Should the labour licence expiry date be tracked, not just the licence number? | The fixture holds a licence number only. Licences under the Contract Labour Act expire, and the Document Expiry Tracker screen already exists to flag such dates. | Client — Compliance | Open |
 | Q-42 | Can a company ever be deactivated, given projects, sites and employees point at it? | The toggle exists for consistency with other masters and warns about dependents, but it may need to be removed or restricted to entities with no linked records. | Client — Accounts | Open |
@@ -34,6 +36,9 @@ _None._
 | Q-51 | Which project types are measured in chainage besides roads? | `LINEAR_TYPES` currently holds ROAD only. Pipelines, canals and transmission lines are also chainage-measured but are not in `ProjectType`. | Client — Planning | Open |
 | Q-52 | Should a project have more than one manager, or a manager history? | One `projectManagerId` today. A two-year contract usually sees a handover, and approval routing by project manager would follow the current holder. | Client — Projects | Open |
 | Q-53 | Can a project belong to more than one company (JV sharing)? | `companyId` is single. A JV project is billed by the JV entity, which the fixtures model as its own company, so this may already be sufficient. | Client — Accounts | Open |
+| Q-54 | Should a plant or yard hold stock, and can it do so without a named store keeper? | `SITE-SH19-HMP` (hot mix plant) is flagged as holding stock with no keeper. A plant consumes aggregate and produces mix, so it holds material even if nobody is formally posted there. If plants need a keeper, the field becomes conditionally required. | Client — Stores/Plant | Open |
+| Q-55 | Must a store keeper belong to the Stores department? | The employee lookup currently offers every active employee. `DEP-STR` exists, so the restriction is expressible, but a small site store is often run by the site engineer. | Client — Stores/HR | Open |
+| Q-56 | Should deactivating a site be blocked while it holds non-zero stock? | Stock balances are held per site. Deactivating a location with material still on the books hides that stock from every screen without writing it off. The warning currently says balances stay on record. | Client — Stores/Accounts | Open |
 
 
 **Needed before dashboards (Step 18)**

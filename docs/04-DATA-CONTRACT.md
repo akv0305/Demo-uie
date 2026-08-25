@@ -1,5 +1,6 @@
 # DATA CONTRACT
-Version 1.0 · 2026-08-21 · Source of truth: `lib/data/types.ts`
+Version 1.1 · 2026-08-25 · Source of truth: `lib/data/types.ts`
+
 
 ## 1. Rules
 | # | Rule |
@@ -10,6 +11,8 @@ Version 1.0 · 2026-08-21 · Source of truth: `lib/data/types.ts`
 | R4 | Every document type carries: companyId, projectId, siteId, status, revisionNo, createdBy/On, updatedBy/On. |
 | R5 | New fields on existing types are OPTIONAL. Fixtures must keep compiling. |
 | R6 | Fixture field names = future Prisma field names. Renaming later costs a migration. |
+| R7 | A cleared optional foreign key is written as `''`, never `undefined`. Prisma will map `''` to `null` at handover. | 
+
 
 ## 2. Master types
 | Type | Key fields | Notes |
@@ -19,6 +22,11 @@ Version 1.0 · 2026-08-21 · Source of truth: `lib/data/types.ts`
 | `HsnSac` | code, kind, gstRate, cgst/sgst/igst, effectiveFrom, isNonGst | cgst=sgst=gst/2, igst=gst |
 | `Item` | 8 mandatory legacy fields + 6 optional groups | See §3 |
 | `ItemGroupDef` | code, name, subGroups[] | Groups rendered from data, not hard-coded |
+| `Company` | code, name, legalName, type, gstin, pan, cin, isActive? | CIN required for PARENT/SPV, optional for JV (D-050) |
+| `Department` | code, name, headEmployeeId?, isActive? | Group-wide, no `companyId` — see Q-44 |
+| `Employee` | code, name, designation, departmentId, companyId, projectId, isActive | `projectId: null` = not posted to a project |
+| `Project` | code, name, shortName, type, client, contractValue, status | `status`, not `isActive` (D-058). Value in rupees (D-059) |
+| `Site` | code, name, type, companyId, projectId, location, storeKeeperId?, isStore, isActive? | `projectId: null` only for MAIN_STORE (D-065) |
 
 ## 3. Item field groups
 Identification · Type & behaviour · Units · Stock control · Costing reference · Classification.
@@ -36,8 +44,9 @@ The Item Master form has one FormSection per group, in that order.
 ## 5. Known gaps (deliberate)
 | Gap | Decision |
 |---|---|
-| `Project.contractValueCr` leaks crore into the model (violates R2) | DEF-013 open — rename to `contractValue` in rupees when fixtures are next edited |
 | No `revisionNo` on `DocumentSummary` yet | Add when the first revisable document screen is built |
 | Valuation policy (weighted average, negative stock) | Q-14 unanswered by client |
 | `UomConversion` typed but never built or seeded | DEF-025 — build in Step 8 or drop from the contract |
-| `MasterAudit.updatedBy`/`updatedOn` never written | DEF-026 — containers only set `createdBy` |
+| | `Equipment` does not extend `MasterAudit` | Last type outstanding from D-044; fix when the Equipment screen is built |
+| Optional FKs must be cleared to `''`, not `undefined` | D-067 — `JSON.stringify` drops undefined keys, so the patch merge keeps the stale value |
+

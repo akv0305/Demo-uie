@@ -564,6 +564,34 @@ export const terminology = {
     ptWAREHOUSE: 'Warehouse',
     ptBUILDING: 'Building',
 
+    sitFull: 'Site & Store Master',
+    sitSubtitle: 'Physical locations where material is received, stored, issued or produced.',
+    sitNew: 'New Site / Store',
+    sitEdit: 'Edit Site / Store',
+    sitEmpty: 'No sites or stores defined',
+    sitEmptyHint: 'Every receipt and issue happens at a store, so at least one is needed.',
+    sitDuplicateCode: 'This site code is already in use.',
+    sitCode: 'Site / Store Code',
+    sitIsStore: 'Holds Stock',
+    sitIsStoreForced: 'A main store or site store always holds stock.',
+    sitStoreKeeperOrphan: 'Tick Holds Stock, or clear the store keeper.',
+    sitStoreKeeperNone: 'Not assigned',
+    sitProjectRequired: 'A site store, plant or site office belongs to a project.',
+    sitProjectOnMain: 'A main store serves every project, so leave the project blank.',
+    sitProjectCompanyMismatch: 'This project belongs to {company}.',
+    sitProjectNone: 'Company level / no project',
+    sitDeactivateWarning:
+      'Stock balances and documents at this location stay on record. Deactivating removes it from new entries.',
+
+    secSitIdentity: 'Identification',
+    secSitOwnership: 'Company & Project',
+    secSitStock: 'Stock Handling',
+
+    stMAIN_STORE: 'Main Store',
+    stSITE_STORE: 'Site Store',
+    stSITE_OFFICE: 'Site Office',
+    stPLANT: 'Plant / Yard',
+
   },
 
   // ===========================================================================
@@ -1033,6 +1061,10 @@ export const terminology = {
       'Chainage marks distance along a linear work in kilometres and metres, so Km 24+000 means 24 kilometres and zero metres. Roads and pipelines are measured this way; a bridge or building is not, so the fields stay blank for those.',
     projectContractValue:
       'The awarded contract value, stored in rupees and shown in crore. Variations and escalation are handled as separate documents rather than by editing this figure.',
+        site:
+      'The physical location a document happens at. A goods receipt lands at a store, an issue leaves one, and stock is counted per location — so the site list decides where stock can exist at all.',
+    siteStock:
+      'Only locations that hold stock appear in receipt, issue and transfer screens. A site office is a place people work, not a place material sits, so it is excluded.',
 
   },
 } as const;

@@ -34,6 +34,9 @@ export interface UseMasterCollectionOptions<T extends MasterRow, F> {
   fetchFixtures: () => Promise<T[]>;
   /** Form values to domain shape. */
   toDomain: (values: F) => Omit<T, 'id'>;
+    /** False for masters with their own status field (Projects use `status`). */
+  supportsActiveToggle?: boolean;
+
 }
 
 /**
@@ -46,6 +49,7 @@ export function useMasterCollection<T extends MasterRow, F>({
   entityKey,
   fetchFixtures,
   toDomain,
+  supportsActiveToggle = true,
 }: UseMasterCollectionOptions<T, F>) {
   const [fixtureRows, setFixtureRows] = React.useState<T[]>([]);
   const [localRows, setLocalRows] = React.useState<T[]>([]);

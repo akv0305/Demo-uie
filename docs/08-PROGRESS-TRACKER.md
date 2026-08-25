@@ -1,11 +1,12 @@
 # PROGRESS TRACKER
-Last updated: 2026-08-21 · Update this at the end of every session.
+Last updated: 2026-08-25 · Update this at the end of every session.
 
 ## Current position
-**Step 7 complete. UOM, HSN/SAC and Item masters are built and verified.**
-Item Master is the frozen golden path (D-024, D-035). `lint`, `typecheck` and
-`build` pass on Node 20. Next action is Step 8 — replicating the pattern
-across the remaining masters, starting with Vendors.
+**Step 8 in progress. Ten masters built: UOM, HSN/SAC, Item, Vendor,
+Subcontractor (+ Labour Contractor view), Company, Department, Employee,
+Project, Site & Store.** Item Master is the frozen golden path (D-024, D-035);
+`useMasterCollection` (D-042) is the shared container. Next action is Equipment,
+then WBS, which closes Step 8.
 
 
 ## Phase status
@@ -29,8 +30,16 @@ across the remaining masters, starting with Vendors.
 | 6 | HSN/SAC Master | ✅ DONE | 22 fixtures, derived tax split (D-028), isNonGst (D-029) |
 | 7 | Item Master | ✅ DONE | 9 cross-field rules, 12 columns, 6-section dialog, GST derived from HSN (D-034), static import route (D-036) |
 | 8 | Vendor Master | ✅ DONE | 10 fixtures. GSTIN/PAN/IFSC validation with PAN-in-GSTIN and state-code cross-checks (D-045). Container is 45 lines on the shared hook |
-| 8b | Remaining masters | ⬜ NOT STARTED | Subcontractors → Sites/Stores → Employees ✅ DONE → Departments ✅ DONE → Equipment → Projects → Companies ✅ DONE|
-| 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
+| 8b | Subcontractor Master (+ Labour Contractor view) | ✅ DONE | 9 fixtures, 3 flagged labour. One type, two routes (D-046). Tax validators extracted (D-047) |
+| 8c | Company Master | ✅ DONE | 3 fixtures. CIN required for PARENT/SPV, optional for JV (D-050). Closes DEF-028 |
+| 8d | Department Master | ✅ DONE | 8 fixtures. First foreign key in a table; column factories (D-052). Head rule advisory (D-053) |
+| 8e | Employee Master | ✅ DONE | Company→project interlock (D-055), cross-company reporting advisory (D-056), reporting cycles blocked (D-057). Closes DEF-029 |
+| 8f | Project Master | ✅ DONE | `status` not `isActive` (D-058). Closes DEF-013 — `contractValue` in rupees (D-059). Chainage for linear types only (D-061) |
+| 8g | Site & Store Master | ✅ DONE | 7 fixtures. Main store is company-level (D-065), store types forced to hold stock (D-066), hyphens allowed in codes (D-069) |
+| 8h | Equipment Master | ⬜ NOT STARTED | Needs the `MasterAudit` change still outstanding from D-044 |
+| 8i | WBS Master | ⬜ NOT STARTED | Hierarchical — first master that is not a flat list |
+| 9–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
+
 
 ## Defect register (from P0 audit)
 | ID | Severity | Item | Status |
@@ -63,8 +72,12 @@ across the remaining masters, starting with Vendors.
 | DEF-026 | Med | `MasterAudit.updatedBy`/`updatedOn` never written on edit | Closed 2026-08-22 — stamped by `useMasterCollection` (D-043) |
 | DEF-027 | High | Patch upsert replaced the whole patch object instead of merging, so toggling a fixture row's status discarded any earlier field edit. Present in all three master containers | Closed 2026-08-22 — hook merges `{ ...hit.patch, ...values }` (D-042) |
 | DEF-028 | Low | Display filler (`'—'`) stored in fixture data — `Company.cin` on the JV row | Closed 2026-08-24 — fixture set to `''`, dash moved to the column renderer (D-050). Worth a sweep for the same pattern elsewhere. |
-| DEF-029 | Med | Department fixtures reference employee ids (`EMP-1020`, `EMP-1030`, `EMP-1040`) that were not verified to exist in the employee fixtures | Open 2026-08-24 — screen renders "Not assigned" for an unresolved id rather than an empty cell, so a dangling reference is visible. Verify during the Employees master build and fix the fixture if any id is missing. |
 | DEF-029 | Med | Department fixtures reference employee ids not verified to exist | Closed 2026-08-25 — false alarm. All eight heads (`EMP-1001/1005/1020/1010/1030/1040/1050/1060`) exist in the employee fixtures, and each sits in the department they head, so the Q-45 convention holds throughout. |
+| DEF-030 | High | `useMasterCollection.toggleActive` guarded with `'isActive' in row`, a runtime key-presence test. Fixture rows for departments, companies and sites omit the optional flag, so deactivating any of them threw instead of working | Closed 2026-08-25 — replaced by the explicit `supportsActiveToggle` option (D-068). Projects pass `false` |
+| DEF-031 | Med | Optional foreign keys cleared to `undefined` are dropped by `JSON.stringify`, so the patch never overwrites the stored value and the cleared lookup reverts on reload. Confirmed pattern risk on `Department.headEmployeeId` | Open 2026-08-25 — Sites store `''` per D-067. Check the Department container's `toDomain` and change it to `''` if it maps blank to `undefined` |
+| DEF-032 | Low | `06-DECISION-LOG.md` rows D-046..D-057 were written with four cells in a five-column table, so the Status column rendered empty | Closed 2026-08-25 — trailing `ACTIVE` added to all twelve |
+| DEF-033 | Low | `07-OPEN-QUESTIONS.md` held Q-40..Q-53 as table rows inside a bulleted section with no header row, rendering as literal pipe text | Closed 2026-08-25 — moved under a new "master data model" section with a header |
+| DEF-034 | Med | `D-060` recorded three money helpers (`asCrore`, `asShortMoney`, `asRupees`) that were never written to `lib/format.ts`; a decision described intent rather than code | Closed 2026-08-25 — D-063 supersedes and records the real exports. Same root cause as DEF-024 and D-039 |
 
 
 ## Confirmed good (do not re-audit)
@@ -79,7 +92,8 @@ static export config. `DataTable` API. Fixture domain fidelity (real IS
 and MoRTH specifications).
 
 ## Registers (kept in separate files)
-- Decisions → `06-DECISION-LOG.md` (D-001 … D-037)
-- Defects → this file, §Defect register (DEF-001 … DEF-026)
-- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-37; Q-01, Q-02, Q-03, Q-33, Q-34 closed)
+- Decisions → `06-DECISION-LOG.md` (D-001 … D-069; D-012 and D-060 superseded)
+- Defects → this file, §Defect register (DEF-001 … DEF-034)
+- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-56; Q-01, Q-02, Q-03, Q-33, Q-34 closed)
 - Session history → `09-SESSION-LOG.md`
+
