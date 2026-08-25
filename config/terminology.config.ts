@@ -634,6 +634,36 @@ export const terminology = {
     esBREAKDOWN: 'Breakdown',
     esUNDER_MAINTENANCE: 'Under Maintenance',
 
+    wbsFull: 'Work Breakdown Structure',
+    wbsSubtitle: 'Cost codes a project is planned, measured and billed against.',
+    wbsNew: 'New WBS Node',
+    wbsEdit: 'Edit WBS Node',
+    wbsChild: 'Add Child Node',
+    wbsEmpty: 'No WBS defined for this project',
+    wbsEmptyHint: 'Measurements, budgets and cost reports all post against a WBS code.',
+    wbsSelectProject: 'Select a project to view its work breakdown.',
+    wbsDuplicateCode: 'This code is already used in this project.',
+    wbsCode: 'WBS Code',
+    wbsName: 'Description',
+    wbsParent: 'Parent Node',
+    wbsParentNone: 'Top level',
+    wbsLevel: 'Level',
+    wbsBudgetedQty: 'Budgeted Qty',
+    wbsBudgetedCost: 'Budgeted Cost',
+    wbsExecutedQty: 'Executed Qty',
+    wbsActualCost: 'Actual Cost',
+    wbsVariance: 'Variance',
+    wbsExecutionReadOnly: 'Maintained from measurement books — not editable here.',
+    wbsParentCycle: 'A node cannot be its own parent or descendant.',
+    wbsParentCrossProject: 'The parent must belong to the same project.',
+    wbsHasChildren: 'This node has child nodes. Budget is normally entered at the lowest level.',
+    wbsDeactivateWarning:
+      'Measurements and costs already booked stay on record. Deactivating removes the code from new entries.',
+
+    secWbsIdentity: 'Identification',
+    secWbsBudget: 'Budget',
+    secWbsExecution: 'Execution',
+
   },
 
   // ===========================================================================
@@ -1113,6 +1143,8 @@ export const terminology = {
       'Hired plant is billed per hour or per day against a vendor. The rate recorded here is the reference the hire bill is checked against.',
     equipmentReading:
       'Plant is measured in running hours and vehicles in kilometres. Both are held in one field, so the service due figure must be read in the same unit as the current reading.',
+    wbsBudget:
+      'Budget is normally entered at the lowest level of the tree, because a parent total is the sum of its children. Entering both invites the two disagreeing.',
 
   },
 } as const;

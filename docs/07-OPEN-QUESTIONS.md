@@ -43,6 +43,10 @@ _None._
 | Q-58 | Should hour-meter and odometer be separate fields? | `currentHmr` holds running hours for plant (8,942) and kilometres for vehicles (142,850). A tipper has both. Fuel efficiency is litres/hour for plant and km/litre for vehicles, so the fuel module will need to know which it is reading. | Client — Plant | Open |
 | Q-59 | Must hired equipment come from an `EQUIPMENT_HIRE` vendor? | The lookup filters to that category, which leaves one vendor. If plant is hired from transporters or contractors too, the filter should widen or drop. | Client — Procurement | Open |
 | Q-60 | Can one machine move between projects, and should history be kept? | `projectId` is a single current value, so a transfer overwrites the old posting with no record of when it moved. Idle-time and utilisation reporting per project needs the history. | Client — Plant | Open |
+| Q-61 | Should parent budgets be entered, or rolled up from children? | Both are stored today. Four of five fixture parents equal the sum of their children exactly; one does not (DEF-035). If rollup is the rule, the parent field should be computed and locked. | Client — Project Controls | Open |
+| Q-62 | How many WBS levels does UIE actually use? | Fixtures stop at two. The screen allows four and the code format extends indefinitely. Billing schedules often run to four or five. | Client — Project Controls | Open |
+| Q-63 | Should the WBS be a collapsible tree rather than an indented list? | Indented list today (D-077). At two levels and 27 nodes it reads fine; at four levels and several hundred it would not. | Owner | Open |
+| Q-64 | Can WBS codes be fractional in quantity, and can a node be measured in two units? | `budgetedQty` is entered as a whole number because `NumberField` is integer-only. Fixtures are all whole. Steel measured in MT and NOS would need a second unit. | Client — Project Controls | Open |
 
 
 **Needed before dashboards (Step 18)**

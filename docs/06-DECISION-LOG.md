@@ -78,6 +78,12 @@ one SUPERSEDED. Never edit history.
 | D-072 | 2026-08-25 | `Equipment.type` stays free text. `EQUIPMENT_TYPES` in the schema offers the 14 fixture values as searchable suggestions without constraining input. | A union would need a code change every time the fleet buys a machine class it has not owned before. Revisit if the client wants type-wise utilisation reporting — see Q-57. | ACTIVE |
 | D-073 | 2026-08-25 | Hire fields are required for `HIRED` and cleared for `OWNED`. Equipment-hire vendors only in the lookup. | A hire rate on owned plant is meaningless data that would flow into hire-bill checking. | ACTIVE |
 | D-074 | 2026-08-25 | Service-due is computed by `isServiceOverdue()` in the schema file, shared by list and form. | Two fixtures are already overdue, so the rule is visible on load rather than needing contrived data. Reading and date are both checked because a machine can pass either threshold first. | ACTIVE |
+| D-075 | 2026-08-25 | `WbsNode` extends `MasterAudit` and gains optional `isActive`. | Last master type without audit fields. All 27 fixtures compile unchanged. | ACTIVE |
+| D-076 | 2026-08-25 | WBS is scoped to one project at a time via a mandatory project selector, not a global list. | `listWbsNodes(projectId)` requires a project, and a combined tree across four projects has no meaningful root. | ACTIVE |
+| D-077 | 2026-08-25 | Hierarchy is rendered as an indent column in `DataTable`, ordered depth-first by `sortTree()`. No column is sortable. | Reuses the shipped table with its export, column toggle and mobile cards. Sorting any column would break the parent-child adjacency the indent relies on. Revisit if the client wants collapsible branches — see Q-63. | ACTIVE |
+| D-078 | 2026-08-25 | `level` is computed from the selected parent and never typed. Code depth must match it, and a child's code must be prefixed by its parent's. | `level` and `parentId` are redundant in the type, so the screen keeps them in step rather than trusting input. Matches the fixture convention exactly. | ACTIVE |
+| D-079 | 2026-08-25 | `uomCode` and `budgetedQty` are required together or absent together. | Every fixture node with a unit has a quantity. A cost-only rollup node has neither. | ACTIVE |
+| D-080 | 2026-08-25 | Budget is entered in crore and stored in rupees; `executedQty` and `actualCost` are display-only. | Consistent with Project (D-059, D-062). Execution figures come from measurement books, so an editable field would let someone type over a measured value. | ACTIVE |
 
 
 ## Superseded decisions

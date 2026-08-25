@@ -37,7 +37,7 @@ then WBS, which closes Step 8.
 | 8f | Project Master | ✅ DONE | `status` not `isActive` (D-058). Closes DEF-013 — `contractValue` in rupees (D-059). Chainage for linear types only (D-061) |
 | 8g | Site & Store Master | ✅ DONE | 7 fixtures. Main store is company-level (D-065), store types forced to hold stock (D-066), hyphens allowed in codes (D-069) |
 | 8h | Equipment Master | ✅ DONE | 21 fixtures. Closes D-044 — last MasterAudit gap. Status independent of isActive (D-071), type free text (D-072) |
-| 8i | WBS Master | ⬜ NOT STARTED | Hierarchical — first master that is not a flat list |
+| 8i | WBS Master | ✅ DONE | 27 fixtures, 4 projects. Per-project selector (D-076), indent column (D-077), level derived (D-078) |
 | 9–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 
@@ -78,6 +78,7 @@ then WBS, which closes Step 8.
 | DEF-032 | Low | `06-DECISION-LOG.md` rows D-046..D-057 were written with four cells in a five-column table, so the Status column rendered empty | Closed 2026-08-25 — trailing `ACTIVE` added to all twelve |
 | DEF-033 | Low | `07-OPEN-QUESTIONS.md` held Q-40..Q-53 as table rows inside a bulleted section with no header row, rendering as literal pipe text | Closed 2026-08-25 — moved under a new "master data model" section with a header |
 | DEF-034 | Med | `D-060` recorded three money helpers (`asCrore`, `asShortMoney`, `asRupees`) that were never written to `lib/format.ts`; a decision described intent rather than code | Closed 2026-08-25 — D-063 supersedes and records the real exports. Same root cause as DEF-024 and D-039 |
+| DEF-035 | Med | `WBS-SH19-01` (Road Works) does not equal the sum of its six children: budget 1,684,000,000 against 1,333,105,000 (short ₹35.09 Cr), actual 712,400,000 against 561,458,200. The other four parent nodes balance exactly on both figures | Open 2026-08-25 — correct the parent to the child sums, or confirm per Q-61 that parents hold unitemised scope |
 
 
 ## Confirmed good (do not re-audit)

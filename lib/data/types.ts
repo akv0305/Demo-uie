@@ -422,18 +422,22 @@ export interface Equipment extends MasterAudit {
 // ===========================================================================
 // WBS / Cost codes
 // ===========================================================================
-export interface WbsNode {
+export interface WbsNode extends MasterAudit {
   id: string;
   projectId: string;
   code: string;
   name: string;
   parentId: string | null;
+  /** Derived from parentId depth. Stored for query convenience — see Q-61. */
   level: number;
   uomCode?: string;
   budgetedQty?: number;
   budgetedCost?: number;
+  /** Execution data from measurement books — display-only on the master form (D-062). */
   executedQty?: number;
   actualCost?: number;
+  /** Absent on fixture rows; treat missing as active. */
+  isActive?: boolean;
 }
 
 // ===========================================================================

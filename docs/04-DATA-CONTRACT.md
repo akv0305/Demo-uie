@@ -28,6 +28,7 @@ Version 1.1 · 2026-08-25 · Source of truth: `lib/data/types.ts`
 | `Project` | code, name, shortName, type, client, contractValue, status | `status`, not `isActive` (D-058). Value in rupees (D-059) |
 | `Site` | code, name, type, companyId, projectId, location, storeKeeperId?, isStore, isActive? | `projectId: null` only for MAIN_STORE (D-065) |
 | `Equipment` | code, name, type, ownership, projectId, siteId, status, currentHmr, isActive | `status` is operational, separate from `isActive` (D-071). `type` free text (D-072) |
+| `WbsNode` | projectId, code, name, parentId, level, uomCode?, budgetedQty?, budgetedCost?, isActive? | Tree via `parentId`; `level` derived (D-078). Execution fields display-only (D-080) |
 
 
 ## 3. Item field groups
