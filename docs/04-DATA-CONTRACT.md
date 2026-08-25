@@ -27,6 +27,8 @@ Version 1.1 · 2026-08-25 · Source of truth: `lib/data/types.ts`
 | `Employee` | code, name, designation, departmentId, companyId, projectId, isActive | `projectId: null` = not posted to a project |
 | `Project` | code, name, shortName, type, client, contractValue, status | `status`, not `isActive` (D-058). Value in rupees (D-059) |
 | `Site` | code, name, type, companyId, projectId, location, storeKeeperId?, isStore, isActive? | `projectId: null` only for MAIN_STORE (D-065) |
+| `Equipment` | code, name, type, ownership, projectId, siteId, status, currentHmr, isActive | `status` is operational, separate from `isActive` (D-071). `type` free text (D-072) |
+
 
 ## 3. Item field groups
 Identification · Type & behaviour · Units · Stock control · Costing reference · Classification.

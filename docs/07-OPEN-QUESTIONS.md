@@ -39,6 +39,10 @@ _None._
 | Q-54 | Should a plant or yard hold stock, and can it do so without a named store keeper? | `SITE-SH19-HMP` (hot mix plant) is flagged as holding stock with no keeper. A plant consumes aggregate and produces mix, so it holds material even if nobody is formally posted there. If plants need a keeper, the field becomes conditionally required. | Client — Stores/Plant | Open |
 | Q-55 | Must a store keeper belong to the Stores department? | The employee lookup currently offers every active employee. `DEP-STR` exists, so the restriction is expressible, but a small site store is often run by the site engineer. | Client — Stores/HR | Open |
 | Q-56 | Should deactivating a site be blocked while it holds non-zero stock? | Stock balances are held per site. Deactivating a location with material still on the books hides that stock from every screen without writing it off. The warning currently says balances stay on record. | Client — Stores/Accounts | Open |
+| Q-57 | Should equipment type be a controlled list? | Free text today (D-072). A controlled list is needed for type-wise utilisation and hire-rate benchmarking, but means a master screen or a code change per new machine class. | Client — Plant | Open |
+| Q-58 | Should hour-meter and odometer be separate fields? | `currentHmr` holds running hours for plant (8,942) and kilometres for vehicles (142,850). A tipper has both. Fuel efficiency is litres/hour for plant and km/litre for vehicles, so the fuel module will need to know which it is reading. | Client — Plant | Open |
+| Q-59 | Must hired equipment come from an `EQUIPMENT_HIRE` vendor? | The lookup filters to that category, which leaves one vendor. If plant is hired from transporters or contractors too, the filter should widen or drop. | Client — Procurement | Open |
+| Q-60 | Can one machine move between projects, and should history be kept? | `projectId` is a single current value, so a transfer overwrites the old posting with no record of when it moved. Idle-time and utilisation reporting per project needs the history. | Client — Plant | Open |
 
 
 **Needed before dashboards (Step 18)**

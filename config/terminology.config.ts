@@ -592,6 +592,48 @@ export const terminology = {
     stSITE_OFFICE: 'Site Office',
     stPLANT: 'Plant / Yard',
 
+    eqpFull: 'Equipment & Vehicle Master',
+    eqpSubtitle: 'Owned and hired plant, vehicles and gensets, with deployment and service position.',
+    eqpNew: 'New Equipment',
+    eqpEdit: 'Edit Equipment',
+    eqpEmpty: 'No equipment defined',
+    eqpEmptyHint: 'Log books, fuel issues and maintenance all post against an equipment record.',
+    eqpDuplicateCode: 'This equipment code is already in use.',
+    eqpDuplicateReg: 'This registration number is already recorded.',
+    eqpCode: 'Equipment Code',
+    eqpName: 'Description',
+    eqpType: 'Equipment Type',
+    eqpRegNo: 'Registration No.',
+    eqpOwnership: 'Ownership',
+    eqpHireVendor: 'Hire Vendor',
+    eqpHireRate: 'Hire Rate',
+    eqpHireRateUnit: 'Rate Per',
+    eqpOperator: 'Operator',
+    eqpOperatorNone: 'Not assigned',
+    eqpStatus: 'Operational Status',
+    eqpCurrentHmr: 'Current Reading',
+    eqpCurrentHmrHint: 'Hour meter for plant, odometer reading for vehicles.',
+    eqpNextServiceHmr: 'Next Service Due At',
+    eqpNextServiceDate: 'Next Service Due On',
+    eqpServiceOverdue: 'Service overdue',
+    eqpHireFieldsRequired: 'Hire vendor and rate are required for hired equipment.',
+    eqpHireFieldsOwned: 'Hire details apply to hired equipment only.',
+    eqpRegNoHint: 'Road-registered vehicles only. Plant and gensets have none.',
+    eqpDeactivateWarning:
+      'Log books, fuel and maintenance history stay on record. Deactivating removes it from new entries. Use Operational Status for a breakdown.',
+
+    secEqpIdentity: 'Identification',
+    secEqpOwnership: 'Ownership & Hire',
+    secEqpDeployment: 'Deployment',
+    secEqpService: 'Reading & Service',
+
+    eoOWNED: 'Owned',
+    eoHIRED: 'Hired',
+    esWORKING: 'Working',
+    esIDLE: 'Idle',
+    esBREAKDOWN: 'Breakdown',
+    esUNDER_MAINTENANCE: 'Under Maintenance',
+
   },
 
   // ===========================================================================
@@ -1065,6 +1107,12 @@ export const terminology = {
       'The physical location a document happens at. A goods receipt lands at a store, an issue leaves one, and stock is counted per location — so the site list decides where stock can exist at all.',
     siteStock:
       'Only locations that hold stock appear in receipt, issue and transfer screens. A site office is a place people work, not a place material sits, so it is excluded.',
+        equipment:
+      'Every fuel issue, log book entry and maintenance job posts against an equipment record, so the code here becomes the cost centre for plant expenditure.',
+    equipmentHire:
+      'Hired plant is billed per hour or per day against a vendor. The rate recorded here is the reference the hire bill is checked against.',
+    equipmentReading:
+      'Plant is measured in running hours and vehicles in kilometres. Both are held in one field, so the service due figure must be read in the same unit as the current reading.',
 
   },
 } as const;

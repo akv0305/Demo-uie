@@ -36,7 +36,7 @@ then WBS, which closes Step 8.
 | 8e | Employee Master | ✅ DONE | Company→project interlock (D-055), cross-company reporting advisory (D-056), reporting cycles blocked (D-057). Closes DEF-029 |
 | 8f | Project Master | ✅ DONE | `status` not `isActive` (D-058). Closes DEF-013 — `contractValue` in rupees (D-059). Chainage for linear types only (D-061) |
 | 8g | Site & Store Master | ✅ DONE | 7 fixtures. Main store is company-level (D-065), store types forced to hold stock (D-066), hyphens allowed in codes (D-069) |
-| 8h | Equipment Master | ⬜ NOT STARTED | Needs the `MasterAudit` change still outstanding from D-044 |
+| 8h | Equipment Master | ✅ DONE | 21 fixtures. Closes D-044 — last MasterAudit gap. Status independent of isActive (D-071), type free text (D-072) |
 | 8i | WBS Master | ⬜ NOT STARTED | Hierarchical — first master that is not a flat list |
 | 9–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 

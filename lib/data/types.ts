@@ -396,20 +396,23 @@ export type EquipmentOwnership = 'OWNED' | 'HIRED';
 
 export type EquipmentStatus = 'WORKING' | 'IDLE' | 'BREAKDOWN' | 'UNDER_MAINTENANCE';
 
-export interface Equipment {
+export interface Equipment extends MasterAudit {
   id: string;
   code: string;
   name: string;
+  /** Free text, not a union — see Q-57. Existing values: 'Excavator', 'Tipper', … */
   type: string;
   registrationNo?: string;
   ownership: EquipmentOwnership;
   hireVendorId?: string;
+  /** Rupees per hireRateUnit (R2). */
   hireRate?: number;
   hireRateUnit?: string;
   projectId: string | null;
   siteId: string | null;
   operatorEmployeeId?: string;
   status: EquipmentStatus;
+  /** Hour-meter for plant, odometer km for vehicles — see Q-58. */
   currentHmr: number;
   nextServiceDueHmr?: number;
   nextServiceDueDate?: string;
