@@ -89,3 +89,13 @@ export function toInputDate(value: string | Date | null | undefined): string {
 export function todayInputDate(): string {
   return format(new Date(), 'yyyy-MM-dd');
 }
+
+/** Crore → rupees. Forms accept crore; storage is whole rupees (D-059). */
+export function croreToRupees(crore: number): number {
+  return Math.round(crore * 10000000);
+}
+
+/** Rupees → crore, for prefilling a crore-denominated form field. */
+export function rupeesToCrore(rupees: number): number {
+  return rupees / 10000000;
+}

@@ -62,6 +62,11 @@ one SUPERSEDED. Never edit history.
 | D-055 | 2026-08-25 | Project lookup is filtered by the selected company | A project belongs to one company. Changing company clears a project that no longer belongs to it, rather than leaving an inconsistent pair. Sites will reuse this. |
 | D-056 | 2026-08-25 | Cross-company reporting is allowed and advisory only | `EMP-1002` (CMP-UIRPL) reports to `EMP-1001` (CMP-UIE) in the fixtures. Normal in a group with SPVs, so the form notes it rather than blocking. |
 | D-057 | 2026-08-25 | Reporting-line cycles blocked on edit by walking the chain | Self-reference and loops are rejected with the offending chain named in the message. Only applies when editing, since a new record has no id to loop back to. |
+| D-058 | 2026-08-25 | Projects have `status`, not `isActive`, and therefore no deactivate action | Adding `isActive` beside `status: ACTIVE/COMPLETED/ON_HOLD` would recreate the two-fields-one-truth defect removed in D-038. Status is edited on the form. `useMasterCollection.toggleActive` now throws if called on a type without the flag, rather than silently writing an untyped field. | ACTIVE |
+| D-059 | 2026-08-25 | `Project.contractValueCr` renamed to `contractValue` and stored in rupees; closes DEF-013 | The old field embedded a display unit in the model, against R2/D-010. Fixtures migrated exactly (214.75 Cr → 2147500000). The form still accepts crore and converts at the edge via `lib/format.ts`, which is where display units belong. | ACTIVE |
+| D-060 | 2026-08-25 | Money formatting helpers live in `lib/format.ts` | `asCrore`, `asShortMoney`, `asRupees`, `croreToRupees`, `rupeesToCrore`. Every money surface from here — POs, bills, dashboards — formats through these rather than dividing inline. | ACTIVE |
+| D-061 | 2026-08-25 | Chainage fields appear only for linear project types and must be entered as a pair | Km+m validated (`24+000`), ordering enforced, and switching away from a linear type clears both. A bridge or warehouse has no chainage, so showing the fields would invite meaningless data. | ACTIVE |
+| D-062 | 2026-08-25 | Progress percentages are display-only on the Project form | They are maintained from DPRs and measurement books. An editable field on the master would let someone type over a computed figure. | ACTIVE |
 
 
 ## Superseded decisions

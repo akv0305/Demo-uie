@@ -30,6 +30,10 @@ _None._
 | Q-47 | Should an employee's project posting be a single field or a history? | The contract holds one `projectId`. Site transfers are routine, and payroll or cost allocation across a transfer month needs the dates, which a single field cannot express. | Client — HR/Accounts | Open |
 | Q-48 | Are PF and ESI mandatory above a wage threshold? | Both optional in the demo. ESI applies below a wage ceiling and PF above a headcount threshold, so the rule is conditional on data the contract does not carry. | Client — HR | Open |
 | Q-49 | Should deactivating an employee be blocked while they are a department head or project manager? | `DEP-PRJ` names `EMP-1001` as head and `PRJ-SH19` names him as manager. Deactivating him today leaves both pointing at an inactive record. | Client — HR | Open |
+| Q-50 | Are variations and escalation separate documents, or do they revise the contract value in place? | The demo treats `contractValue` as the awarded figure and does not edit it. A revised-value field or a variation register may be needed for the order book MIS. | Client — Commercial | Open |
+| Q-51 | Which project types are measured in chainage besides roads? | `LINEAR_TYPES` currently holds ROAD only. Pipelines, canals and transmission lines are also chainage-measured but are not in `ProjectType`. | Client — Planning | Open |
+| Q-52 | Should a project have more than one manager, or a manager history? | One `projectManagerId` today. A two-year contract usually sees a handover, and approval routing by project manager would follow the current holder. | Client — Projects | Open |
+| Q-53 | Can a project belong to more than one company (JV sharing)? | `companyId` is single. A JV project is billed by the JV entity, which the fixtures model as its own company, so this may already be sufficient. | Client — Accounts | Open |
 
 
 **Needed before dashboards (Step 18)**

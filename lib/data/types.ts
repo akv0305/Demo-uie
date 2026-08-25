@@ -71,7 +71,7 @@ export type ProjectType =
   | 'WAREHOUSE'
   | 'BUILDING';
 
-export interface Project {
+export interface Project extends MasterAudit {
   id: string;
   companyId: string;
   code: string;
@@ -80,12 +80,15 @@ export interface Project {
   type: ProjectType;
   client: string;
   location: string;
-  contractValueCr: number; // in crore INR
+  /** Rupees. Crore/lakh is a formatting concern only (R2, D-010). */
+  contractValue: number;
   startDate: string;
   endDate: string;
+  /** Execution data, maintained from DPRs — display-only on the master form. */
   physicalProgressPct: number;
   financialProgressPct: number;
   projectManagerId: string;
+  /** Linear works only (road, pipeline). Blank for bridges and buildings. */
   chainageFrom?: string;
   chainageTo?: string;
   status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD';

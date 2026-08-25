@@ -518,6 +518,52 @@ export const terminology = {
     secEmpContact: 'Contact',
     company: 'Company',
     project: 'Project',
+
+    prjFull: 'Project Master',
+    prjSubtitle: 'Contracts under execution — the cost centre every document belongs to.',
+    prjNew: 'New Project',
+    prjEdit: 'Edit Project',
+    prjEmpty: 'No projects defined',
+    prjEmptyHint: 'Every indent, purchase order and bill belongs to a project, so at least one is needed.',
+    prjDuplicateCode: 'This project code is already in use.',
+    prjCode: 'Project Code',
+    prjName: 'Full Project Name',
+    prjShortName: 'Short Name',
+    prjType: 'Project Type',
+    prjClient: 'Client / Employer',
+    prjLocation: 'Location',
+    prjContractValue: 'Contract Value',
+    prjContractValueCr: 'Contract Value (₹ Cr)',
+    prjStartDate: 'Commencement Date',
+    prjEndDate: 'Scheduled Completion',
+    prjManager: 'Project Manager',
+    prjChainageFrom: 'Chainage From',
+    prjChainageTo: 'Chainage To',
+    prjChainageOrder: 'Chainage To must be beyond Chainage From.',
+    prjChainagePair: 'Enter both chainage points, or neither.',
+    prjPhysicalProgress: 'Physical Progress',
+    prjFinancialProgress: 'Financial Progress',
+    prjProgressNote: 'Maintained from daily progress reports — not editable here.',
+    prjEndBeforeStart: 'Completion date must be after the commencement date.',
+    prjManagerOtherCompany: 'This manager is posted to {company}.',
+    prjStatus: 'Project Status',
+
+    secPrjIdentity: 'Project',
+    secPrjContract: 'Contract',
+    secPrjSchedule: 'Schedule',
+    secPrjLinear: 'Chainage',
+    secPrjProgress: 'Progress',
+
+    prjACTIVE: 'Active',
+    prjCOMPLETED: 'Completed',
+    prjON_HOLD: 'On Hold',
+
+    ptROAD: 'Road',
+    ptBRIDGE: 'Bridge / Structure',
+    ptINDUSTRIAL_PARK: 'Industrial Park',
+    ptWAREHOUSE: 'Warehouse',
+    ptBUILDING: 'Building',
+
   },
 
   // ===========================================================================
@@ -981,6 +1027,12 @@ export const terminology = {
       'The reporting line is used where an approval rule says "the raiser\'s manager" rather than a named person, so the workflow survives transfers and promotions.',
     employeeStatutory:
       'PF and ESI numbers are needed on statutory returns. Not every employee has both, so neither is mandatory here.',
+        project:
+      'The contract being executed. Every indent, purchase order, issue and bill carries a project, which is how cost is attributed and how a client bill is built. Getting the project list right is a precondition for everything downstream.',
+    projectChainage:
+      'Chainage marks distance along a linear work in kilometres and metres, so Km 24+000 means 24 kilometres and zero metres. Roads and pipelines are measured this way; a bridge or building is not, so the fields stay blank for those.',
+    projectContractValue:
+      'The awarded contract value, stored in rupees and shown in crore. Variations and escalation are handled as separate documents rather than by editing this figure.',
 
   },
 } as const;

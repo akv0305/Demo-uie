@@ -47,7 +47,7 @@ across the remaining masters, starting with Vendors.
 | DEF-010 | Low | `'var(--heading-weight)' as unknown as string` cast in tailwind.config | Open |
 | DEF-011 | Low | `ApprovalAction` mixes actions with states | Deferred to production |
 | DEF-012 | Med | `Item.isAsset` duplicated `isCapitalItem` | Closed 2026-08-22 — `isAsset` removed from the type and all 28 fixtures; `isCapitalItem` is the single field (D-038) |
-| DEF-013 | Med | `Project.contractValueCr: number` — display unit in the model, money as float. Violates R2/D-010 | Open |
+| DEF-013 | High | `Project.contractValueCr` stores crore, embedding a display unit in the model against R2/D-010 | Closed 2026-08-25 — renamed to `contractValue` in rupees, fixtures migrated, form converts at the edge (D-059, D-060). |
 | DEF-014 | Med | Login brand panel used `text-foreground` on navy → unreadable | Closed 2026-08-20 by revert (D-013) |
 | DEF-015 | High | Uppercase `.PNG` would 404 on Netlify | Closed 2026-08-21 |
 | DEF-016 | Low | `BrandLogo` asset paths | Closed 2026-08-21 — component reads `themeConfig.brand`; source arrays are an intentional SVG→PNG→monogram fallback chain (D-011) |

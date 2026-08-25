@@ -131,8 +131,11 @@ export function useMasterCollection<T extends MasterRow, F>({
     [entityKey, isLocal, reload, writePatch],
   );
 
-  const toggleActive = React.useCallback(
+    const toggleActive = React.useCallback(
     async (row: T) => {
+      if (!('isActive' in row)) {
+        throw new Error(`${entityKey} has no isActive field; use update() with its own status field.`);
+      }
       const next = asPatch<T>({
         isActive: !(row.isActive ?? true),
         updatedBy: DEMO_USER,
