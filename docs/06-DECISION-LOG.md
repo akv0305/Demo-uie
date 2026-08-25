@@ -58,6 +58,10 @@ one SUPERSEDED. Never edit history.
 | D-051 | 2026-08-24 | `Department` gains optional `isActive` and extends `MasterAudit` | Same treatment as `Company` (D-049). Fixture rows carry no flag, so reads use `isActive !== false`. |
 | D-052 | 2026-08-24 | Column definitions become factories where a foreign key must render as a name | `departmentColumns(employeeName)` takes a resolver instead of importing data. Keeps the columns file presentational and free of data-layer imports, which the lint rule forbids anyway. Projects, Sites and Employees will follow this shape. |
 | D-053 | 2026-08-24 | Department head / employee department mismatch is advisory, not blocking | A new department has no employees posted to it, so a hard rule would make the first save impossible. The form shows which department the chosen head currently sits in and lets the save proceed. |
+| D-054 | 2026-08-25 | `Employee` extends `MasterAudit`; `Department` audit/isActive edit re-applied | The `Department` change from D-051 was not present in `lib/data/types.ts` when re-read, so it is restated here. |
+| D-055 | 2026-08-25 | Project lookup is filtered by the selected company | A project belongs to one company. Changing company clears a project that no longer belongs to it, rather than leaving an inconsistent pair. Sites will reuse this. |
+| D-056 | 2026-08-25 | Cross-company reporting is allowed and advisory only | `EMP-1002` (CMP-UIRPL) reports to `EMP-1001` (CMP-UIE) in the fixtures. Normal in a group with SPVs, so the form notes it rather than blocking. |
+| D-057 | 2026-08-25 | Reporting-line cycles blocked on edit by walking the chain | Self-reference and loops are rejected with the offending chain named in the message. Only applies when editing, since a new record has no id to loop back to. |
 
 
 ## Superseded decisions

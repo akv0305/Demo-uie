@@ -27,6 +27,9 @@ _None._
 | Q-44 | Are departments shared across all companies, or defined per company? | `Department` has no `companyId`, so the demo treats the eight departments as group-wide. An SPV or JV with its own Accounts function would need departments scoped per company. | Client — HR/Accounts | Open |
 | Q-45 | Must a department head be an employee already posted to that department? | The fixtures follow that convention but it cannot be enforced without blocking the creation of a new department. Currently advisory. | Client — HR | Open |
 | Q-46 | Should approval routing point at the department head post, or at a named employee? | Routing by post survives a change of personnel; routing by name does not. Affects how the approval matrix screen is modelled. | Client — Management | Open |
+| Q-47 | Should an employee's project posting be a single field or a history? | The contract holds one `projectId`. Site transfers are routine, and payroll or cost allocation across a transfer month needs the dates, which a single field cannot express. | Client — HR/Accounts | Open |
+| Q-48 | Are PF and ESI mandatory above a wage threshold? | Both optional in the demo. ESI applies below a wage ceiling and PF above a headcount threshold, so the rule is conditional on data the contract does not carry. | Client — HR | Open |
+| Q-49 | Should deactivating an employee be blocked while they are a department head or project manager? | `DEP-PRJ` names `EMP-1001` as head and `PRJ-SH19` names him as manager. Deactivating him today leaves both pointing at an inactive record. | Client — HR | Open |
 
 
 **Needed before dashboards (Step 18)**

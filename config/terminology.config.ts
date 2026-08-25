@@ -487,6 +487,37 @@ export const terminology = {
     secDepIdentity: 'Department',
     secDepOwner: 'Ownership',
 
+        empFull: 'Employee Master',
+    empSubtitle: 'People on the rolls, their posting and their reporting line.',
+    empNew: 'New Employee',
+    empEdit: 'Edit Employee',
+    empEmpty: 'No employees defined',
+    empEmptyHint: 'Employees raise and approve documents, so at least one record is needed.',
+    empDuplicateCode: 'This employee code is already in use.',
+    empDuplicateEmail: 'An employee with this email already exists.',
+    empCode: 'Employee Code',
+    empName: 'Employee Name',
+    empDesignation: 'Designation',
+    empDoj: 'Date of Joining',
+    empReportingTo: 'Reports To',
+    empReportingNone: 'No reporting manager',
+    empReportingSelf: 'An employee cannot report to themselves.',
+    empReportingCycle: 'This creates a reporting loop: {chain}.',
+    empReportingCrossCompany: 'Manager is in {company}. Cross-company reporting is allowed.',
+    empPf: 'PF Number',
+    empEsi: 'ESI Number',
+    empPosting: 'Posting',
+    empProjectNone: 'Head office / no project',
+    empProjectCompanyMismatch: 'This project belongs to {company}.',
+    empDeactivateWarning:
+      'Documents raised by this employee stay on record. Deactivating removes them from approver and assignment lists.',
+
+    secEmpIdentity: 'Identification',
+    secEmpPosting: 'Posting & Reporting',
+    secEmpStatutory: 'Statutory',
+    secEmpContact: 'Contact',
+    company: 'Company',
+    project: 'Project',
   },
 
   // ===========================================================================
@@ -944,6 +975,12 @@ export const terminology = {
       'Departments decide who approves what. A purchase indent raised at site routes to Procurement, and a payment to Accounts, so the department set on an employee determines which queue their documents land in.',
     departmentHead:
       'The person accountable for the department. Approval rules can be written against the department head rather than a named person, so the workflow keeps working when the post changes hands.',
+        employee:
+      'The person who raises, approves or receives a document. The department decides which approval queue their documents enter, and the project decides which books the cost lands in.',
+    employeeReporting:
+      'The reporting line is used where an approval rule says "the raiser\'s manager" rather than a named person, so the workflow survives transfers and promotions.',
+    employeeStatutory:
+      'PF and ESI numbers are needed on statutory returns. Not every employee has both, so neither is mandatory here.',
 
   },
 } as const;

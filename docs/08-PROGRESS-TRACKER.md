@@ -29,7 +29,7 @@ across the remaining masters, starting with Vendors.
 | 6 | HSN/SAC Master | ✅ DONE | 22 fixtures, derived tax split (D-028), isNonGst (D-029) |
 | 7 | Item Master | ✅ DONE | 9 cross-field rules, 12 columns, 6-section dialog, GST derived from HSN (D-034), static import route (D-036) |
 | 8 | Vendor Master | ✅ DONE | 10 fixtures. GSTIN/PAN/IFSC validation with PAN-in-GSTIN and state-code cross-checks (D-045). Container is 45 lines on the shared hook |
-| 8b | Remaining masters | ⬜ NOT STARTED | Subcontractors → Sites/Stores → Employees → Departments ✅ DONE → Equipment → Projects → Companies ✅ DONE|
+| 8b | Remaining masters | ⬜ NOT STARTED | Subcontractors → Sites/Stores → Employees ✅ DONE → Departments ✅ DONE → Equipment → Projects → Companies ✅ DONE|
 | 8–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 ## Defect register (from P0 audit)
@@ -64,6 +64,7 @@ across the remaining masters, starting with Vendors.
 | DEF-027 | High | Patch upsert replaced the whole patch object instead of merging, so toggling a fixture row's status discarded any earlier field edit. Present in all three master containers | Closed 2026-08-22 — hook merges `{ ...hit.patch, ...values }` (D-042) |
 | DEF-028 | Low | Display filler (`'—'`) stored in fixture data — `Company.cin` on the JV row | Closed 2026-08-24 — fixture set to `''`, dash moved to the column renderer (D-050). Worth a sweep for the same pattern elsewhere. |
 | DEF-029 | Med | Department fixtures reference employee ids (`EMP-1020`, `EMP-1030`, `EMP-1040`) that were not verified to exist in the employee fixtures | Open 2026-08-24 — screen renders "Not assigned" for an unresolved id rather than an empty cell, so a dangling reference is visible. Verify during the Employees master build and fix the fixture if any id is missing. |
+| DEF-029 | Med | Department fixtures reference employee ids not verified to exist | Closed 2026-08-25 — false alarm. All eight heads (`EMP-1001/1005/1020/1010/1030/1040/1050/1060`) exist in the employee fixtures, and each sits in the department they head, so the Q-45 convention holds throughout. |
 
 
 ## Confirmed good (do not re-audit)

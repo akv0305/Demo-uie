@@ -117,7 +117,7 @@ export interface Department extends MasterAudit {
 // ===========================================================================
 // People
 // ===========================================================================
-export interface Employee {
+export interface Employee extends MasterAudit {
   id: string;
   code: string;
   name: string;
