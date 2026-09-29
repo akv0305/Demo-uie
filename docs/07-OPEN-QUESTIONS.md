@@ -105,6 +105,11 @@ _None._
   (recommended) vs hand-rolled session layer.
 - Q-32 Owner's weekly review hours — the real throughput constraint.
 
+**Open — document management (Step 9)**
+| Q-65 | Should an attachment record its company and project, so the library can be filtered the way transaction screens are? | Fields added as optional (D-081) but unpopulated. Today a document is reachable only through the record it hangs off. | Client |
+| Q-66 | Is 30 days the right renewal warning window, and is it the same for every document type? | A labour licence renewal may need 60 days of lead time while a weighbridge calibration needs a week. One constant today (D-084). | Client |
+| Q-67 | Should Document Type be a controlled master rather than free text? | Needed before any rule of the form "no PO to a vendor whose GST certificate has lapsed" can exist. Adds a small master screen. | Client |
+| Q-68 | Where will attached files actually live in production — server filesystem, object storage, or a document system UIE already owns? | Affects cost, backup and the 26-week estimate. No storage exists in the demo (D-088). | Owner + Client |
 
 ## Closed
 - Q-01 (Owner) Dev environment: Codespaces, local, or other? -- Dev

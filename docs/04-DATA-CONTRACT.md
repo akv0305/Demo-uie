@@ -1,5 +1,5 @@
 # DATA CONTRACT
-Version 1.1 · 2026-08-25 · Source of truth: `lib/data/types.ts`
+Version 1.2 · 2026-09-29 · Source of truth: `lib/data/types.ts`
 
 
 ## 1. Rules
@@ -29,6 +29,7 @@ Version 1.1 · 2026-08-25 · Source of truth: `lib/data/types.ts`
 | `Site` | code, name, type, companyId, projectId, location, storeKeeperId?, isStore, isActive? | `projectId: null` only for MAIN_STORE (D-065) |
 | `Equipment` | code, name, type, ownership, projectId, siteId, status, currentHmr, isActive | `status` is operational, separate from `isActive` (D-071). `type` free text (D-072) |
 | `WbsNode` | projectId, code, name, parentId, level, uomCode?, budgetedQty?, budgetedCost?, isActive? | Tree via `parentId`; `level` derived (D-078). Execution fields display-only (D-080) |
+| `Attachment` | entityKey, entityId, fileName, category, sizeKb, uploadedByName, uploadedOn, expiryDate?, validFrom?, companyId?, projectId?, remarks? | `entityKey`+`entityId` point at any master or document. No file bytes are stored in the demo (D-088). Optional FKs follow R7 |
 
 
 ## 3. Item field groups

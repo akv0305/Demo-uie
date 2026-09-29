@@ -2,11 +2,11 @@
 Last updated: 2026-08-25 · Update this at the end of every session.
 
 ## Current position
-**Step 8 in progress. Ten masters built: UOM, HSN/SAC, Item, Vendor,
-Subcontractor (+ Labour Contractor view), Company, Department, Employee,
-Project, Site & Store.** Item Master is the frozen golden path (D-024, D-035);
-`useMasterCollection` (D-042) is the shared container. Next action is Equipment,
-then WBS, which closes Step 8.
+**Step 8 complete — all eleven masters built. Step 9 (Document Management)
+complete: Library, Upload and Expiry Tracker.** Item Master is the frozen
+golden path for masters (D-024, D-035); `useMasterCollection` (D-042) is the
+shared master container. Documents is the first non-master module and the
+first to read `attachments`. Next action is Step 10, Project Controls / DPR.
 
 
 ## Phase status
@@ -38,7 +38,8 @@ then WBS, which closes Step 8.
 | 8g | Site & Store Master | ✅ DONE | 7 fixtures. Main store is company-level (D-065), store types forced to hold stock (D-066), hyphens allowed in codes (D-069) |
 | 8h | Equipment Master | ✅ DONE | 21 fixtures. Closes D-044 — last MasterAudit gap. Status independent of isActive (D-071), type free text (D-072) |
 | 8i | WBS Master | ✅ DONE | 27 fixtures, 4 projects. Per-project selector (D-076), indent column (D-077), level derived (D-078) |
-| 9–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
+| 9 | Document Management — Library, Upload, Expiry Tracker | ✅ DONE | D-081..D-088. First module outside masters. Upload stores metadata only (DEF-041) |
+| 10–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 
 ## Defect register (from P0 audit)
@@ -79,6 +80,12 @@ then WBS, which closes Step 8.
 | DEF-033 | Low | `07-OPEN-QUESTIONS.md` held Q-40..Q-53 as table rows inside a bulleted section with no header row, rendering as literal pipe text | Closed 2026-08-25 — moved under a new "master data model" section with a header |
 | DEF-034 | Med | `D-060` recorded three money helpers (`asCrore`, `asShortMoney`, `asRupees`) that were never written to `lib/format.ts`; a decision described intent rather than code | Closed 2026-08-25 — D-063 supersedes and records the real exports. Same root cause as DEF-024 and D-039 |
 | DEF-035 | Med | `WBS-SH19-01` (Road Works) does not equal the sum of its six children: budget 1,684,000,000 against 1,333,105,000 (short ₹35.09 Cr), actual 712,400,000 against 561,458,200. The other four parent nodes balance exactly on both figures | Open 2026-08-25 — correct the parent to the child sums, or confirm per Q-61 that parents hold unitemised scope |
+| DEF-036 | Every attachment expiry fixture had lapsed relative to the demo date, so all four rendered red | Fixtures rebased to Oct 2026 – Aug 2027 | CLOSED |
+| DEF-037 | `listExpiringAttachments` had no lower bound — expired documents were returned as "expiring soon" | Rewritten under D-083 | CLOSED |
+| DEF-038 | Bare calls to paged DAL functions silently truncate at 25 rows | Document containers fixed under D-086. **Audit the eleven master containers for the same mistake — Employees is the likely victim** | OPEN |
+| DEF-039 | The three document containers log fetch failures to the console instead of rendering the frozen `ErrorState` | A rejected `Promise.all` leaves the screen blank with no message. Wire `ErrorState` before client walkthroughs | OPEN |
+| DEF-040 | `AttachmentsPanel` Download button is inert, as is the Download row action in the Document Library | Frozen P0 component. Decide whether to hide or stub before a walkthrough | OPEN |
+| DEF-041 | The Upload screen implies the file was stored when only its details were kept | Accepted knowingly (D-088). Terminology and banner text drafted in session but not applied | OPEN — deferred by owner |
 
 
 ## Confirmed good (do not re-audit)

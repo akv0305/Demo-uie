@@ -40,6 +40,19 @@ export interface ApprovalStep {
   remarks?: string;
 }
 
+/** R4: every transaction document carries these. Masters use MasterAudit instead. */
+export interface DocumentAudit {
+  companyId: string;
+  projectId: string;
+  siteId: string;
+  status: DocumentStatus;
+  revisionNo: number;
+  createdBy: string;
+  createdOn: string;
+  updatedBy?: string;
+  updatedOn?: string;
+}
+
 // ===========================================================================
 // Organisation
 // ===========================================================================
@@ -619,4 +632,97 @@ export interface Paged<T> {
   total: number;
   page: number;
   pageSize: number;
+}
+
+// ===========================================================================
+// Daily progress
+// ===========================================================================
+export type WeatherCondition = 'CLEAR' | 'CLOUDY' | 'LIGHT_RAIN' | 'HEAVY_RAIN' | 'EXTREME_HEAT';
+
+export interface DprProgressLine {
+  id: string;
+  wbsId: string;
+  uomCode: string;
+  todayQty: number;
+  /** Including today. Site staff record this against the measurement book. */
+  cumulativeQty: number;
+  /** Chainage or structure reference, in the client's own words. */
+  location?: string;
+  remarks?: string;
+}
+
+export interface DprLabourLine {
+  id: string;
+  trade: string;
+  /** Absent = departmental labour on own muster. */
+  subcontractorId?: string;
+  skilledCount: number;
+  unskilledCount: number;
+}
+
+export interface DprEquipmentLine {
+  id: string;
+  equipmentId: string;
+  hoursWorked: number;
+  idleHours: number;
+  breakdownHours: number;
+  dieselIssued?: number;
+}
+
+export interface DailyProgressReport extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** One report per site per day — see Q-70. */
+  date: string;
+  weather: WeatherCondition;
+  rainfallMm?: number;
+  hoursLost?: number;
+  progressLines: DprProgressLine[];
+  labourLines: DprLabourLine[];
+  equipmentLines: DprEquipmentLine[];
+  hindranceRemarks?: string;
+  safetyIncidents?: number;
+  generalRemarks?: string;
+  preparedByName: string;
+  approvals?: ApprovalStep[];
+}
+
+// ===========================================================================
+// Hindrance register
+// ===========================================================================
+export type HindranceCategory =
+  | 'LAND_ACQUISITION'
+  | 'DRAWINGS_APPROVAL'
+  | 'UTILITY_SHIFTING'
+  | 'STATUTORY_PERMISSION'
+  | 'WEATHER'
+  | 'CLIENT_MATERIAL'
+  | 'PAYMENT_DELAY'
+  | 'LABOUR_SHORTAGE'
+  | 'EQUIPMENT_BREAKDOWN'
+  | 'LAW_AND_ORDER'
+  | 'OTHER';
+
+/** Who caused it. Drives whether an extension of time can be claimed. */
+export type HindranceResponsibility = 'CLIENT' | 'CONTRACTOR' | 'EXTERNAL';
+
+export interface Hindrance extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  fromDate: string;
+  /** Absent = the hindrance is still running. */
+  toDate?: string;
+  category: HindranceCategory;
+  responsibility: HindranceResponsibility;
+  description: string;
+  /** Activity held up, when it maps to one work item. */
+  wbsId?: string;
+  location?: string;
+  /** Work fully stopped, as against slowed down. */
+  isWorkStopped: boolean;
+  isEotClaimable: boolean;
+  /** Days formally claimed, which need not equal elapsed days. */
+  eotClaimDays?: number;
+  actionTaken?: string;
+  resolvedRemarks?: string;
 }

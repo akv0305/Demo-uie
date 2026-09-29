@@ -16,6 +16,10 @@ import {
   projects as fxProjects,
   sites as fxSites,
 } from './adapters/fixtures/org';
+
+import { dailyProgressReports as fxDprs } from './adapters/fixtures/progress';
+import { hindrances as fxHindrances } from './adapters/fixtures/hindrances';
+
 import {
   equipment as fxEquipment,
   hsnSacCodes as fxHsnSac,
@@ -68,10 +72,33 @@ import type {
   UserRole,
   Vendor,
   WbsNode,
+  DailyProgressReport,
+  Hindrance, 
 } from './types';
+
 
 export type * from './types';
 export { store } from './store';
+
+// ===========================================================================
+// Daily progress
+// ===========================================================================
+export async function listDprs(params?: ListParams): Promise<Paged<DailyProgressReport>> {
+  let rows = fxDprs;
+  if (params?.projectId) rows = rows.filter((d) => d.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((d) => d.status === params.status);
+  if (params?.fromDate) rows = rows.filter((d) => d.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((d) => d.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((d) => matchesText([d.documentNo, d.preparedByName, d.generalRemarks ?? ''], params.search));
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getDpr(id: string): Promise<DailyProgressReport | null> {
+  return resolve(fxDprs.find((d) => d.id === id) ?? null);
+}
+
 
 const SESSION_KEY = 'session';
 
@@ -400,4 +427,26 @@ export async function listRecords<T extends { id: string }>(entityKey: string): 
 
 export async function removeRecord(entityKey: string, id: string): Promise<boolean> {
   return resolve(store.remove(entityKey, id), 0);
+}
+
+// ===========================================================================
+// Hindrance register
+// ===========================================================================
+/** Fixture rows plus anything raised during the demo session. */
+function allHindrances(): Hindrance[] {
+  const created = store.list<Hindrance & { [k: string]: unknown }>(
+    'hindrances',
+  ) as unknown as Hindrance[];
+  return created.length ? [...created, ...fxHindrances] : fxHindrances;
+}
+
+export async function listHindrances(params?: ListParams): Promise<Paged<Hindrance>> {
+  let rows = allHindrances();
+  if (params?.projectId) rows = rows.filter((h) => h.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((h) => h.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((h) => h.category === params.group);
+  if (params?.search)
+    rows = rows.filter((h) => matchesText([h.documentNo, h.description, h.location ?? ''], params.search));
+  const sorted = [...rows].sort((a, b) => (a.fromDate < b.fromDate ? 1 : -1));
+  return resolve(paginate(sorted, params));
 }
