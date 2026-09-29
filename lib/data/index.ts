@@ -304,11 +304,40 @@ export async function listAttachments(entityKey: string, entityId: string): Prom
   return resolve(fxAttachments.filter((a) => a.entityKey === entityKey && a.entityId === entityId));
 }
 
+/** Fixture rows plus anything uploaded during the demo session. */
+function allAttachments(): Attachment[] {
+  const created = store.list<Attachment & { [k: string]: unknown }>(
+    'attachments',
+  ) as unknown as Attachment[];
+  return created.length ? [...fxAttachments, ...created] : fxAttachments;
+}
+
+/** Every file in the library. entityKey/entityId filter is optional here. */
+export async function listDocumentFiles(params?: ListParams): Promise<Paged<Attachment>> {
+  let rows = fxAttachments;
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((a) => a.category === params.group);
+  if (params?.search)
+    rows = rows.filter((a) => matchesText([a.fileName, a.category, a.uploadedByName], params.search));
+  if (params?.fromDate) rows = rows.filter((a) => a.uploadedOn >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((a) => a.uploadedOn <= params.toDate!);
+  const sorted = [...rows].sort((a, b) => (a.uploadedOn < b.uploadedOn ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function listAttachmentCategories(): Promise<string[]> {
+  return resolve([...new Set(fxAttachments.map((a) => a.category))].sort());
+}
+
+/** Documents with an expiry date, already expired or due within `withinDays`. */
 export async function listExpiringAttachments(withinDays: number): Promise<Attachment[]> {
-  const limit = new Date();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const limit = new Date(today);
   limit.setDate(limit.getDate() + withinDays);
   return resolve(
-    fxAttachments.filter((a) => a.expiryDate && new Date(a.expiryDate) <= limit),
+    fxAttachments
+      .filter((a) => a.expiryDate && new Date(a.expiryDate) <= limit)
+      .sort((a, b) => (a.expiryDate! < b.expiryDate! ? -1 : 1)),
   );
 }
 

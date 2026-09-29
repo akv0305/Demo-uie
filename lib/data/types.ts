@@ -507,6 +507,7 @@ export interface DocumentLine {
 // ===========================================================================
 export interface Attachment {
   id: string;
+  /** Owning entity collection: 'documents' | 'vendors' | 'subcontractors' | 'equipment' | … */
   entityKey: string;
   entityId: string;
   fileName: string;
@@ -514,7 +515,13 @@ export interface Attachment {
   sizeKb: number;
   uploadedByName: string;
   uploadedOn: string;
+  /** Statutory documents only. Absent = nothing to track. */
   expiryDate?: string;
+  /** Optional (R5). Absent on fixture rows — see Q-65. */
+  validFrom?: string;
+  companyId?: string;
+  projectId?: string | null;
+  remarks?: string;
 }
 
 export interface AuditEntry {

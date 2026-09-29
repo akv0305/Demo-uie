@@ -477,10 +477,10 @@ export const attachments: Attachment[] = [
   { id: 'ATT-2', entityKey: 'documents', entityId: 'DOC-PO-0014', fileName: 'Comparative_Statement_Cement_Jul2026.xlsx', category: 'Comparative Statement', sizeKb: 86, uploadedByName: 'Deepika Sharma Tiwari', uploadedOn: '2026-07-16T15:05:00' },
   { id: 'ATT-3', entityKey: 'documents', entityId: 'DOC-GRN-0032', fileName: 'Supplier_Challan_SVCA_4471.jpg', category: 'Supplier Challan', sizeKb: 1284, uploadedByName: 'Srinivas Goud Perika', uploadedOn: '2026-08-04T08:40:00' },
   { id: 'ATT-4', entityKey: 'documents', entityId: 'DOC-GRN-0032', fileName: 'Weighbridge_Slip_TS07UF8890.pdf', category: 'Weighbridge Slip', sizeKb: 148, uploadedByName: 'Srinivas Goud Perika', uploadedOn: '2026-08-04T08:52:00' },
-  { id: 'ATT-5', entityKey: 'vendors', entityId: 'VEN-0002', fileName: 'Bharathi_Steel_GST_Certificate.pdf', category: 'Statutory Document', sizeKb: 322, uploadedByName: 'Deepika Sharma Tiwari', uploadedOn: '2026-04-11T10:15:00', expiryDate: '2026-08-31' },
-  { id: 'ATT-6', entityKey: 'subcontractors', entityId: 'SUB-0003', fileName: 'Ganapathi_Labour_Licence_2024.pdf', category: 'Labour Licence', sizeKb: 268, uploadedByName: 'Aruna Devi Kotagiri', uploadedOn: '2026-01-22T14:30:00', expiryDate: '2026-08-25' },
-  { id: 'ATT-7', entityKey: 'equipment', entityId: 'EQP-0013', fileName: 'Tipper_TS07UF8890_Insurance.pdf', category: 'Insurance', sizeKb: 196, uploadedByName: 'Yadagiri Reddy Bommu', uploadedOn: '2025-09-02T09:45:00', expiryDate: '2026-09-01' },
-  { id: 'ATT-8', entityKey: 'equipment', entityId: 'EQP-0006', fileName: 'Excavator_TS07UB4412_Fitness.pdf', category: 'Fitness Certificate', sizeKb: 174, uploadedByName: 'Yadagiri Reddy Bommu', uploadedOn: '2025-08-28T16:10:00', expiryDate: '2026-08-27' },
+  { id: 'ATT-5', entityKey: 'vendors', entityId: 'VEN-0002', fileName: 'Bharathi_Steel_GST_Certificate.pdf', category: 'Statutory Document', sizeKb: 322, uploadedByName: 'Deepika Sharma Tiwari', uploadedOn: '2026-04-11T10:15:00', expiryDate: '2026-10-26' },
+  { id: 'ATT-6', entityKey: 'subcontractors', entityId: 'SUB-0003', fileName: 'Ganapathi_Labour_Licence_2024.pdf', category: 'Labour Licence', sizeKb: 268, uploadedByName: 'Aruna Devi Kotagiri', uploadedOn: '2026-01-22T14:30:00', expiryDate: '2026-10-17' },
+  { id: 'ATT-7', entityKey: 'equipment', entityId: 'EQP-0013', fileName: 'Tipper_TS07UF8890_Insurance.pdf', category: 'Insurance', sizeKb: 196, uploadedByName: 'Yadagiri Reddy Bommu', uploadedOn: '2025-09-02T09:45:00', expiryDate: '2027-01-21' },
+  { id: 'ATT-8', entityKey: 'equipment', entityId: 'EQP-0006', fileName: 'Excavator_TS07UB4412_Fitness.pdf', category: 'Fitness Certificate', sizeKb: 174, uploadedByName: 'Yadagiri Reddy Bommu', uploadedOn: '2025-08-28T16:10:00', expiryDate: '2027-08-27' },
 ];
 
 export const auditEntries: AuditEntry[] = [
