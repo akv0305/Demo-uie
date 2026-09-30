@@ -29,6 +29,7 @@ import {
 import { purchaseRequisitions as fxPrs } from './adapters/fixtures/procurement';
 import { rfqs as fxRfqs } from './adapters/fixtures/rfqs';
 import { quotations as fxQuotations } from './adapters/fixtures/quotations';
+import { purchaseOrders as fxPos } from './adapters/fixtures/purchase-orders';
 
 import {
   equipment as fxEquipment,
@@ -91,6 +92,7 @@ import type {
   PurchaseRequisition,
   Rfq,
   Quotation,
+  PurchaseOrder,
 } from './types';
 
 export type * from './types';
@@ -765,6 +767,50 @@ export async function saveQuotation(id: string, patch: Partial<Quotation>): Prom
   if (!base) return resolve(null, 0);
   return resolve(
     store.create<Quotation & { [k: string]: unknown }>('quotations', { ...base, ...patch, id }) as Quotation,
+    0,
+  );
+}
+
+// ===========================================================================
+// Procurement — purchase orders
+// ===========================================================================
+function allPurchaseOrders(): PurchaseOrder[] {
+  const created = store.list<PurchaseOrder & { [k: string]: unknown }>('purchaseOrders') as unknown as PurchaseOrder[];
+  if (!created.length) return fxPos;
+  const overridden = new Set(created.map((p: PurchaseOrder) => p.id));
+  return [...created, ...fxPos.filter((p: PurchaseOrder) => !overridden.has(p.id))];
+}
+
+export async function listPurchaseOrders(
+  params?: ListParams & { vendorId?: string; rfqId?: string },
+): Promise<Paged<PurchaseOrder>> {
+  let rows: PurchaseOrder[] = allPurchaseOrders();
+  if (params?.projectId) rows = rows.filter((p) => p.projectId === params.projectId);
+  if (params?.vendorId) rows = rows.filter((p) => p.vendorId === params.vendorId);
+  if (params?.rfqId) rows = rows.filter((p) => p.rfqId === params.rfqId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((p) => p.status === params.status);
+  if (params?.search)
+    rows = rows.filter((p) =>
+      matchesText([p.documentNo, p.vendorName, ...p.lines.map((l) => l.description)], params.search),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getPurchaseOrder(id: string): Promise<PurchaseOrder | null> {
+  return resolve(allPurchaseOrders().find((p) => p.id === id) ?? null);
+}
+
+export async function savePurchaseOrder(
+  id: string,
+  patch: Partial<PurchaseOrder>,
+): Promise<PurchaseOrder | null> {
+  const updated = store.update<PurchaseOrder & { [k: string]: unknown }>('purchaseOrders', id, patch);
+  if (updated) return resolve(updated as PurchaseOrder, 0);
+  const base = fxPos.find((p: PurchaseOrder) => p.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<PurchaseOrder & { [k: string]: unknown }>('purchaseOrders', { ...base, ...patch, id }) as PurchaseOrder,
     0,
   );
 }

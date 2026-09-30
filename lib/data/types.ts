@@ -1093,3 +1093,81 @@ export interface Quotation extends DocumentAudit {
   remarks?: string;
   receivedOn?: string;
 }
+
+// ===========================================================================
+// Procurement — Purchase Order
+// ===========================================================================
+
+/** How the order was arrived at. Drives what the purchase file must contain. */
+export type PoBasis = 'COMPARATIVE' | 'RATE_CONTRACT' | 'SINGLE_SOURCE' | 'EMERGENCY' | 'REPEAT_ORDER';
+
+export type PoDeliveryTerms = 'FOR_SITE' | 'EX_WORKS' | 'FOR_DESTINATION';
+
+export interface PoLine {
+  id: string;
+  quotationLineId?: string;
+  rfqLineId?: string;
+  prId?: string;
+  itemId: string;
+  itemCode?: string;
+  description: string;
+  specification?: string;
+  makeApproved?: string;
+  uomCode: string;
+  quantity: number;
+  rate: number;
+  discountPct?: number;
+  gstRate: number;
+  wbsId?: string;
+  /** Quantity received so far against this line — written by the GRN later. */
+  receivedQty?: number;
+  scheduledDate?: string;
+  remarks?: string;
+}
+
+/** Document-level charges, carried across from the accepted offer. */
+export interface PoCharges {
+  freightAmount?: number;
+  loadingAmount?: number;
+  packingAmount?: number;
+  chargesGstRate?: number;
+}
+
+/**
+ * Q-83: retention/security on a supply order is not universal — confirm whether
+ * the client withholds a percentage on material orders or only on works.
+ */
+export interface PurchaseOrder extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  vendorId: string;
+  vendorName: string;
+  basis: PoBasis;
+  /** The offer accepted. Absent for a rate-contract or emergency order. */
+  quotationId?: string;
+  rfqId?: string;
+  prIds: string[];
+  lines: PoLine[];
+  charges: PoCharges;
+  deliveryTerms: PoDeliveryTerms;
+  deliverySiteId: string;
+  deliveryAddress?: string;
+  /** Overall completion date for the order. Lines may schedule within it. */
+  deliveryByDate?: string;
+  paymentTerms?: string;
+  warrantyTerms?: string;
+  /** Advance payable on order, in rupees. */
+  advanceAmount?: number;
+  retentionPct?: number;
+  /** Liquidated damages clause as agreed, free text — varies by order. */
+  ldClause?: string;
+  /** Why this vendor, for the file. Mandatory when the basis is not comparative. */
+  awardJustification?: string;
+  inspectionRequired?: boolean;
+  amendmentNo?: number;
+  amendmentReason?: string;
+  remarks?: string;
+  approvedBy?: string;
+  approvedOn?: string;
+}
