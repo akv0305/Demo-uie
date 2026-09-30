@@ -726,3 +726,111 @@ export interface Hindrance extends DocumentAudit {
   actionTaken?: string;
   resolvedRemarks?: string;
 }
+
+// ===========================================================================
+// Variations / deviation orders
+// ===========================================================================
+export type VariationCategory =
+  | 'EXTRA_ITEM'
+  | 'DEVIATION_QTY'
+  | 'SUBSTITUTED_ITEM'
+  | 'DESIGN_CHANGE'
+  | 'SCOPE_ADDITION'
+  | 'OMISSION';
+
+export type VariationOrigin =
+  | 'CLIENT_INSTRUCTION'
+  | 'SITE_CONDITION'
+  | 'DESIGN_REVISION'
+  | 'STATUTORY'
+  | 'CONTRACTOR_PROPOSAL';
+
+/**
+ * A deviation from the agreement BOQ. Indian practice: the proposed value is
+ * what the contractor claims, the approved value is what the client admits,
+ * and the two rarely match — both are kept.
+ */
+export interface Variation extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  category: VariationCategory;
+  origin: VariationOrigin;
+  description: string;
+  /** BOQ item the deviation sits against. Blank for a wholly new item. */
+  wbsId?: string;
+  location?: string;
+  uomCode?: string;
+  quantity?: number;
+  /** Rupees per UOM (R2). Agreement rate for a deviation, analysed rate for an extra item. */
+  rate?: number;
+  /** Rupees. What the contractor has put up. */
+  proposedAmount: number;
+  /** Rupees. What the client has admitted. Absent until decided; 0 when rejected. */
+  approvedAmount?: number;
+  /** Client letter or instruction that gave rise to the variation. */
+  clientRefNo?: string;
+  clientRefDate?: string;
+  /** Beyond the agreement deviation limit, so a fresh rate analysis is needed. */
+  needsRateAnalysis: boolean;
+  /** Time impact, if any — links to the extension-of-time position. */
+  timeExtensionDays?: number;
+  remarks?: string;
+}
+
+// ===========================================================================
+// Contractual claims
+// ===========================================================================
+export type ClaimType =
+  | 'EOT'
+  | 'PROLONGATION'
+  | 'IDLE_RESOURCES'
+  | 'PRICE_ESCALATION'
+  | 'DELAYED_PAYMENT_INTEREST'
+  | 'CHANGE_IN_LAW'
+  | 'OTHER';
+
+/** Where the claim has reached in the contract's dispute ladder. */
+export type ClaimStage =
+  | 'NOTICE_GIVEN'
+  | 'PARTICULARS_SUBMITTED'
+  | 'UNDER_REVIEW'
+  | 'ENGINEER_DECISION'
+  | 'CONCILIATION'
+  | 'ARBITRATION'
+  | 'SETTLED'
+  | 'WITHDRAWN';
+
+/**
+ * A claim on the client for time or money. Distinct from a variation: a
+ * variation prices a change in the work, a claim seeks compensation for its
+ * consequences. Most contracts require notice within a stated period, so the
+ * notice date is tracked separately from the date particulars were submitted.
+ */
+export interface Claim extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  type: ClaimType;
+  stage: ClaimStage;
+  title: string;
+  description: string;
+  /** The hindrance that gave rise to the claim, where there is one. */
+  hindranceId?: string;
+  /** The variation this claim rides on, where there is one. */
+  variationId?: string;
+  /** Contractual notice — the date the client was first put on notice. */
+  noticeDate?: string;
+  noticeRefNo?: string;
+  /** Date the detailed particulars and costing went in. */
+  particularsDate?: string;
+  /** Rupees. Nil for a purely time-based claim. */
+  claimedAmount: number;
+  /** Rupees. What the client has admitted so far; absent until decided. */
+  settledAmount?: number;
+  /** Days of extension sought, for a time claim. */
+  claimedDays?: number;
+  settledDays?: number;
+  settledDate?: string;
+  remarks?: string;
+}

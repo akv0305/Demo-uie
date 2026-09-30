@@ -19,6 +19,8 @@ import {
 
 import { dailyProgressReports as fxDprs } from './adapters/fixtures/progress';
 import { hindrances as fxHindrances } from './adapters/fixtures/hindrances';
+import { variations as fxVariations } from './adapters/fixtures/variations';
+import { claims as fxClaims } from './adapters/fixtures/claims';
 
 import {
   equipment as fxEquipment,
@@ -73,7 +75,9 @@ import type {
   Vendor,
   WbsNode,
   DailyProgressReport,
-  Hindrance, 
+  Hindrance,
+  Variation,
+  Claim,
 } from './types';
 
 
@@ -341,7 +345,7 @@ function allAttachments(): Attachment[] {
 
 /** Every file in the library. entityKey/entityId filter is optional here. */
 export async function listDocumentFiles(params?: ListParams): Promise<Paged<Attachment>> {
-  let rows = fxAttachments;
+  let rows = allAttachments();
   if (params?.group && params.group !== 'ALL') rows = rows.filter((a) => a.category === params.group);
   if (params?.search)
     rows = rows.filter((a) => matchesText([a.fileName, a.category, a.uploadedByName], params.search));
@@ -352,7 +356,7 @@ export async function listDocumentFiles(params?: ListParams): Promise<Paged<Atta
 }
 
 export async function listAttachmentCategories(): Promise<string[]> {
-  return resolve([...new Set(fxAttachments.map((a) => a.category))].sort());
+  return resolve([...new Set(allAttachments().map((a) => a.category))].sort());
 }
 
 /** Documents with an expiry date, already expired or due within `withinDays`. */
@@ -362,7 +366,7 @@ export async function listExpiringAttachments(withinDays: number): Promise<Attac
   const limit = new Date(today);
   limit.setDate(limit.getDate() + withinDays);
   return resolve(
-    fxAttachments
+    allAttachments()
       .filter((a) => a.expiryDate && new Date(a.expiryDate) <= limit)
       .sort((a, b) => (a.expiryDate! < b.expiryDate! ? -1 : 1)),
   );
@@ -432,12 +436,38 @@ export async function removeRecord(entityKey: string, id: string): Promise<boole
 // ===========================================================================
 // Hindrance register
 // ===========================================================================
-/** Fixture rows plus anything raised during the demo session. */
+/**
+ * Fixture rows plus anything raised during the demo session. A stored row with
+ * the same id overrides its fixture, which is how an edit to a seeded record
+ * survives a reload (DEF-044).
+ */
 function allHindrances(): Hindrance[] {
   const created = store.list<Hindrance & { [k: string]: unknown }>(
     'hindrances',
   ) as unknown as Hindrance[];
-  return created.length ? [...created, ...fxHindrances] : fxHindrances;
+  if (!created.length) return fxHindrances;
+  const overridden = new Set(created.map((h) => h.id));
+  return [...created, ...fxHindrances.filter((h) => !overridden.has(h.id))];
+}
+
+/**
+ * Edits a hindrance whether it came from a fixture or from this session.
+ * store.update only knows rows the store created, so a fixture row is copied
+ * into the store on first edit.
+ */
+export async function saveHindrance(id: string, patch: Partial<Hindrance>): Promise<Hindrance | null> {
+  const updated = store.update<Hindrance & { [k: string]: unknown }>('hindrances', id, patch);
+  if (updated) return resolve(updated as Hindrance, 0);
+  const base = fxHindrances.find((h) => h.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<Hindrance & { [k: string]: unknown }>('hindrances', {
+      ...base,
+      ...patch,
+      id,
+    }) as Hindrance,
+    0,
+  );
 }
 
 export async function listHindrances(params?: ListParams): Promise<Paged<Hindrance>> {
@@ -449,4 +479,82 @@ export async function listHindrances(params?: ListParams): Promise<Paged<Hindran
     rows = rows.filter((h) => matchesText([h.documentNo, h.description, h.location ?? ''], params.search));
   const sorted = [...rows].sort((a, b) => (a.fromDate < b.fromDate ? 1 : -1));
   return resolve(paginate(sorted, params));
+}
+
+// ---------------------------------------------------------------------------
+// Variations
+// ---------------------------------------------------------------------------
+
+/** Fixture rows plus anything raised in this session; a stored row wins on id. */
+function allVariations(): Variation[] {
+  const created = store.list<Variation & { [k: string]: unknown }>(
+    'variations',
+  ) as unknown as Variation[];
+  if (!created.length) return fxVariations;
+  const overridden = new Set(created.map((v) => v.id));
+  return [...created, ...fxVariations.filter((v) => !overridden.has(v.id))];
+}
+
+export async function listVariations(params?: ListParams): Promise<Paged<Variation>> {
+  let rows = allVariations();
+  if (params?.projectId) rows = rows.filter((v) => v.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((v) => v.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((v) => v.category === params.group);
+  if (params?.search)
+    rows = rows.filter((v) =>
+      matchesText([v.documentNo, v.description, v.location ?? '', v.clientRefNo ?? ''], params.search),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+/** Edits a variation whether it came from a fixture or from this session. */
+export async function saveVariation(id: string, patch: Partial<Variation>): Promise<Variation | null> {
+  const updated = store.update<Variation & { [k: string]: unknown }>('variations', id, patch);
+  if (updated) return resolve(updated as Variation, 0);
+  const base = fxVariations.find((v) => v.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<Variation & { [k: string]: unknown }>('variations', { ...base, ...patch, id }) as Variation,
+    0,
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Claims
+// ---------------------------------------------------------------------------
+
+/** Fixture rows plus anything raised in this session; a stored row wins on id. */
+function allClaims(): Claim[] {
+  const created = store.list<Claim & { [k: string]: unknown }>('claims') as unknown as Claim[];
+  if (!created.length) return fxClaims;
+  const overridden = new Set(created.map((c) => c.id));
+  return [...created, ...fxClaims.filter((c) => !overridden.has(c.id))];
+}
+
+export async function listClaims(params?: ListParams): Promise<Paged<Claim>> {
+  let rows = allClaims();
+  if (params?.projectId) rows = rows.filter((c) => c.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((c) => c.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((c) => c.type === params.group);
+  if (params?.category && params.category !== 'ALL')
+    rows = rows.filter((c) => c.stage === params.category);
+  if (params?.search)
+    rows = rows.filter((c) =>
+      matchesText([c.documentNo, c.title, c.description, c.noticeRefNo ?? ''], params.search),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+/** Edits a claim whether it came from a fixture or from this session. */
+export async function saveClaim(id: string, patch: Partial<Claim>): Promise<Claim | null> {
+  const updated = store.update<Claim & { [k: string]: unknown }>('claims', id, patch);
+  if (updated) return resolve(updated as Claim, 0);
+  const base = fxClaims.find((c) => c.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<Claim & { [k: string]: unknown }>('claims', { ...base, ...patch, id }) as Claim,
+    0,
+  );
 }
