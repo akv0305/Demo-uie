@@ -21,6 +21,10 @@ import { dailyProgressReports as fxDprs } from './adapters/fixtures/progress';
 import { hindrances as fxHindrances } from './adapters/fixtures/hindrances';
 import { variations as fxVariations } from './adapters/fixtures/variations';
 import { claims as fxClaims } from './adapters/fixtures/claims';
+import {
+  bankGuarantees as fxBgs,
+  retentionEntries as fxRetention,
+} from './adapters/fixtures/bg-retention';
 
 import {
   equipment as fxEquipment,
@@ -78,6 +82,9 @@ import type {
   Hindrance,
   Variation,
   Claim,
+  BankGuarantee,
+  RetentionEntry,
+
 } from './types';
 
 
@@ -557,4 +564,63 @@ export async function saveClaim(id: string, patch: Partial<Claim>): Promise<Clai
     store.create<Claim & { [k: string]: unknown }>('claims', { ...base, ...patch, id }) as Claim,
     0,
   );
+}
+
+// ---------------------------------------------------------------------------
+// Bank guarantees & retention
+// ---------------------------------------------------------------------------
+
+/** Fixture rows plus anything raised in this session; a stored row wins on id. */
+function allBankGuarantees(): BankGuarantee[] {
+  const created = store.list<BankGuarantee & { [k: string]: unknown }>(
+    'bankGuarantees',
+  ) as unknown as BankGuarantee[];
+  if (!created.length) return fxBgs;
+  const overridden = new Set(created.map((b) => b.id));
+  return [...created, ...fxBgs.filter((b) => !overridden.has(b.id))];
+}
+
+export async function listBankGuarantees(params?: ListParams): Promise<Paged<BankGuarantee>> {
+  let rows = allBankGuarantees();
+  if (params?.projectId) rows = rows.filter((b) => b.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((b) => b.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((b) => b.type === params.group);
+  if (params?.category && params.category !== 'ALL')
+    rows = rows.filter((b) => b.bgStatus === params.category);
+  if (params?.search)
+    rows = rows.filter((b) =>
+      matchesText([b.documentNo, b.bgNumber, b.bankName, b.beneficiary], params.search),
+    );
+  // Soonest expiry first — the register exists to catch lapses.
+  const sorted = [...rows].sort((a, b) => (a.validUpto < b.validUpto ? -1 : 1));
+  return resolve(paginate(sorted, params));
+}
+
+/** Edits a guarantee whether it came from a fixture or from this session. */
+export async function saveBankGuarantee(
+  id: string,
+  patch: Partial<BankGuarantee>,
+): Promise<BankGuarantee | null> {
+  const updated = store.update<BankGuarantee & { [k: string]: unknown }>('bankGuarantees', id, patch);
+  if (updated) return resolve(updated as BankGuarantee, 0);
+  const base = fxBgs.find((b) => b.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<BankGuarantee & { [k: string]: unknown }>('bankGuarantees', {
+      ...base,
+      ...patch,
+      id,
+    }) as BankGuarantee,
+    0,
+  );
+}
+
+/**
+ * Retention movements. Read-only in Phase 1 — entries arise from running
+ * account bills, which the billing module will raise.
+ */
+export async function listRetentionEntries(params?: ListParams): Promise<RetentionEntry[]> {
+  let rows = fxRetention;
+  if (params?.projectId) rows = rows.filter((r) => r.projectId === params.projectId);
+  return resolve([...rows].sort((a, b) => (a.date < b.date ? -1 : 1)));
 }

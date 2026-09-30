@@ -834,3 +834,87 @@ export interface Claim extends DocumentAudit {
   settledDate?: string;
   remarks?: string;
 }
+
+// ===========================================================================
+// Bank guarantees & retention
+// ===========================================================================
+export type BgType =
+  | 'PERFORMANCE'
+  | 'MOBILISATION_ADVANCE'
+  | 'RETENTION_MONEY'
+  | 'ADVANCE_PAYMENT'
+  | 'SECURITY_DEPOSIT'
+  | 'EMD';
+
+/**
+ * Where the instrument stands. Separate from DocumentStatus, which tracks the
+ * approval of the register entry rather than the life of the guarantee itself.
+ */
+export type BgStatus =
+  | 'LIVE'
+  | 'UNDER_EXTENSION'
+  | 'EXPIRED'
+  | 'RELEASED'
+  | 'INVOKED';
+
+/**
+ * A guarantee issued by a bank in the client's favour. The commercial risk
+ * here is lapse: an unextended guarantee can be invoked, and margin money
+ * stays locked until the original is returned and cancelled.
+ */
+export interface BankGuarantee extends DocumentAudit {
+  id: string;
+  /** Internal register number. */
+  documentNo: string;
+  /** The bank's own guarantee number, as printed on the instrument. */
+  bgNumber: string;
+  /** Date of issue. */
+  date: string;
+  type: BgType;
+  bgStatus: BgStatus;
+  bankName: string;
+  branch?: string;
+  /** In whose favour it is issued — normally the client. */
+  beneficiary: string;
+  /** Rupees. For a reducing guarantee this is the value standing today. */
+  amount: number;
+  validUpto: string;
+  /** Most formats allow claims for a further period beyond validity. */
+  claimPeriodUpto?: string;
+  /** Margin money or FDR the bank holds against the guarantee. */
+  marginPct?: number;
+  marginAmount?: number;
+  fdrNo?: string;
+  /** Bank commission, percent per annum. */
+  commissionPct?: number;
+  purpose?: string;
+  releasedOn?: string;
+  remarks?: string;
+}
+
+/** Retention is deducted from bills, and leaves either by release or by BG. */
+export type RetentionEvent = 'DEDUCTED' | 'RELEASED' | 'SUBSTITUTED_BY_BG';
+
+/**
+ * One movement on the retention account. Balance is the running total, not a
+ * stored figure, so the register can never disagree with its own entries.
+ */
+export interface RetentionEntry extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  event: RetentionEvent;
+  /**
+   * Running account bill the movement relates to. Plain text until the client
+   * billing module lands, when this becomes a reference — Q-29.
+   */
+  billNo: string;
+  /** Rupees. Gross value of the bill the deduction was made from. */
+  billAmount?: number;
+  retentionPct?: number;
+  /** Rupees, always positive. The event decides the direction. */
+  amount: number;
+  /** The guarantee furnished, where retention was substituted by a BG. */
+  bgId?: string;
+  remarks?: string;
+}
