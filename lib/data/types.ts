@@ -918,3 +918,178 @@ export interface RetentionEntry extends DocumentAudit {
   bgId?: string;
   remarks?: string;
 }
+
+// ===========================================================================
+// Procurement — Purchase Requisition (Indent)
+// ===========================================================================
+export type PrPriority = 'NORMAL' | 'URGENT' | 'EMERGENCY';
+
+export interface PurchaseRequisitionLine {
+  id: string;
+  itemId: string;
+  /** Snapshot of the item name, so an later master rename does not rewrite history. */
+  description: string;
+  uomCode: string;
+  quantity: number;
+  /**
+   * Indicative rate in rupees, for the approver's benefit only. An indent is
+   * not a priced document — the real rate comes from the quotation (D-101).
+   */
+  estimatedRate?: number;
+  /** Cost code the material is being drawn against. */
+  wbsId?: string;
+  /** Rupees ordered against this line so far. Maintained by the PO screen. */
+  orderedQty?: number;
+  requiredDate?: string;
+  remarks?: string;
+}
+
+export interface PurchaseRequisition extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  priority: PrPriority;
+  /** Employee raising the indent. */
+  indentedBy: string;
+  /** Date the material is wanted at site. */
+  requiredBy: string;
+  /** Where it must be delivered — normally a site store. */
+  deliverySiteId: string;
+  /** Why it is needed. The approver's main read on an urgent indent. */
+  justification?: string;
+  lines: PurchaseRequisitionLine[];
+  remarks?: string;
+}
+
+// ===========================================================================
+// Procurement — Request for Quotation (enquiry)
+// ===========================================================================
+
+/** How the enquiry reached the vendor. Kept on record because Indian
+ *  purchase files are audited on "was every vendor given equal notice". */
+export type RfqSentMode = 'EMAIL' | 'WHATSAPP' | 'COURIER' | 'HAND_DELIVERY' | 'PORTAL';
+
+export type RfqResponse = 'AWAITED' | 'RECEIVED' | 'REGRETTED' | 'NO_RESPONSE';
+
+/** Freight basis asked for in the enquiry, so offers are comparable. */
+export type FreightTerms = 'FOR_SITE' | 'EX_WORKS' | 'EXTRA_AT_ACTUALS' | 'INCLUSIVE';
+
+export interface RfqVendor {
+  vendorId: string;
+  vendorName: string;
+  sentOn?: string;
+  sentMode: RfqSentMode;
+  response: RfqResponse;
+  respondedOn?: string;
+  /** Set once the offer is captured on the Vendor Quotations screen. */
+  quotationId?: string;
+  remarks?: string;
+}
+
+export interface RfqLine {
+  id: string;
+  /** Indent this line was pulled from. Free lines added directly are allowed. */
+  prId?: string;
+  prLineId?: string;
+  itemId: string;
+  itemCode?: string;
+  description: string;
+  specification?: string;
+  uomCode: string;
+  quantity: number;
+  /** Internal estimate only — never printed on the enquiry sent to vendors (D-102). */
+  estimatedRate?: number;
+  wbsId?: string;
+}
+
+/**
+ * Q-77: status mapping. DRAFT = being prepared, SUBMITTED = floated to vendors,
+ * CLOSED = quoting window shut / comparison done, CANCELLED = dropped.
+ * Confirm whether an internal approval is needed before an enquiry may be floated.
+ */
+export interface Rfq extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  title: string;
+  prIds: string[];
+  lines: RfqLine[];
+  vendors: RfqVendor[];
+  /** Last date for receipt of quotations. */
+  dueDate: string;
+  quoteValidityDays?: number;
+  deliveryLocationSiteId?: string;
+  deliverySchedule?: string;
+  paymentTermsExpected?: string;
+  freightTerms?: FreightTerms;
+  inspectionRequired?: boolean;
+  scopeNotes?: string;
+  remarks?: string;
+  preparedBy?: string;
+}
+
+// ===========================================================================
+// Procurement — Vendor Quotation (offer)
+// ===========================================================================
+
+/** Who bears freight, per the offer as received — may differ from what was asked. */
+export type QuotationCharge = 'INCLUDED' | 'EXTRA' | 'NOT_APPLICABLE';
+
+export interface QuotationLine {
+  id: string;
+  rfqLineId?: string;
+  itemId: string;
+  itemCode?: string;
+  description: string;
+  uomCode: string;
+  quantity: number;
+  /** Rate as quoted, before any charge or tax. */
+  basicRate: number;
+  discountPct?: number;
+  gstRate: number;
+  /** Vendor's own make/brand offered against the specification. */
+  makeOffered?: string;
+  /** Set when the vendor has not quoted this line at all. */
+  notQuoted?: boolean;
+  remarks?: string;
+}
+
+/**
+ * Charges quoted at the document level rather than per line. Indian offers
+ * routinely add freight, loading and P&F after the rate, which is why a
+ * bare rate comparison misleads (D-104).
+ */
+export interface QuotationCharges {
+  freightBasis: QuotationCharge;
+  freightAmount?: number;
+  loadingBasis: QuotationCharge;
+  loadingAmount?: number;
+  packingBasis: QuotationCharge;
+  packingAmount?: number;
+  /** GST applied on the charges themselves, where the vendor has shown it. */
+  chargesGstRate?: number;
+}
+
+export interface Quotation extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  date: string;
+  rfqId: string;
+  vendorId: string;
+  vendorName: string;
+  /** The vendor's own reference on their letterhead — what accounts will cite. */
+  vendorRefNo?: string;
+  vendorRefDate?: string;
+  validUntil?: string;
+  lines: QuotationLine[];
+  charges: QuotationCharges;
+  paymentTerms?: string;
+  deliveryPeriodDays?: number;
+  warrantyTerms?: string;
+  /** Set once the technical scrutiny is done, before rates are opened. */
+  isTechnicallyQualified?: boolean;
+  /** Where the offer departs from the enquiry — the reason offers rarely compare cleanly. */
+  deviations?: string;
+  remarks?: string;
+  receivedOn?: string;
+}

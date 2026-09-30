@@ -20,3 +20,33 @@ next-env.d.ts being gitignored (D-017). Registers reconciled: D-011..D-017
 and DEF-014..DEF-017 written to file after being issued only in conversation
 — process note: register entries must land in the repo in the same session
 they are raised.
+
+### 2026-09-30 — Step 10, Project Controls (all eight screens)
+DPR, Hindrance Register, WBS Budget, Variation Register, Claim Register,
+Contract Summary, BG & Retention Register and the module dashboard.
+D-089..D-100 recorded. Q-69..Q-75 raised.
+
+Three firsts: a derived read-only screen (Contract Summary, D-094), a computed
+ledger (retention running balance, D-096) and a dashboard built with no
+charting dependency (D-098, which answers Q-04).
+
+Module arithmetic was extracted to `lib/project/*` as seven pure-function
+files (D-090) — worth copying in Procurement rather than putting totals in
+presenters.
+
+Six defects found by re-reading pushed code: DEF-042 (containers hard-coding
+`CMP-UIE`) fixed; DEF-043..DEF-047 logged only, deferred by owner to protect
+throughput. DEF-044 is the significant one — `store.update` cannot edit a
+seeded fixture row — fixed forward in this module (D-091) but still present in
+the masters and documents layers.
+
+Two process notes. `listDailyProgressReports` was written into a container
+from memory; the real export is `listDprs`, caught by the owner's typecheck —
+the same failure mode as D-039 and DEF-034, and the reason the flagged
+"verify before build" items at the end of each step are worth keeping.
+DEF-048: new question numbers were assigned from memory and collided with
+Q-28..Q-32; they must be read from `07-OPEN-QUESTIONS.md` before use.
+
+Outstanding: Contract Summary's six files were issued but not pushed.
+
+Next: Step 11, Procurement.

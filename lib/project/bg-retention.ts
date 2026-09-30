@@ -9,7 +9,7 @@ import type { BankGuarantee, BgStatus, BgType, RetentionEntry, RetentionEvent } 
 /**
  * Banks and clients both want the extension in hand well before expiry, and
  * the paperwork takes weeks. Sixty days is the usual working margin, but it is
- * a company policy rather than a contract term — Q-30.
+ * a company policy rather than a contract term — Q-70.
  */
 export const DEFAULT_EXPIRY_WARNING_DAYS = 60;
 

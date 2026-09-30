@@ -26,6 +26,10 @@ import {
   retentionEntries as fxRetention,
 } from './adapters/fixtures/bg-retention';
 
+import { purchaseRequisitions as fxPrs } from './adapters/fixtures/procurement';
+import { rfqs as fxRfqs } from './adapters/fixtures/rfqs';
+import { quotations as fxQuotations } from './adapters/fixtures/quotations';
+
 import {
   equipment as fxEquipment,
   hsnSacCodes as fxHsnSac,
@@ -84,9 +88,10 @@ import type {
   Claim,
   BankGuarantee,
   RetentionEntry,
-
+  PurchaseRequisition,
+  Rfq,
+  Quotation,
 } from './types';
-
 
 export type * from './types';
 export { store } from './store';
@@ -623,4 +628,143 @@ export async function listRetentionEntries(params?: ListParams): Promise<Retenti
   let rows = fxRetention;
   if (params?.projectId) rows = rows.filter((r) => r.projectId === params.projectId);
   return resolve([...rows].sort((a, b) => (a.date < b.date ? -1 : 1)));
+}
+
+// ---------------------------------------------------------------------------
+// Procurement — purchase requisitions
+// ---------------------------------------------------------------------------
+
+/** Fixture rows plus anything raised in this session; a stored row wins on id. */
+function allPurchaseRequisitions(): PurchaseRequisition[] {
+  const created = store.list<PurchaseRequisition & { [k: string]: unknown }>(
+    'purchaseRequisitions',
+  ) as unknown as PurchaseRequisition[];
+  if (!created.length) return fxPrs;
+  const overridden = new Set(created.map((p) => p.id));
+  return [...created, ...fxPrs.filter((p) => !overridden.has(p.id))];
+}
+
+export async function listPurchaseRequisitions(
+  params?: ListParams,
+): Promise<Paged<PurchaseRequisition>> {
+  let rows = allPurchaseRequisitions();
+  if (params?.projectId) rows = rows.filter((p) => p.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((p) => p.status === params.status);
+  if (params?.category && params.category !== 'ALL')
+    rows = rows.filter((p) => p.priority === params.category);
+  if (params?.search)
+    rows = rows.filter((p) =>
+      matchesText(
+        [p.documentNo, p.justification ?? '', ...p.lines.map((l) => l.description)],
+        params.search,
+      ),
+    );
+  // Newest first — the register is worked from the top.
+  const sorted = [...rows].sort((a, b) => (a.date > b.date ? -1 : 1));
+  return resolve(paginate(sorted, params));
+}
+
+/** Edits a requisition whether it came from a fixture or from this session. */
+export async function savePurchaseRequisition(
+  id: string,
+  patch: Partial<PurchaseRequisition>,
+): Promise<PurchaseRequisition | null> {
+  const updated = store.update<PurchaseRequisition & { [k: string]: unknown }>(
+    'purchaseRequisitions',
+    id,
+    patch,
+  );
+  if (updated) return resolve(updated as PurchaseRequisition, 0);
+  const base = fxPrs.find((p) => p.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<PurchaseRequisition & { [k: string]: unknown }>('purchaseRequisitions', {
+      ...base,
+      ...patch,
+      id,
+    }) as PurchaseRequisition,
+    0,
+  );
+}
+
+// ===========================================================================
+// Procurement — RFQ / enquiry
+// ===========================================================================
+function allRfqs(): Rfq[] {
+  const created = store.list<Rfq & { [k: string]: unknown }>('rfqs') as unknown as Rfq[];
+  if (!created.length) return fxRfqs;
+  const overridden = new Set(created.map((r: Rfq) => r.id));
+  return [...created, ...fxRfqs.filter((r: Rfq) => !overridden.has(r.id))];
+}
+
+export async function listRfqs(params?: ListParams): Promise<Paged<Rfq>> {
+  let rows: Rfq[] = allRfqs();
+  if (params?.projectId) rows = rows.filter((r) => r.projectId === params.projectId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((r) => r.status === params.status);
+  if (params?.search)
+    rows = rows.filter((r) =>
+      matchesText(
+        [r.documentNo, r.title, ...r.lines.map((l) => l.description), ...r.vendors.map((v) => v.vendorName)],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getRfq(id: string): Promise<Rfq | null> {
+  return resolve(allRfqs().find((r) => r.id === id) ?? null);
+}
+
+/** Edits an enquiry whether it came from a fixture or from this session. */
+export async function saveRfq(id: string, patch: Partial<Rfq>): Promise<Rfq | null> {
+  const updated = store.update<Rfq & { [k: string]: unknown }>('rfqs', id, patch);
+  if (updated) return resolve(updated as Rfq, 0);
+  const base = fxRfqs.find((r: Rfq) => r.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<Rfq & { [k: string]: unknown }>('rfqs', { ...base, ...patch, id }) as Rfq,
+    0,
+  );
+}
+
+// ===========================================================================
+// Procurement — vendor quotations
+// ===========================================================================
+function allQuotations(): Quotation[] {
+  const created = store.list<Quotation & { [k: string]: unknown }>('quotations') as unknown as Quotation[];
+  if (!created.length) return fxQuotations;
+  const overridden = new Set(created.map((q: Quotation) => q.id));
+  return [...created, ...fxQuotations.filter((q: Quotation) => !overridden.has(q.id))];
+}
+
+export async function listQuotations(
+  params?: ListParams & { rfqId?: string; vendorId?: string },
+): Promise<Paged<Quotation>> {
+  let rows: Quotation[] = allQuotations();
+  if (params?.projectId) rows = rows.filter((q) => q.projectId === params.projectId);
+  if (params?.rfqId) rows = rows.filter((q) => q.rfqId === params.rfqId);
+  if (params?.vendorId) rows = rows.filter((q) => q.vendorId === params.vendorId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((q) => q.status === params.status);
+  if (params?.search)
+    rows = rows.filter((q) =>
+      matchesText([q.documentNo, q.vendorName, q.vendorRefNo ?? '', ...q.lines.map((l) => l.description)], params.search),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getQuotation(id: string): Promise<Quotation | null> {
+  return resolve(allQuotations().find((q) => q.id === id) ?? null);
+}
+
+export async function saveQuotation(id: string, patch: Partial<Quotation>): Promise<Quotation | null> {
+  const updated = store.update<Quotation & { [k: string]: unknown }>('quotations', id, patch);
+  if (updated) return resolve(updated as Quotation, 0);
+  const base = fxQuotations.find((q: Quotation) => q.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<Quotation & { [k: string]: unknown }>('quotations', { ...base, ...patch, id }) as Quotation,
+    0,
+  );
 }

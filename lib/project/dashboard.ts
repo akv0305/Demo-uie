@@ -25,7 +25,7 @@ import { wbsTotals, type RolledWbsNode } from './wbs-rollup';
 /**
  * Physical progress trailing time elapsed by more than this many points is
  * treated as slippage worth flagging. A working convention, not a contract
- * term — Q-31.
+ * term — Q-73.
  */
 export const SLIPPAGE_THRESHOLD_PCT = 5;
 
@@ -228,7 +228,7 @@ export interface TrendPoint {
 
 /**
  * Daily executed quantity from the DPRs, oldest first. Not a true S-curve —
- * that needs a baseline programme, which Phase 1 does not hold (Q-32) — but it
+ * that needs a baseline programme, which Phase 1 does not hold (Q-74) — but it
  * shows the working trend and where a wet day bites.
  */
 export function dprTrend(dprs: DailyProgressReport[], lastN = 14): TrendPoint[] {

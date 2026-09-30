@@ -50,7 +50,6 @@ _None._
 
 
 **Needed before dashboards (Step 18)**
-- Q-04 Charting dependency — Recharts vs alternative. Needs approval.
 - Q-05 Dashboard KPI list per dashboard (cap at 8).
 
 **Client — commercial / phase framing**
@@ -111,6 +110,15 @@ _None._
 | Q-67 | Should Document Type be a controlled master rather than free text? | Needed before any rule of the form "no PO to a vendor whose GST certificate has lapsed" can exist. Adds a small master screen. | Client |
 | Q-68 | Where will attached files actually live in production — server filesystem, object storage, or a document system UIE already owns? | Affects cost, backup and the 26-week estimate. No storage exists in the demo (D-088). | Owner + Client |
 
+**Open — project controls (Step 10)**
+| Q-69 | What is the deviation limit in UIE's contracts, beyond which a variation needs fresh sanction and a rate analysis? | Contract Summary flags deviation above 25%, the common CPWD/NHAI-style position, as `DEFAULT_DEVIATION_LIMIT_PCT`. It is contract-specific and probably differs between the R&B and Railway contracts. | Client — Commercial | Open |
+| Q-70 | How far ahead of expiry does UIE apply for a bank guarantee extension? | 60 days today (`DEFAULT_EXPIRY_WARNING_DAYS`), which is company practice rather than a contract term. Drives the "falling due" count on both the BG register and the dashboard. | Client — Accounts | Open |
+| Q-71 | Should retention entries be raised from running account bills, or entered directly? | Read-only in Phase 1 (D-096) and `billNo` is plain text. Retention is a consequence of certifying a bill, so it should arise from the billing register — which does not exist yet. Ties to Q-12. | Client — Commercial | Open |
+| Q-72 | What are the retention release rules? | Typically half on the completion certificate and half after the defect liability period, but the split and triggers are contract-specific. Deliberately not built — the register records releases, it does not schedule them. | Client — Commercial | Open |
+| Q-73 | Is 5 points the right slippage threshold for flagging a project as behind programme? | `SLIPPAGE_THRESHOLD_PCT` on the dashboard; amber past 5 points, red past 10. A working convention, not a contract term. | Owner + Client — Planning | Open |
+| Q-74 | Is a baseline programme available, and does the client review expect a planned-vs-actual S-curve? | The dashboard shows an output trend from DPR quantities, not an S-curve, because Phase 1 holds no baseline. A real S-curve needs either a programme import or milestone dates with planned cumulative values, and would be the one thing to reopen D-098 for. | Client — Planning | Open |
+| Q-75 | Are physical and financial progress maintained by hand on the project master, or should they be derived from DPR quantities against BOQ? | Both are read from `Project` today and are display-only on the master form (D-062), so they only move if someone edits them. The dashboard's headline figures depend on this answer. | Client — Project Controls | Open |
+
 ## Closed
 - Q-01 (Owner) Dev environment: Codespaces, local, or other? -- Dev
 - Q-02 (Owner) Logo artwork — SVG/PNG, full lockup + square mark? -- Ok
@@ -118,4 +126,7 @@ _None._
   demo URL with fabricated data + noindex. Stated, accepted. -- Client name is displayed
 - Q-33 Approve Zod as a dependency? - Zod is Approved
 - Q-34 Approve react-hook-form? - Approved
+- Q-04 Charting dependency — Recharts vs alternative. **Closed 2026-09-30 by
+  D-098: no charting dependency.** Dashboard visuals are CSS/SVG. Reopen only
+  if a true planned-vs-actual S-curve is required (Q-74).
 

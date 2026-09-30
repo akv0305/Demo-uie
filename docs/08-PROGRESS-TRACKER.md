@@ -1,12 +1,25 @@
 # PROGRESS TRACKER
-Last updated: 2026-08-25 · Update this at the end of every session.
+Last updated: 2026-09-30 · Update this at the end of every session.
 
 ## Current position
-**Step 8 complete — all eleven masters built. Step 9 (Document Management)
-complete: Library, Upload and Expiry Tracker.** Item Master is the frozen
-golden path for masters (D-024, D-035); `useMasterCollection` (D-042) is the
-shared master container. Documents is the first non-master module and the
-first to read `attachments`. Next action is Step 10, Project Controls / DPR.
+**Step 10 complete — Project Controls, all eight screens.** DPR, Hindrance
+Register, WBS Budget, Variation Register, Claim Register, Contract Summary,
+BG & Retention Register and the Project Controls Dashboard. This is the first
+module with a derived read-only screen (Contract Summary), the first with a
+computed ledger (retention running balance) and the first dashboard, built
+without a charting dependency (D-098, answers Q-04).
+
+The module's arithmetic lives in `lib/project/*` as pure functions — seven
+files, no data-layer imports — which is the pattern later modules should copy
+(D-090).
+
+**Not in the repo:** the Contract Summary files were issued but not pushed.
+Six files outstanding — `lib/project/contract-summary.ts`,
+`features/project-controls/contract-summary-columns.tsx`,
+`contract-summary-screen.tsx`, the route `layout.tsx`, the `page.tsx`
+replacement, and the terminology additions.
+
+Next action is Step 11, Procurement.
 
 
 ## Phase status
@@ -39,7 +52,16 @@ first to read `attachments`. Next action is Step 10, Project Controls / DPR.
 | 8h | Equipment Master | ✅ DONE | 21 fixtures. Closes D-044 — last MasterAudit gap. Status independent of isActive (D-071), type free text (D-072) |
 | 8i | WBS Master | ✅ DONE | 27 fixtures, 4 projects. Per-project selector (D-076), indent column (D-077), level derived (D-078) |
 | 9 | Document Management — Library, Upload, Expiry Tracker | ✅ DONE | D-081..D-088. First module outside masters. Upload stores metadata only (DEF-041) |
-| 10–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
+| 10 | Project Controls — Daily Progress Report | ✅ DONE | 5 fixtures. Weather, progress/labour/equipment lines, safety incidents |
+| 10b | Project Controls — Hindrance Register | ✅ DONE | 7 fixtures. Open-ended events count to today (D-091). Responsibility split drives the EOT case |
+| 10c | Project Controls — WBS Budget | ✅ DONE | Leaf-only pricing, parents total descendants (D-089). Masks the DEF-035 fixture gap rather than fixing it |
+| 10d | Project Controls — Variation Register | ✅ DONE | 10 fixtures. Proposed vs approved kept separate (D-092); `effectiveAmount` is the single read |
+| 10e | Project Controls — Claim Register | ✅ DONE | 8 fixtures. Links to hindrances and variations (D-093) — the demo's best traceability story |
+| 10f | Project Controls — Contract Summary | ⚠️ NOT PUSHED | Code issued and reviewed; six files not in the repo. Derived, read-only (D-094) |
+| 10g | Project Controls — BG & Retention Register | ✅ DONE | 6 BG + 8 retention fixtures. Two types, one tabbed screen (D-095). Retention balance computed, never stored (D-096) |
+| 10h | Project Controls — Dashboard | ✅ DONE | CSS/SVG visuals, no chart dependency (D-098). Derived read-only with drill-downs (D-099) |
+| 11–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
+
 
 
 ## Defect register (from P0 audit)
@@ -86,6 +108,13 @@ first to read `attachments`. Next action is Step 10, Project Controls / DPR.
 | DEF-039 | The three document containers log fetch failures to the console instead of rendering the frozen `ErrorState` | A rejected `Promise.all` leaves the screen blank with no message. Wire `ErrorState` before client walkthroughs | OPEN |
 | DEF-040 | `AttachmentsPanel` Download button is inert, as is the Download row action in the Document Library | Frozen P0 component. Decide whether to hide or stub before a walkthrough | OPEN |
 | DEF-041 | The Upload screen implies the file was stored when only its details were kept | Accepted knowingly (D-088). Terminology and banner text drafted in session but not applied | OPEN — deferred by owner |
+| DEF-042 | High | Register containers hard-coded `companyId: 'CMP-UIE'`, so a hindrance raised on a `CMP-UIRPL` project was booked to the wrong legal entity | Closed 2026-09-30 — every Project Controls container now derives company from the selected project. Audit the eleven master containers and the three document containers for the same literal |
+| DEF-043 | Med | `allAttachments()` was dead code — consumers read the fixture array directly, so an uploaded document never appeared in the library | Open — logged only, deferred by owner. Fix drafted: point `listDocumentFiles`, `listAttachmentCategories` and `listExpiringAttachments` at the helper |
+| DEF-044 | High | `store.update` only touches rows the store created, so editing a seeded fixture row silently reverted on reload | Open — logged only, deferred by owner. Pattern fixed forward in the Project Controls DAL (D-091): `save<Entity>` copies a fixture row into the store on first edit. The masters and documents layers still have the original bug |
+| DEF-045 | High | `toRecord` rewrote audit fields on edit, so editing an approved record reset it to draft and cleared `createdBy` | Open — logged only, deferred by owner. Project Controls containers avoid it by patching named fields only |
+| DEF-046 | Med | `createdBy` in the new fixtures referenced employees that do not exist (`EMP-0004`, `EMP-0009`, `EMP-0012`, `EMP-0015`; real ids are `EMP-1001`–`EMP-1060`) | Open — logged only, deferred by owner. Confirmed still present in `progress.ts` (all five DPRs carry `EMP-0004`) |
+| DEF-047 | Med | `HIN-0004` and `HIN-0005` carry `companyId: 'CMP-UIE'` on a `CMP-UIRPL` project | Open — logged only, deferred by owner |
+| DEF-048 | Med | Code comments in `lib/project/contract-summary.ts`, `bg-retention.ts` and `dashboard.ts` cite `Q-28`–`Q-32`, which are existing unrelated questions. The intended questions are Q-69–Q-74 | Closed 2026-09-30 — comments corrected (see §5 of the Step 10 doc update). Root cause: question numbers assigned from memory instead of read from `07-OPEN-QUESTIONS.md`, the same failure mode as DEF-034 and D-039 |
 
 
 ## Confirmed good (do not re-audit)
@@ -100,8 +129,7 @@ static export config. `DataTable` API. Fixture domain fidelity (real IS
 and MoRTH specifications).
 
 ## Registers (kept in separate files)
-- Decisions → `06-DECISION-LOG.md` (D-001 … D-069; D-012 and D-060 superseded)
-- Defects → this file, §Defect register (DEF-001 … DEF-034)
-- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-56; Q-01, Q-02, Q-03, Q-33, Q-34 closed)
+- Decisions → `06-DECISION-LOG.md` (D-001 … D-100; D-012, D-053 and D-060 superseded)
+- Defects → this file, §Defect register (DEF-001 … DEF-048)
+- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-74; Q-01, Q-02, Q-03, Q-04, Q-33, Q-34 closed)
 - Session history → `09-SESSION-LOG.md`
-

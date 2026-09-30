@@ -17,7 +17,7 @@ import { wbsTotals, type RolledWbsNode } from './wbs-rollup';
 /**
  * Deviation beyond this share of the agreement value normally needs a fresh
  * rate analysis and client sanction. 25% is the common Indian position
- * (CPWD/NHAI-style conditions) but it is contract-specific — Q-28.
+ * (CPWD/NHAI-style conditions) but it is contract-specific — Q-69.
  */
 export const DEFAULT_DEVIATION_LIMIT_PCT = 25;
 
