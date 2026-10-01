@@ -31,6 +31,8 @@ import { rfqs as fxRfqs } from './adapters/fixtures/rfqs';
 import { quotations as fxQuotations } from './adapters/fixtures/quotations';
 import { purchaseOrders as fxPos } from './adapters/fixtures/purchase-orders';
 import { goodsReceipts as fxGrns } from './adapters/fixtures/goods-receipts';
+import { materialIssues as fxIssues } from './adapters/fixtures/material-issues';
+import { materialReturns as fxReturns } from './adapters/fixtures/material-returns';
 
 import {
   equipment as fxEquipment,
@@ -95,6 +97,8 @@ import type {
   Quotation,
   PurchaseOrder,
   GoodsReceipt,
+  MaterialIssue,
+  MaterialReturn,
 } from './types';
 
 export type * from './types';
@@ -870,6 +874,138 @@ export async function saveGoodsReceipt(
       ...patch,
       id,
     }) as GoodsReceipt,
+    0,
+  );
+}
+
+// ===========================================================================
+// Stores — material issue
+// ===========================================================================
+function allMaterialIssues(): MaterialIssue[] {
+  const created = store.list<MaterialIssue & { [k: string]: unknown }>(
+    'materialIssues',
+  ) as unknown as MaterialIssue[];
+  if (!created.length) return fxIssues;
+  const overridden = new Set(created.map((m: MaterialIssue) => m.id));
+  return [...created, ...fxIssues.filter((m: MaterialIssue) => !overridden.has(m.id))];
+}
+
+export async function listMaterialIssues(
+  params?: ListParams & { subcontractorId?: string; equipmentId?: string },
+): Promise<Paged<MaterialIssue>> {
+  let rows: MaterialIssue[] = allMaterialIssues();
+  if (params?.projectId) rows = rows.filter((m) => m.projectId === params.projectId);
+  if (params?.siteId) rows = rows.filter((m) => m.storeSiteId === params.siteId);
+  if (params?.subcontractorId) rows = rows.filter((m) => m.subcontractorId === params.subcontractorId);
+  if (params?.equipmentId) rows = rows.filter((m) => m.equipmentId === params.equipmentId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((m) => m.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((m) => m.issueType === params.group);
+  if (params?.fromDate) rows = rows.filter((m) => m.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((m) => m.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((m) =>
+      matchesText(
+        [
+          m.documentNo,
+          m.requisitionNo ?? '',
+          m.purpose ?? '',
+          m.subcontractorName ?? '',
+          ...m.lines.map((l) => l.description),
+        ],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getMaterialIssue(id: string): Promise<MaterialIssue | null> {
+  return resolve(allMaterialIssues().find((m) => m.id === id) ?? null);
+}
+
+export async function saveMaterialIssue(
+  id: string,
+  patch: Partial<MaterialIssue>,
+): Promise<MaterialIssue | null> {
+  const updated = store.update<MaterialIssue & { [k: string]: unknown }>('materialIssues', id, patch);
+  if (updated) return resolve(updated as MaterialIssue, 0);
+  const base = fxIssues.find((m: MaterialIssue) => m.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<MaterialIssue & { [k: string]: unknown }>('materialIssues', {
+      ...base,
+      ...patch,
+      id,
+    }) as MaterialIssue,
+    0,
+  );
+}
+
+// ===========================================================================
+// Stores — material return
+// ===========================================================================
+function allMaterialReturns(): MaterialReturn[] {
+  const created = store.list<MaterialReturn & { [k: string]: unknown }>(
+    'materialReturns',
+  ) as unknown as MaterialReturn[];
+  if (!created.length) return fxReturns;
+  const overridden = new Set(created.map((r: MaterialReturn) => r.id));
+  return [...created, ...fxReturns.filter((r: MaterialReturn) => !overridden.has(r.id))];
+}
+
+export async function listMaterialReturns(
+  params?: ListParams & { issueId?: string; subcontractorId?: string },
+): Promise<Paged<MaterialReturn>> {
+  let rows: MaterialReturn[] = allMaterialReturns();
+  if (params?.projectId) rows = rows.filter((r) => r.projectId === params.projectId);
+  if (params?.siteId) rows = rows.filter((r) => r.storeSiteId === params.siteId);
+  if (params?.issueId) rows = rows.filter((r) => r.issueId === params.issueId);
+  if (params?.subcontractorId)
+    rows = rows.filter((r) => r.subcontractorId === params.subcontractorId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((r) => r.status === params.status);
+  if (params?.group && params.group !== 'ALL')
+    rows = rows.filter((r) => r.returnType === params.group);
+  if (params?.fromDate) rows = rows.filter((r) => r.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((r) => r.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((r) =>
+      matchesText(
+        [
+          r.documentNo,
+          r.issueDocumentNo ?? '',
+          r.reason ?? '',
+          r.subcontractorName ?? '',
+          ...r.lines.map((l) => l.description),
+        ],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getMaterialReturn(id: string): Promise<MaterialReturn | null> {
+  return resolve(allMaterialReturns().find((r) => r.id === id) ?? null);
+}
+
+export async function saveMaterialReturn(
+  id: string,
+  patch: Partial<MaterialReturn>,
+): Promise<MaterialReturn | null> {
+  const updated = store.update<MaterialReturn & { [k: string]: unknown }>(
+    'materialReturns',
+    id,
+    patch,
+  );
+  if (updated) return resolve(updated as MaterialReturn, 0);
+  const base = fxReturns.find((r: MaterialReturn) => r.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<MaterialReturn & { [k: string]: unknown }>('materialReturns', {
+      ...base,
+      ...patch,
+      id,
+    }) as MaterialReturn,
     0,
   );
 }

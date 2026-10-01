@@ -1256,3 +1256,142 @@ export interface GoodsReceipt extends DocumentAudit {
   approvedBy?: string;
   approvedOn?: string;
 }
+
+// ===========================================================================
+// Stores — Material Issue
+// ===========================================================================
+
+/** Why the material left the store. Drives which party field the screen demands. */
+export type IssueType = 'CONSUMPTION' | 'SUBCONTRACTOR' | 'EQUIPMENT' | 'RETURNABLE';
+
+export interface MaterialIssueLine {
+  id: string;
+  itemId: string;
+  itemCode?: string;
+  /** Snapshot of the item name at issue — a later master rename must not rewrite history. */
+  description: string;
+  uomCode: string;
+  /** What the site asked for on the requisition slip. */
+  requestedQty: number;
+  /** What actually went out. Short of requested = the store could not meet it (D-124). */
+  issuedQty: number;
+  /** Stock rate at the issuing store on the date of issue (D-123). */
+  rate?: number;
+  /** Cost code the material is charged to. */
+  wbsId?: string;
+  binLocation?: string;
+  batchNo?: string;
+  /** Shuttering, staging, scaffolding — issued and expected back (D-126). */
+  isReturnable?: boolean;
+  expectedReturnDate?: string;
+  /** Returned so far. Written by the Material Return screen only (D-127). */
+  returnedQty?: number;
+  remarks?: string;
+}
+
+export interface MaterialIssue extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** Date the material left the store, not the date of entry. */
+  date: string;
+  issueType: IssueType;
+  /** Store the material went out of. */
+  storeSiteId: string;
+
+  /** Site requisition slip the store issued against — see Q-90. */
+  requisitionNo?: string;
+  requisitionDate?: string;
+
+  /** Set when issueType is SUBCONTRACTOR. Recoverable issue — see Q-89. */
+  subcontractorId?: string;
+  subcontractorName?: string;
+  /** Set when issueType is EQUIPMENT, for fuel and lubricants. */
+  equipmentId?: string;
+  /** Hour-meter or odometer reading at the time of issue. */
+  equipmentHmr?: number;
+
+  /** Activity the material is charged to, when the whole issue is for one item. */
+  wbsId?: string;
+  purpose?: string;
+  /** Material leaving the premises needs a gate pass. */
+  gatePassNo?: string;
+  vehicleNo?: string;
+
+  lines: MaterialIssueLine[];
+  /** Storekeeper making the issue. */
+  issuedBy: string;
+  /** Person taking delivery at site. */
+  receivedBy: string;
+  remarks?: string;
+  approvedBy?: string;
+  approvedOn?: string;
+}
+
+// ===========================================================================
+// Stores — Material Return
+// ===========================================================================
+
+/** Why the material came back. Drives which reference the screen demands. */
+export type ReturnType = 'SURPLUS' | 'RETURNABLE' | 'FROM_SUBCONTRACTOR' | 'SCRAP';
+
+/** Condition it came back in. Only GOOD re-enters usable stock (D-129). */
+export type ReturnCondition = 'GOOD' | 'DAMAGED' | 'SCRAP';
+
+export interface MaterialReturnLine {
+  id: string;
+  /** Issue line this came back against. Absent on a return with no reference. */
+  issueLineId?: string;
+  itemId: string;
+  itemCode?: string;
+  /** Snapshot of the item name at return — a later master rename must not rewrite history. */
+  description: string;
+  uomCode: string;
+  /** Total handed back at the store counter. */
+  returnedQty: number;
+  /** Of that, taken back into usable stock (D-129). */
+  restockedQty: number;
+  /** Of that, unusable — damaged or scrap. */
+  damagedQty: number;
+  condition: ReturnCondition;
+  /** The rate the material went out at (D-128). Not re-rated on return. */
+  rate?: number;
+  /** Cost code the credit goes back to. */
+  wbsId?: string;
+  binLocation?: string;
+  remarks?: string;
+}
+
+export interface MaterialReturn extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** Date the material came back to the store, not the date of entry. */
+  date: string;
+  returnType: ReturnType;
+  /** Store taking the material back. */
+  storeSiteId: string;
+
+  /** One return, one issue (D-131). Absent where there is no reference — see Q-95. */
+  issueId?: string;
+  issueDocumentNo?: string;
+
+  /** Set when returnType is FROM_SUBCONTRACTOR. Recovery question is Q-93. */
+  subcontractorId?: string;
+  subcontractorName?: string;
+
+  /** Activity the credit goes back to, when the whole return is for one activity. */
+  wbsId?: string;
+  reason?: string;
+  /** Material coming back through the gate needs the pass referenced. */
+  gatePassNo?: string;
+  vehicleNo?: string;
+
+  lines: MaterialReturnLine[];
+  /** Site person handing the material back. */
+  returnedBy: string;
+  /** Storekeeper taking it in. */
+  receivedBy: string;
+  inspectedBy?: string;
+  remarks?: string;
+  approvedBy?: string;
+  approvedOn?: string;
+}
