@@ -50,3 +50,30 @@ Q-28..Q-32; they must be read from `07-OPEN-QUESTIONS.md` before use.
 Outstanding: Contract Summary's six files were issued but not pushed.
 
 Next: Step 11, Procurement.
+
+### 2026-09-30 — Step 11, Procurement (full chain)
+Built Purchase Requisition, RFQ, Vendor Quotation, Comparative Statement and
+Purchase Order: five routes, five feature sets, five pure helper modules
+under `lib/procurement/` (D-101). The chain carries a value end to end —
+indent estimate, enquiry estimate, quoted landed value, CST ranking, order
+value — and the CST is the module's demonstration piece.
+
+Decisions D-101..D-112 and questions Q-75..Q-81 were written retrospectively
+from the source files, because the build sessions produced none. Four of the
+numbers were forced: the code comments already cited D-103, D-105, D-107 and
+D-109, so the new entries had to be numbered to match what the source says.
+Writing the code before the decision is the wrong order and is the reason
+the numbering had no slack.
+
+Two register defects raised. DEF-049: six build errors, all from an API or
+terminology key written from memory rather than read — the fourth instance
+of D-039. DEF-050: jsDelivr served a five-week-old copy of the tracker,
+and a full session of reconciliation was done against it before the owner
+caught it; docs are now read from GitHub raw with a commits-API freshness
+check.
+
+Outstanding: Step 10f Contract Summary is in the repo but
+`contract-summary-columns.tsx` and the `t.project.cp*` keys are unconfirmed.
+Purchase Invoice Capture (11f) remains the last placeholder in the menu.
+
+Next: Step 12, Stores — Goods Receipt first.

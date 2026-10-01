@@ -1171,3 +1171,88 @@ export interface PurchaseOrder extends DocumentAudit {
   approvedBy?: string;
   approvedOn?: string;
 }
+
+// ===========================================================================
+// Stores — Goods Receipt
+// ===========================================================================
+
+/** How the material arrived. Drives which fields the screen demands. */
+export type GrnType = 'AGAINST_PO' | 'WITHOUT_PO' | 'FREE_ISSUE' | 'SITE_TRANSFER_IN';
+
+/** Condition recorded at the gate, per line. */
+export type GrnLineCondition = 'ACCEPTED' | 'PARTIALLY_REJECTED' | 'REJECTED' | 'PENDING_TEST';
+
+export interface GoodsReceiptLine {
+  id: string;
+  /** Set when received against an order. Absent on a without-PO receipt. */
+  poLineId?: string;
+  itemId: string;
+  itemCode?: string;
+  /** Snapshot of the item name at receipt — a later master rename must not rewrite history. */
+  description: string;
+  specification?: string;
+  makeReceived?: string;
+  uomCode: string;
+  /** Quantity written on the vendor's delivery challan. */
+  challanQty: number;
+  /** Quantity physically found. Short of challan = transit shortage (D-116). */
+  receivedQty: number;
+  /** Quantity taken into stock. Only this posts to PoLine.receivedQty (D-115). */
+  acceptedQty: number;
+  rejectedQty: number;
+  condition: GrnLineCondition;
+  rejectionReason?: string;
+  /** Rate carried from the order, for receipt valuation. Absent on free issue. */
+  rate?: number;
+  wbsId?: string;
+  /** Where in the store it was put. */
+  binLocation?: string;
+  /** Mill test certificate / batch reference, as printed on the material. */
+  batchNo?: string;
+  manufacturedOn?: string;
+  expiresOn?: string;
+  remarks?: string;
+}
+
+export interface GoodsReceipt extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** Date the material was received at site, not the date of entry. */
+  date: string;
+  grnType: GrnType;
+  /** One GRN, one order (D-119). Absent when grnType is not AGAINST_PO (D-120). */
+  poId?: string;
+  poDocumentNo?: string;
+  vendorId?: string;
+  vendorName?: string;
+
+  /** Mandatory — material arrives against a challan, not an invoice (D-118). */
+  challanNo: string;
+  challanDate: string;
+  invoiceNo?: string;
+  invoiceDate?: string;
+  /** Lorry receipt / consignment note from the transporter. */
+  lrNo?: string;
+  lrDate?: string;
+  vehicleNo?: string;
+  transporterName?: string;
+  gateEntryNo?: string;
+  gateEntryOn?: string;
+
+  /** Weighbridge, for bulk receipts (D-117). Net is stored — the slip is the record. */
+  weighbridgeSlipNo?: string;
+  grossWeight?: number;
+  tareWeight?: number;
+  netWeight?: number;
+
+  /** Store the material was taken into. */
+  storeSiteId: string;
+  receivedBy: string;
+  inspectedBy?: string;
+  testCertificateNo?: string;
+
+  lines: GoodsReceiptLine[];
+  remarks?: string;
+  approvedBy?: string;
+  approvedOn?: string;
+}

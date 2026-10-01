@@ -2,12 +2,22 @@
 Last updated: 2026-09-30 · Update this at the end of every session.
 
 ## Current position
-**Step 10 complete — Project Controls, all eight screens.** DPR, Hindrance
-Register, WBS Budget, Variation Register, Claim Register, Contract Summary,
-BG & Retention Register and the Project Controls Dashboard. This is the first
-module with a derived read-only screen (Contract Summary), the first with a
-computed ledger (retention running balance) and the first dashboard, built
-without a charting dependency (D-098, answers Q-04).
+**Step 11 complete — Procurement, the full chain.** Purchase Requisition →
+RFQ → Vendor Quotation → Comparative Statement → Purchase Order, each with
+its route, schema, columns and screen, and each backed by a pure helper
+module in `lib/procurement/` (D-101). This is the first module where one
+document seeds the next end to end, and the first with a derived matrix
+screen (the CST).
+
+Contract Summary (Step 10f), recorded in the previous session as issued but
+not pushed, **is in the repo** — `lib/project/contract-summary.ts`,
+`contract-summary-screen.tsx`, and a real route `page.tsx` (2,656 B, not the
+214 B placeholder). Confirm `contract-summary-columns.tsx` and the
+`t.project.cp*` terminology keys on the next typecheck.
+
+Next action is Step 12, Stores, beginning with Goods Receipt. GRN writes
+back to `PoLine.receivedQty` (D-111); it must not keep progress of its own.
+
 
 The module's arithmetic lives in `lib/project/*` as pure functions — seven
 files, no data-layer imports — which is the pattern later modules should copy
@@ -60,8 +70,14 @@ Next action is Step 11, Procurement.
 | 10f | Project Controls — Contract Summary | ⚠️ NOT PUSHED | Code issued and reviewed; six files not in the repo. Derived, read-only (D-094) |
 | 10g | Project Controls — BG & Retention Register | ✅ DONE | 6 BG + 8 retention fixtures. Two types, one tabbed screen (D-095). Retention balance computed, never stored (D-096) |
 | 10h | Project Controls — Dashboard | ✅ DONE | CSS/SVG visuals, no chart dependency (D-098). Derived read-only with drill-downs (D-099) |
-| 11–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
-
+| 11a | Purchase Requisition (Indent) | ✅ DONE | `lib/procurement/requisition.ts`; pending-qty model (D-102) |
+| 11b | RFQ / Enquiry | ✅ DONE | `rfq.ts`; `MIN_QUOTES_EXPECTED = 3`, flag not block (D-103) |
+| 11c | Vendor Quotation | ✅ DONE | `quotation.ts`; landed value is the comparison basis (D-104, D-105, D-106) |
+| 11d | Comparative Statement (CST) | ✅ DONE | `comparison.ts`; rejects stay unranked (D-107), split-award saving (D-108) |
+| 11e | Purchase Order | ✅ DONE | `purchase-order.ts`; value-weighted progress (D-109), justification gate (D-110) |
+| 11f | Purchase Invoice Capture | ⬜ PLACEHOLDER | Last stub in the Procurement menu; `page.tsx` is 214 B `PlaceholderPage`. Needs PO + GRN for a three-way match |
+| 12 | Stores: GRN, Issue, Return, Transfer, Adjustment, Ledger, Opening Stock, Summary | ⬜ NOT STARTED | All eight route folders exist; contents unverified |
+| 13–20 | See 01-DELIVERY-PLAN §6 | ⬜ NOT STARTED | |
 
 
 ## Defect register (from P0 audit)
@@ -115,6 +131,9 @@ Next action is Step 11, Procurement.
 | DEF-046 | Med | `createdBy` in the new fixtures referenced employees that do not exist (`EMP-0004`, `EMP-0009`, `EMP-0012`, `EMP-0015`; real ids are `EMP-1001`–`EMP-1060`) | Open — logged only, deferred by owner. Confirmed still present in `progress.ts` (all five DPRs carry `EMP-0004`) |
 | DEF-047 | Med | `HIN-0004` and `HIN-0005` carry `companyId: 'CMP-UIE'` on a `CMP-UIRPL` project | Open — logged only, deferred by owner |
 | DEF-048 | Med | Code comments in `lib/project/contract-summary.ts`, `bg-retention.ts` and `dashboard.ts` cite `Q-28`–`Q-32`, which are existing unrelated questions. The intended questions are Q-69–Q-74 | Closed 2026-09-30 — comments corrected (see §5 of the Step 10 doc update). Root cause: question numbers assigned from memory instead of read from `07-OPEN-QUESTIONS.md`, the same failure mode as DEF-034 and D-039 |
+| DEF-049 | Med | Six build errors in Step 11 from APIs and keys written from memory: `Paged<T>` treated as an array (D-086 already covers it); `itemCode`/`purpose` assumed onto `PurchaseRequisitionLine`/`PurchaseRequisition`; `CheckboxField` given `value` instead of `checked`; `Rfq[]` mixed into a `PurchaseRequisition[]` aggregate; Badge variant `destructive` when the set is `danger`; three terminology keys assumed into `t.common`. Fourth instance of the D-039 root cause | Closed 2026-09-30 by D-112 and by this entry. Prevention is unchanged: read the file |
+| DEF-050 | Med | **jsDelivr serves stale snapshots of this repo.** `cdn.jsdelivr.net/gh/.../@main/docs/08-PROGRESS-TRACKER.md` returned a 5,468-byte August copy of a file GitHub reports as 15.6 KB, causing a full session of analysis against five-week-old docs | Open 2026-09-30 — read docs from `github.com/akv0305/Demo-uie/raw/refs/heads/main/<path>`; confirm freshness via `api.github.com/repos/.../commits?path=<file>` |
+| DEF-051 | Low | `PurchaseRequisitionLine.orderedQty` doc comment says "Rupees ordered against this line so far" — it is a quantity. Misleading to anyone implementing GRN or PO write-back | Open 2026-09-30 — correct the comment to "Quantity ordered against this line so far" |
 
 
 ## Confirmed good (do not re-audit)
@@ -129,7 +148,6 @@ static export config. `DataTable` API. Fixture domain fidelity (real IS
 and MoRTH specifications).
 
 ## Registers (kept in separate files)
-- Decisions → `06-DECISION-LOG.md` (D-001 … D-100; D-012, D-053 and D-060 superseded)
-- Defects → this file, §Defect register (DEF-001 … DEF-048)
-- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-74; Q-01, Q-02, Q-03, Q-04, Q-33, Q-34 closed)
-- Session history → `09-SESSION-LOG.md`
+- Decisions → `06-DECISION-LOG.md` (D-001 … D-112; D-012, D-053 and D-060 superseded)
+- Defects → this file, §Defect register (DEF-001 … DEF-050)
+- Open questions → `07-OPEN-QUESTIONS.md` (Q-01 … Q-81; Q-01, Q-02, Q-03, Q-04, Q-33, Q-34 closed)

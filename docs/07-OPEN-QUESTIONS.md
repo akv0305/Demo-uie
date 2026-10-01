@@ -119,6 +119,22 @@ _None._
 | Q-74 | Is a baseline programme available, and does the client review expect a planned-vs-actual S-curve? | The dashboard shows an output trend from DPR quantities, not an S-curve, because Phase 1 holds no baseline. A real S-curve needs either a programme import or milestone dates with planned cumulative values, and would be the one thing to reopen D-098 for. | Client — Planning | Open |
 | Q-75 | Are physical and financial progress maintained by hand on the project master, or should they be derived from DPR quantities against BOQ? | Both are read from `Project` today and are display-only on the master form (D-062), so they only move if someone edits them. The dashboard's headline figures depend on this answer. | Client — Project Controls | Open |
 
+**Open — procurement (Step 11)**
+| Q-75 | (Client) Must an indent be approved before an enquiry can be floated against it, or may purchase start sourcing on a submitted indent to save time? | Demo allows floating from approved indents only. If sourcing starts earlier in practice, the gate is wrong. | Client |
+| Q-76 | (Client) When fewer than three offers are received (D-103), who may authorise the award and at what value — is there a threshold above which three comparable offers are mandatory? | Demo flags, never blocks. The threshold is the real control and we have invented none. | Client |
+| Q-77 | (Client) Should freight be apportioned by value share (D-105) or by weight for bulk materials like cement and steel? | Value share is implemented. Weight-based is defensible and would need gross weight on the item master. | Client |
+| Q-78 | (Client) Is a split award across vendors for a single enquiry permitted, and if so who approves it? | The CST computes the saving (D-108) but the demo cannot act on it. If splitting never happens in practice, the figure is noise and should be removed. | Client |
+| Q-79 | (Client) Diesel is outside GST (D-020, D-029). Confirm how an HSD purchase order should present rate and tax — the quotation and PO maths currently apply `gstRate` uniformly and would show 0% rather than "Outside GST". | Owner + Client |
+| Q-80 | (Client) Does a purchase order need its own approval chain distinct from the indent's, and does an amendment re-enter approval? | `revisionNo` exists on the type; no amendment flow is built. | Client |
+| Q-81 | (Owner) Should the PO carry LD (liquidated damages) terms as structured fields rather than free text, given `isDeliveryOverdue()` already identifies the LD situation? | Overdue is detected; nothing is computed from it. | Owner |
+**Open — stores (Step 12)**
+| Q-84 | (Client) When an approved GRN is cancelled, must the posted `receivedQty` reverse automatically, or is a cancellation disallowed once stock has been issued against it? | Demo posts forward only. Reversal is unimplemented. | Client |
+| Q-85 | (Client) Over-receipt tolerance — is 2% right (D-121), and who authorises a receipt beyond the ordered quantity? | Invented figure. Needs a real one. | Client |
+| Q-86 | (Client) Does one lorry ever arrive against two purchase orders, requiring a consolidated GRN (D-119)? | Client |
+| Q-87 | (Client) Is a separate inspection/QC step needed between receipt and acceptance — material received and quarantined pending lab test (cube results, MTC verification) — or does the storekeeper accept at the gate? | Demo accepts at the gate with a `testCertificateNo` reference. Quarantine would be a real workflow stage. | Client |
+| Q-88 | (Client) How is rejected material handled — returned on the same vehicle, held for vendor collection, or debited? Does the system need a vendor debit note? | Client |
+| Q-89 | (Client) Client free-issue material (cement/steel supplied by the employer) — does it enter the same stock ledger at zero value, or a separate register with its own reconciliation? | Drives whether `GrnType` needs a FREE_ISSUE member. | Client |
+
 ## Closed
 - Q-01 (Owner) Dev environment: Codespaces, local, or other? -- Dev
 - Q-02 (Owner) Logo artwork — SVG/PNG, full lockup + square mark? -- Ok

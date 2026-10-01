@@ -30,6 +30,7 @@ import { purchaseRequisitions as fxPrs } from './adapters/fixtures/procurement';
 import { rfqs as fxRfqs } from './adapters/fixtures/rfqs';
 import { quotations as fxQuotations } from './adapters/fixtures/quotations';
 import { purchaseOrders as fxPos } from './adapters/fixtures/purchase-orders';
+import { goodsReceipts as fxGrns } from './adapters/fixtures/goods-receipts';
 
 import {
   equipment as fxEquipment,
@@ -93,6 +94,7 @@ import type {
   Rfq,
   Quotation,
   PurchaseOrder,
+  GoodsReceipt,
 } from './types';
 
 export type * from './types';
@@ -811,6 +813,63 @@ export async function savePurchaseOrder(
   if (!base) return resolve(null, 0);
   return resolve(
     store.create<PurchaseOrder & { [k: string]: unknown }>('purchaseOrders', { ...base, ...patch, id }) as PurchaseOrder,
+    0,
+  );
+}
+
+// ===========================================================================
+// Stores — goods receipt
+// ===========================================================================
+function allGoodsReceipts(): GoodsReceipt[] {
+  const created = store.list<GoodsReceipt & { [k: string]: unknown }>(
+    'goodsReceipts',
+  ) as unknown as GoodsReceipt[];
+  if (!created.length) return fxGrns;
+  const overridden = new Set(created.map((g: GoodsReceipt) => g.id));
+  return [...created, ...fxGrns.filter((g: GoodsReceipt) => !overridden.has(g.id))];
+}
+
+export async function listGoodsReceipts(
+  params?: ListParams & { poId?: string; vendorId?: string },
+): Promise<Paged<GoodsReceipt>> {
+  let rows: GoodsReceipt[] = allGoodsReceipts();
+  if (params?.projectId) rows = rows.filter((g) => g.projectId === params.projectId);
+  if (params?.siteId) rows = rows.filter((g) => g.storeSiteId === params.siteId);
+  if (params?.poId) rows = rows.filter((g) => g.poId === params.poId);
+  if (params?.vendorId) rows = rows.filter((g) => g.vendorId === params.vendorId);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((g) => g.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((g) => g.grnType === params.group);
+  if (params?.fromDate) rows = rows.filter((g) => g.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((g) => g.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((g) =>
+      matchesText(
+        [g.documentNo, g.challanNo, g.vendorName ?? '', g.vehicleNo ?? '', ...g.lines.map((l) => l.description)],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getGoodsReceipt(id: string): Promise<GoodsReceipt | null> {
+  return resolve(allGoodsReceipts().find((g) => g.id === id) ?? null);
+}
+
+export async function saveGoodsReceipt(
+  id: string,
+  patch: Partial<GoodsReceipt>,
+): Promise<GoodsReceipt | null> {
+  const updated = store.update<GoodsReceipt & { [k: string]: unknown }>('goodsReceipts', id, patch);
+  if (updated) return resolve(updated as GoodsReceipt, 0);
+  const base = fxGrns.find((g: GoodsReceipt) => g.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<GoodsReceipt & { [k: string]: unknown }>('goodsReceipts', {
+      ...base,
+      ...patch,
+      id,
+    }) as GoodsReceipt,
     0,
   );
 }
