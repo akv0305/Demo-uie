@@ -1457,3 +1457,67 @@ export interface StockTransfer extends DocumentAudit {
   approvedBy?: string;
   approvedOn?: string;
 }
+
+
+// ===========================================================================
+// Stores — Stock Adjustment
+// ===========================================================================
+
+/**
+ * Why the stock was counted or written down. The direction — shortage or
+ * excess — is never chosen here; it falls out of the arithmetic (D-139).
+ */
+export type AdjustmentType =
+  | 'PHYSICAL_VERIFICATION'
+  | 'DAMAGE'
+  | 'THEFT'
+  | 'EXPIRY'
+  | 'MEASUREMENT_CORRECTION'
+  | 'WRITE_OFF';
+
+export interface StockAdjustmentLine {
+  id: string;
+  itemId: string;
+  itemCode?: string;
+  /** Snapshot of the item name at counting — a later master rename must not rewrite history. */
+  description: string;
+  uomCode: string;
+  /** What the books said when the count was taken. Stored, not re-read (D-140). */
+  systemQty: number;
+  /** What was actually found in the store. */
+  physicalQty: number;
+  /** Stock rate the material was carried at. Values the variance (D-141). */
+  rate?: number;
+  /** Tolerance for this line, in percent. Bulk material has handling noise (D-142). */
+  tolerancePct?: number;
+  reason?: string;
+  batchNo?: string;
+  binLocation?: string;
+  remarks?: string;
+}
+
+export interface StockAdjustment extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** Date the stock was physically counted, not the date of entry. */
+  date: string;
+  adjustmentType: AdjustmentType;
+
+  /** Store that was counted. `siteId` on the audit block mirrors this. */
+  storeSiteId: string;
+  /** Physical count sheet reference — the paper the entry came from. */
+  countSheetNo?: string;
+
+  /** Mandatory for a write-down; the reason is the whole document (Q-99). */
+  reason?: string;
+  lines: StockAdjustmentLine[];
+
+  /** Storekeeper who counted. */
+  countedBy: string;
+  /** Second person who witnessed the count, where one was present. */
+  verifiedBy?: string;
+  remarks?: string;
+  /** Nothing moves until this is set (D-143). */
+  approvedBy?: string;
+  approvedOn?: string;
+}

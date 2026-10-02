@@ -1723,6 +1723,59 @@ export const terminology = {
     secStReceipt: 'Receipt at Destination',
     secStAuthorisation: 'Authorisation',
 
+    saFull: 'Stock Adjustment',
+    saSubtitle: 'What was actually found in the store, against what the books said.',
+    saNew: 'New Adjustment',
+    saEdit: 'Edit Adjustment',
+    saEmpty: 'No adjustments recorded',
+    saEmptyHint: 'Record a physical count or a write-off so the book stock matches the godown.',
+
+    saType: 'Adjustment Type',
+    atPHYSICAL_VERIFICATION: 'Physical Verification',
+    atDAMAGE: 'Damage',
+    atTHEFT: 'Theft / Pilferage',
+    atEXPIRY: 'Expiry / Shelf Life',
+    atMEASUREMENT_CORRECTION: 'Measurement Correction',
+    atWRITE_OFF: 'Write Off',
+
+    saStore: 'Store Counted',
+    saStoreRequired: 'Select the store that was counted.',
+    saCountSheetNo: 'Count Sheet No.',
+    saReason: 'Reason',
+    saReasonRequired: 'A write-down must say why.',
+    saCountedBy: 'Counted By',
+    saVerifiedBy: 'Witnessed By',
+    saBinLocation: 'Location in Store',
+
+    saSystemQty: 'Book Stock',
+    saPhysicalQty: 'Physical Stock',
+    saVarianceQty: 'Variance',
+    saVariancePct: 'Variance %',
+    saRate: 'Stock Rate',
+    saRateHint: 'Rate the material was carried at. An adjustment does not revalue stock.',
+    saTolerancePct: 'Tolerance %',
+    saToleranceHint: 'Handling allowance for bulk material. Within this, the line is reconciled.',
+    saShortage: 'Shortage',
+    saExcess: 'Excess',
+    saReconciled: 'Reconciled',
+    saNetEffect: 'Net Effect on Books',
+    saNotPosted: 'Not posted — awaiting approval',
+    saPostedOn: 'Posted On',
+
+    saKpiCounts: 'Adjustments This Month',
+    saKpiVariance: 'With Variance',
+    saKpiVarianceHint: 'Outside tolerance',
+    saKpiShortage: 'Shortage Value',
+    saKpiExcess: 'Excess Value',
+    saKpiWriteOff: 'Write-offs',
+    saKpiWriteOffHint: 'Damage, theft and expiry',
+    saKpiPending: 'Awaiting Approval',
+    saKpiPendingHint: 'Counted, not yet posted',
+
+    secSaDocument: 'Adjustment Details',
+    secSaLines: 'Count Sheet',
+    secSaAuthorisation: 'Count & Approval',
+
   },
 
   // ===========================================================================
@@ -2179,9 +2232,10 @@ export const terminology = {
       'The comparative statement, or CST — every offer against one enquiry shown side by side at landed cost. The cheapest quoted rate is often not the cheapest buy once freight and GST are added, which is why the ranking here is on landed value. It also shows what a split award would save, so the decision to place one order or several is made on a number rather than a habit.',
     materialReturn:
       'Material coming back into the store against an issue. It is credited at the rate it went out at, and only the good quantity re-enters usable stock — the damaged part is a loss the job carries.',
-
     stockTransfer:
       'Material moving between stores. It leaves the sending store on dispatch and enters the receiving store on receipt, so what is on the road stays visible instead of disappearing from both. A short receipt is a transit shortage the sending store carries.',
+    stockAdjustment:
+      'The document that makes book stock agree with what is physically in the store. The counted quantity is entered and the shortage or excess is derived from it, so nobody posts a loss directly. A small difference on bulk material is treated as handling allowance rather than a loss, and nothing affects stock until the adjustment is approved.',
   },
 } as const;
 

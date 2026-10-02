@@ -34,6 +34,7 @@ import { goodsReceipts as fxGrns } from './adapters/fixtures/goods-receipts';
 import { materialIssues as fxIssues } from './adapters/fixtures/material-issues';
 import { materialReturns as fxReturns } from './adapters/fixtures/material-returns';
 import { stockTransfers as fxTransfers } from './adapters/fixtures/stock-transfers';
+import { stockAdjustments as fxAdjustments } from './adapters/fixtures/stock-adjustments';
 
 import {
   equipment as fxEquipment,
@@ -101,6 +102,7 @@ import type {
   MaterialIssue,
   MaterialReturn,
   StockTransfer,
+  StockAdjustment,
 } from './types';
 
 export type * from './types';
@@ -1082,6 +1084,77 @@ export async function saveStockTransfer(
       ...patch,
       id,
     }) as StockTransfer,
+    0,
+  );
+}
+
+
+
+// ===========================================================================
+// Stores — stock adjustment
+// ===========================================================================
+function allStockAdjustments(): StockAdjustment[] {
+  const created = store.list<StockAdjustment & { [k: string]: unknown }>(
+    'stockAdjustments',
+  ) as unknown as StockAdjustment[];
+  if (!created.length) return fxAdjustments;
+  const overridden = new Set(created.map((x: StockAdjustment) => x.id));
+  return [...created, ...fxAdjustments.filter((x: StockAdjustment) => !overridden.has(x.id))];
+}
+
+export async function listStockAdjustments(
+  params?: ListParams & { storeSiteId?: string; adjustmentType?: string },
+): Promise<Paged<StockAdjustment>> {
+  let rows: StockAdjustment[] = allStockAdjustments();
+  if (params?.projectId) rows = rows.filter((x) => x.projectId === params.projectId);
+  if (params?.siteId) rows = rows.filter((x) => x.storeSiteId === params.siteId);
+  if (params?.storeSiteId) rows = rows.filter((x) => x.storeSiteId === params.storeSiteId);
+  if (params?.adjustmentType && params.adjustmentType !== 'ALL')
+    rows = rows.filter((x) => x.adjustmentType === params.adjustmentType);
+  if (params?.status && params.status !== 'ALL')
+    rows = rows.filter((x) => x.status === params.status);
+  if (params?.group && params.group !== 'ALL')
+    rows = rows.filter((x) => x.adjustmentType === params.group);
+  if (params?.fromDate) rows = rows.filter((x) => x.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((x) => x.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((x) =>
+      matchesText(
+        [
+          x.documentNo,
+          x.countSheetNo ?? '',
+          x.reason ?? '',
+          ...x.lines.map((l) => l.description),
+        ],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getStockAdjustment(id: string): Promise<StockAdjustment | null> {
+  return resolve(allStockAdjustments().find((x) => x.id === id) ?? null);
+}
+
+export async function saveStockAdjustment(
+  id: string,
+  patch: Partial<StockAdjustment>,
+): Promise<StockAdjustment | null> {
+  const updated = store.update<StockAdjustment & { [k: string]: unknown }>(
+    'stockAdjustments',
+    id,
+    patch,
+  );
+  if (updated) return resolve(updated as StockAdjustment, 0);
+  const base = fxAdjustments.find((x: StockAdjustment) => x.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<StockAdjustment & { [k: string]: unknown }>('stockAdjustments', {
+      ...base,
+      ...patch,
+      id,
+    }) as StockAdjustment,
     0,
   );
 }
