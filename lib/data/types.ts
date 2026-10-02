@@ -1395,3 +1395,65 @@ export interface MaterialReturn extends DocumentAudit {
   approvedBy?: string;
   approvedOn?: string;
 }
+
+// ===========================================================================
+// Stores — Stock Transfer
+// ===========================================================================
+
+/**
+ * Where the transfer has reached. A transfer is two events, not one (D-133),
+ * so the document carries its own lifecycle independent of DocumentStatus.
+ */
+export type TransferStage = 'DRAFT' | 'DISPATCHED' | 'PARTLY_RECEIVED' | 'RECEIVED';
+
+export interface StockTransferLine {
+  id: string;
+  itemId: string;
+  itemCode?: string;
+  /** Snapshot of the item name at dispatch — a later master rename must not rewrite history. */
+  description: string;
+  uomCode: string;
+  /** Sent out of the issuing store. */
+  dispatchedQty: number;
+  /** Taken in at the receiving store. Short of dispatched = transit loss (D-134). */
+  receivedQty: number;
+  /** Rate at the sending store. The move does not revalue material (D-135). */
+  rate?: number;
+  fromBinLocation?: string;
+  toBinLocation?: string;
+  batchNo?: string;
+  remarks?: string;
+}
+
+export interface StockTransfer extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** Date the material left the sending store. */
+  date: string;
+  stage: TransferStage;
+
+  /** Sending store. `siteId` on the audit block mirrors this. */
+  fromSiteId: string;
+  /** Receiving store. May belong to another project (D-136). */
+  toSiteId: string;
+  /** Set only when the receiving store belongs to a different project. */
+  toProjectId?: string;
+
+  /** Internal delivery challan — see Q-98. */
+  challanNo?: string;
+  vehicleNo?: string;
+  transporterName?: string;
+  lrNo?: string;
+  /** Date the material reached the receiving store. Absent until received. */
+  receivedDate?: string;
+
+  reason?: string;
+  lines: StockTransferLine[];
+  /** Storekeeper at the sending store. */
+  dispatchedBy: string;
+  /** Storekeeper at the receiving store. Absent until received. */
+  receivedBy?: string;
+  remarks?: string;
+  approvedBy?: string;
+  approvedOn?: string;
+}

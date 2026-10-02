@@ -1667,6 +1667,62 @@ export const terminology = {
     secMrGatePass: 'Gate Pass',
     secMrAuthorisation: 'Authorisation',
 
+    stFull: 'Stock Transfer',
+    stSubtitle: 'Material moving from one store to another — and what is on the road in between.',
+    stNew: 'New Transfer',
+    stEdit: 'Edit Transfer',
+    stEmpty: 'No transfers recorded',
+    stEmptyHint: 'Record material moving between stores so it is not missing from both.',
+
+    stStage: 'Stage',
+    tsDRAFT: 'Not Dispatched',
+    tsDISPATCHED: 'In Transit',
+    tsPARTLY_RECEIVED: 'Partly Received',
+    tsRECEIVED: 'Received',
+
+    stFromStore: 'From Store',
+    stFromStoreRequired: 'Select the store the material is going out of.',
+    stToStore: 'To Store',
+    stToStoreRequired: 'Select the store the material is going to.',
+    stSameStore: 'The receiving store must be different from the sending store.',
+    stToProject: 'Receiving Project',
+    stInterProject: 'Inter-project transfer',
+    stChallanNo: 'Delivery Challan No.',
+    stVehicleNo: 'Vehicle No.',
+    stTransporter: 'Transporter',
+    stLrNo: 'LR / Consignment No.',
+    stReason: 'Reason for Transfer',
+    stDispatchedBy: 'Dispatched By',
+    stReceivedBy: 'Received By',
+    stReceivedDate: 'Received On',
+
+    stDispatchedQty: 'Dispatched',
+    stReceivedQty: 'Received',
+    stInTransitQty: 'In Transit',
+    stRate: 'Store Rate',
+    stRateHint: 'Rate at the sending store. A transfer does not revalue material.',
+    stExceedsDispatched: 'More than was dispatched against this line.',
+    stTransitLoss: 'Transit shortage',
+    stMarkDispatched: 'Mark Dispatched',
+    stEnterReceipt: 'Enter Receipt',
+    stReceiptHint: 'Entered by the receiving store. Short receipt is a transit shortage.',
+
+    stKpiTransfers: 'Transfers This Month',
+    stKpiInTransit: 'On the Road',
+    stKpiInTransitHint: 'Dispatched, not yet received',
+    stKpiTransitLoss: 'Transit Shortages',
+    stKpiTransitLossValue: 'Value Short',
+    stKpiOpen: 'Open Transfers',
+    stKpiOpenHint: 'Not yet closed',
+    stDaysInTransit: 'Days on the road',
+
+    secStDocument: 'Transfer Details',
+    secStRoute: 'From and To',
+    secStLines: 'Material Transferred',
+    secStTransport: 'Transport',
+    secStReceipt: 'Receipt at Destination',
+    secStAuthorisation: 'Authorisation',
+
   },
 
   // ===========================================================================
@@ -2124,6 +2180,8 @@ export const terminology = {
     materialReturn:
       'Material coming back into the store against an issue. It is credited at the rate it went out at, and only the good quantity re-enters usable stock — the damaged part is a loss the job carries.',
 
+    stockTransfer:
+      'Material moving between stores. It leaves the sending store on dispatch and enters the receiving store on receipt, so what is on the road stays visible instead of disappearing from both. A short receipt is a transit shortage the sending store carries.',
   },
 } as const;
 

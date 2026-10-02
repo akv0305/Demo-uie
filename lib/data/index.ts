@@ -33,6 +33,7 @@ import { purchaseOrders as fxPos } from './adapters/fixtures/purchase-orders';
 import { goodsReceipts as fxGrns } from './adapters/fixtures/goods-receipts';
 import { materialIssues as fxIssues } from './adapters/fixtures/material-issues';
 import { materialReturns as fxReturns } from './adapters/fixtures/material-returns';
+import { stockTransfers as fxTransfers } from './adapters/fixtures/stock-transfers';
 
 import {
   equipment as fxEquipment,
@@ -99,6 +100,7 @@ import type {
   GoodsReceipt,
   MaterialIssue,
   MaterialReturn,
+  StockTransfer,
 } from './types';
 
 export type * from './types';
@@ -1006,6 +1008,80 @@ export async function saveMaterialReturn(
       ...patch,
       id,
     }) as MaterialReturn,
+    0,
+  );
+}
+
+
+// ===========================================================================
+// Stores — stock transfer
+// ===========================================================================
+function allStockTransfers(): StockTransfer[] {
+  const created = store.list<StockTransfer & { [k: string]: unknown }>(
+    'stockTransfers',
+  ) as unknown as StockTransfer[];
+  if (!created.length) return fxTransfers;
+  const overridden = new Set(created.map((x: StockTransfer) => x.id));
+  return [...created, ...fxTransfers.filter((x: StockTransfer) => !overridden.has(x.id))];
+}
+
+export async function listStockTransfers(
+  params?: ListParams & { fromSiteId?: string; toSiteId?: string; stage?: string },
+): Promise<Paged<StockTransfer>> {
+  let rows: StockTransfer[] = allStockTransfers();
+  // A transfer belongs to both ends, so a project filter must match either.
+  if (params?.projectId)
+    rows = rows.filter(
+      (x) => x.projectId === params.projectId || x.toProjectId === params.projectId,
+    );
+  if (params?.siteId)
+    rows = rows.filter((x) => x.fromSiteId === params.siteId || x.toSiteId === params.siteId);
+  if (params?.fromSiteId) rows = rows.filter((x) => x.fromSiteId === params.fromSiteId);
+  if (params?.toSiteId) rows = rows.filter((x) => x.toSiteId === params.toSiteId);
+  if (params?.stage && params.stage !== 'ALL') rows = rows.filter((x) => x.stage === params.stage);
+  if (params?.status && params.status !== 'ALL') rows = rows.filter((x) => x.status === params.status);
+  if (params?.group && params.group !== 'ALL') rows = rows.filter((x) => x.stage === params.group);
+  if (params?.fromDate) rows = rows.filter((x) => x.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((x) => x.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((x) =>
+      matchesText(
+        [
+          x.documentNo,
+          x.challanNo ?? '',
+          x.vehicleNo ?? '',
+          x.reason ?? '',
+          ...x.lines.map((l) => l.description),
+        ],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getStockTransfer(id: string): Promise<StockTransfer | null> {
+  return resolve(allStockTransfers().find((x) => x.id === id) ?? null);
+}
+
+export async function saveStockTransfer(
+  id: string,
+  patch: Partial<StockTransfer>,
+): Promise<StockTransfer | null> {
+  const updated = store.update<StockTransfer & { [k: string]: unknown }>(
+    'stockTransfers',
+    id,
+    patch,
+  );
+  if (updated) return resolve(updated as StockTransfer, 0);
+  const base = fxTransfers.find((x: StockTransfer) => x.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<StockTransfer & { [k: string]: unknown }>('stockTransfers', {
+      ...base,
+      ...patch,
+      id,
+    }) as StockTransfer,
     0,
   );
 }
