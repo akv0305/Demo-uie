@@ -35,6 +35,7 @@ import { materialIssues as fxIssues } from './adapters/fixtures/material-issues'
 import { materialReturns as fxReturns } from './adapters/fixtures/material-returns';
 import { stockTransfers as fxTransfers } from './adapters/fixtures/stock-transfers';
 import { stockAdjustments as fxAdjustments } from './adapters/fixtures/stock-adjustments';
+import { openingStocks as fxOpeningStocks } from './adapters/fixtures/opening-stock';
 
 import {
   equipment as fxEquipment,
@@ -103,6 +104,8 @@ import type {
   MaterialReturn,
   StockTransfer,
   StockAdjustment,
+  StockLedgerRow,
+  OpeningStock
 } from './types';
 
 export type * from './types';
@@ -1155,6 +1158,102 @@ export async function saveStockAdjustment(
       ...patch,
       id,
     }) as StockAdjustment,
+    0,
+  );
+}
+
+
+
+// ===========================================================================
+// Stores — stock ledger (derived; see lib/inventory/ledger.ts)
+// ===========================================================================
+/**
+ * The ledger has no store of its own (D-144). This returns the five registers
+ * the builder needs, so a screen makes one call instead of five.
+ */
+export async function listStoresDocuments(params?: ListParams): Promise<{
+  goodsReceipts: GoodsReceipt[];
+  issues: MaterialIssue[];
+  returns: MaterialReturn[];
+  transfers: StockTransfer[];
+  adjustments: StockAdjustment[];
+  openingStocks: OpeningStock[];
+}> {
+  const p = { ...params, pageSize: 1000 };
+  const [grns, issues, returns, transfers, adjustments, openings] = await Promise.all([
+    listGoodsReceipts(p),
+    listMaterialIssues(p),
+    listMaterialReturns(p),
+    listStockTransfers(p),
+    listStockAdjustments(p),
+    listOpeningStocks(p),
+  ]);
+  return {
+    goodsReceipts: grns.rows,
+    issues: issues.rows,
+    returns: returns.rows,
+    transfers: transfers.rows,
+    adjustments: adjustments.rows,
+    openingStocks: openings.rows,
+  };
+
+}
+
+
+
+// ===========================================================================
+// Stores — opening stock
+// ===========================================================================
+function allOpeningStocks(): OpeningStock[] {
+  const created = store.list<OpeningStock & { [k: string]: unknown }>(
+    'openingStocks',
+  ) as unknown as OpeningStock[];
+  if (!created.length) return fxOpeningStocks;
+  const overridden = new Set(created.map((x: OpeningStock) => x.id));
+  return [...created, ...fxOpeningStocks.filter((x: OpeningStock) => !overridden.has(x.id))];
+}
+
+export async function listOpeningStocks(
+  params?: ListParams & { storeSiteId?: string; basis?: string },
+): Promise<Paged<OpeningStock>> {
+  let rows: OpeningStock[] = allOpeningStocks();
+  if (params?.projectId) rows = rows.filter((x) => x.projectId === params.projectId);
+  if (params?.siteId) rows = rows.filter((x) => x.storeSiteId === params.siteId);
+  if (params?.storeSiteId) rows = rows.filter((x) => x.storeSiteId === params.storeSiteId);
+  if (params?.basis && params.basis !== 'ALL') rows = rows.filter((x) => x.basis === params.basis);
+  if (params?.status && params.status !== 'ALL')
+    rows = rows.filter((x) => x.status === params.status);
+  if (params?.fromDate) rows = rows.filter((x) => x.date >= params.fromDate!);
+  if (params?.toDate) rows = rows.filter((x) => x.date <= params.toDate!);
+  if (params?.search)
+    rows = rows.filter((x) =>
+      matchesText(
+        [x.documentNo, x.referenceNo ?? '', ...x.lines.map((l) => l.description)],
+        params.search,
+      ),
+    );
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  return resolve(paginate(sorted, params));
+}
+
+export async function getOpeningStock(id: string): Promise<OpeningStock | null> {
+  return resolve(allOpeningStocks().find((x) => x.id === id) ?? null);
+}
+
+export async function saveOpeningStock(
+  id: string,
+  patch: Partial<OpeningStock>,
+): Promise<OpeningStock | null> {
+  const updated = store.update<OpeningStock & { [k: string]: unknown }>('openingStocks', id, patch);
+  if (updated) return resolve(updated as OpeningStock, 0);
+  const base = fxOpeningStocks.find((x: OpeningStock) => x.id === id);
+  if (!base) return resolve(null, 0);
+  return resolve(
+    store.create<OpeningStock & { [k: string]: unknown }>('openingStocks', {
+      ...base,
+      ...patch,
+      id,
+    }) as OpeningStock,
     0,
   );
 }

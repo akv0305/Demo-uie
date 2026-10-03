@@ -1521,3 +1521,98 @@ export interface StockAdjustment extends DocumentAudit {
   approvedBy?: string;
   approvedOn?: string;
 }
+
+
+// ===========================================================================
+// Stores — Stock Ledger (derived, never stored — D-144)
+// ===========================================================================
+
+/** Which register a ledger row came from. Not a document status. */
+export type LedgerSource =
+  | 'OPENING'
+  | 'GRN'
+  | 'ISSUE'
+  | 'RETURN'
+  | 'TRANSFER_OUT'
+  | 'TRANSFER_IN'
+  | 'ADJUSTMENT';
+
+/**
+ * One movement of one item at one store. Built at read time from the stores
+ * documents; nothing writes this type (D-144).
+ */
+export interface StockLedgerRow {
+  /** Composite and stable: source document id plus line id. */
+  id: string;
+  date: string;
+  source: LedgerSource;
+  documentId: string;
+  documentNo: string;
+
+  storeSiteId: string;
+  itemId: string;
+  itemCode?: string;
+  description: string;
+  uomCode: string;
+
+  /** Into the store. Zero on an outward row. */
+  inQty: number;
+  /** Out of the store. Zero on an inward row. */
+  outQty: number;
+  /** Rate carried by the source line. The ledger does not revalue (D-149). */
+  rate?: number;
+
+  /** Running quantity after this row, within the filtered set (D-148). */
+  balanceQty: number;
+  /** Running value after this row. */
+  balanceValue: number;
+
+  /** Who or what the movement was for — WBS, vendor, subcontractor, other store. */
+  particulars?: string;
+  remarks?: string;
+}
+
+
+// ===========================================================================
+// Stores — Opening Stock
+// ===========================================================================
+
+/** Where the opening figure came from. The answer sizes the migration (D-155). */
+export type OpeningBasis = 'PHYSICAL_COUNT' | 'LEGACY_SYSTEM' | 'MANUAL_REGISTER';
+
+export interface OpeningStockLine {
+  id: string;
+  itemId: string;
+  itemCode?: string;
+  /** Snapshot of the item name at cut-off. */
+  description: string;
+  uomCode: string;
+  quantity: number;
+  /** Asserted, not derived — the only rate in the system that is (D-152). */
+  rate?: number;
+  batchNo?: string;
+  binLocation?: string;
+  remarks?: string;
+}
+
+export interface OpeningStock extends DocumentAudit {
+  id: string;
+  documentNo: string;
+  /** Cut-off date. Stock as it stood at the close of this day (Q-105). */
+  date: string;
+  basis: OpeningBasis;
+
+  /** Store being opened. `siteId` on the audit block mirrors this. */
+  storeSiteId: string;
+  /** Count sheet, legacy report or register page the figures came from. */
+  referenceNo?: string;
+
+  lines: OpeningStockLine[];
+  preparedBy: string;
+  /** Who stands behind the values (Q-106). */
+  certifiedBy?: string;
+  remarks?: string;
+  /** Frozen once set (D-153). */
+  approvedBy?: string;
+  approvedOn?: string;
+}
